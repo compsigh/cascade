@@ -36,6 +36,7 @@ h6 {
 
 h1 {
   margin-top: 150px;
+  font-weight: 600;
 }
 
 p,
@@ -61,4 +62,17 @@ a {
   text-decoration-line: underline;
   text-decoration-style: solid;
   text-decoration-thickness: 2px;
+}
+
+code {
+  display: inline-block;
+  padding: 2px 5px;
+  background-color: #DFDFDF !important;
+  color: #000000 !important;
+  border-radius: 8px;
+}
+
+h1 code {
+  background-color: #141414 !important;
+  color: #DFDFDF !important;
 }
