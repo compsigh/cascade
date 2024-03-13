@@ -67,12 +67,12 @@ a {
 code {
   display: inline-block;
   padding: 2px 5px;
-  background-color: #DFDFDF !important;
-  color: #000000 !important;
   border-radius: 8px;
+  background-color: #DFDFDF;
+  color: #000000;
 }
 
-h1 code {
-  background-color: #141414 !important;
-  color: #DFDFDF !important;
+code.blackCode, h1.blackCode code {
+  background-color: #141414;
+  color: #DFDFDF;
 }
