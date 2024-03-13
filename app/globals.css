@@ -2,6 +2,7 @@
   --font-mono: var(--font-geist-mono), ui-monospace, "Roboto Mono", "Courier Prime", "Courier New", monospace;
   --color-black: #141414;
   --color-white: #f5f5f5;
+  --color-gray: #dfdfdf;
 }
 
 * {
@@ -70,7 +71,7 @@ code {
   display: inline-block;
   padding: 2px 5px;
   border-radius: 8px;
-  background-color: var(--color-white);
+  background-color: var(--color-gray);
   color: var(--color-black);
   font-family: var(--font-mono);
 }
