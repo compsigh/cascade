@@ -9,8 +9,8 @@ const vercelThemeJson = await vercelTheme.json()
 
 /** @type {import('rehype-pretty-code').Options} */
 const options = {
-  theme: vercelThemeJson,
-  defaultLang: 'plaintext'
+  // theme: vercelThemeJson,
+  // defaultLang: 'plaintext'
 }
 
 const withMDX = createMDX({
