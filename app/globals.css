@@ -70,6 +70,7 @@ code {
   border-radius: 8px;
   background-color: #DFDFDF;
   color: #000000;
+  font-family: var(--font-mono);
 }
 
 code.blackCode, h1.blackCode code {
