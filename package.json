@@ -5,7 +5,7 @@
   "homepage": "https://cascade.compsigh.club",
   "version": "0.1.0",
   "license": "UNLICENSED",
-  "description": "Landing page and platform for cascade, a one-night coding riddle competition",
+  "description": "Landing page and platform for cascade, a one-night coding riddle competition for the compsigh community on April 12th 2024 at 6pm",
   "repository": {
     "type": "git",
     "url": "https://github.com/compsigh/cascade.git"
