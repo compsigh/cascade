@@ -14,7 +14,10 @@ else metadataBase = new URL(`http://localhost:${process.env.PORT || 3000}`)
 export const metadata: Metadata = {
   metadataBase,
   title: 'compsigh cascade',
-  description: 'compsigh cascade — a one-night coding riddle competition'
+  description: 'compsigh cascade — a one-night coding riddle competition',
+  openGraph: {
+    images: [ '/og-image.png' ]
+  }
 }
 
 export default function RootLayout({
