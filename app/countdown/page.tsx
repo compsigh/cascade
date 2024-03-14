@@ -22,7 +22,7 @@ export default async function CountdownPage() {
 
   return (
     <>
-      <h1><code className="blackCode">cascade</code></h1>
+      <h1 id='title'><code className="blackCode">cascade</code></h1>
       <Spacer size={32} />
       <p>
         welcome {session.user?.name?.split(' ')[0].toLowerCase() || 'user'},

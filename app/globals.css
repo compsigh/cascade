@@ -37,9 +37,9 @@ h6 {
   font-size: 1.125rem;
 }
 
-h1 {
+h1#title {
   margin-top: 150px;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 p,
