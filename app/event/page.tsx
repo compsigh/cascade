@@ -59,7 +59,8 @@ function Unregistered() {
       <Spacer size={32} />
       <ul>
         <li>
-          <Link href="/register">register</Link>
+          <Link href="/">register</Link>
+          { /* TODO: replace with valid register route */ }
         </li>
       </ul>
     </>
