@@ -2,6 +2,7 @@ import { Spacer } from '@/components/Spacer'
 import { auth } from '@/auth'
 import { checkAuth } from '@/functions/user-management'
 import Link from 'next/link'
+import { Button } from '@/components/Button'
 
 export default async function Home() {
   const session = await auth()
@@ -32,7 +33,7 @@ export default async function Home() {
           {
             authed
               ? <Link href="/event">go to event dashboard</Link>
-              : <Link href="/api/auth/signin">sign in</Link>
+              : <Button type="signIn" text="sign in" />
           }
         </li>
       </ul>

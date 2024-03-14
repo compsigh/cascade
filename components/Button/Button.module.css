@@ -1,0 +1,17 @@
+button.button {
+  border: none;
+  cursor: pointer;
+
+  background: transparent;
+  color: var(--color-black);
+
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 1.125rem;
+  line-height: 1.6em;
+  text-decoration-line: underline;
+  text-decoration-color: var(--color-black);
+  text-decoration-style: solid;
+  text-decoration-thickness: 2px;
+}
