@@ -11,14 +11,13 @@ datasource db {
 }
 
 model Participant {
-  id     String  @id @default(uuid())
-  name   String  @unique
-  email  String  @unique
-  team   Team?   @relation(fields: [teamId], references: [id])
-  teamId String? @unique
+  name   String @unique
+  email  String @id @unique
+  team   Team?  @relation(fields: [teamId], references: [id])
+  teamId Int?   @unique
 }
 
 model Team {
-  id           String        @id @default(uuid())
+  id           Int           @id @default(autoincrement())
   participants Participant[]
 }
