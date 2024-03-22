@@ -21,3 +21,9 @@ model Team {
   id           Int           @id @default(autoincrement())
   participants Participant[]
 }
+
+model Invite {
+  id                   String @id @default(uuid())
+  fromParticipantEmail String
+  toParticipantEmail   String
+}
