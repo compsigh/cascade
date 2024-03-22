@@ -13,12 +13,12 @@ datasource db {
 model Participant {
   name   String @unique
   email  String @id @unique
-  team   Team?  @relation(fields: [teamId], references: [id])
-  teamId Int?   @unique
+  team   Team   @relation(fields: [teamId], references: [id])
+  teamId String @unique
 }
 
 model Team {
-  id           Int           @id @default(autoincrement())
+  id           String        @id @default(uuid())
   participants Participant[]
 }
 
