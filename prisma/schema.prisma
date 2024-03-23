@@ -14,7 +14,7 @@ model Participant {
   name   String @unique
   email  String @id @unique
   team   Team   @relation(fields: [teamId], references: [id])
-  teamId String @unique
+  teamId String
 }
 
 model Team {
