@@ -1,7 +1,7 @@
 import { Prisma, PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
-export async function listParticipants() {
+export async function getAllParticipants() {
   const participants = await prisma.participant.findMany()
   return participants
 }
@@ -14,6 +14,9 @@ export async function createParticipant(
     data: {
       name,
       email,
+      team: {
+        create: {}
+      }
     }
   })
 
@@ -30,12 +33,12 @@ export async function getParticipantByEmail(email: string) {
   return participant
 }
 
-export async function deleteParticipants() {
+export async function deleteAllParticipants() {
   const users = await prisma.participant.deleteMany()
   return users
 }
 
-export async function listTeams() {
+export async function getAllTeams() {
   const teams = await prisma.team.findMany({
     include: {
       participants: true
@@ -45,22 +48,43 @@ export async function listTeams() {
   return teams
 }
 
-export async function createTeam(name: string, email: string) {
-  const team = await prisma.team.create({
-    data: {
-      participants: {
-        connect: {
-          name,
-          email
-        }
-      }
+export async function addParticipantToTeam(
+  email: string, teamId: string
+) {
+  const participant = await getParticipantByEmail(email)
+
+  if (!participant)
+    return null
+
+  const formerTeam = await prisma.team.findUnique({
+    where: {
+      id: participant.teamId
+    },
+    include: {
+      participants: true
     }
   })
 
-  return team
+  await prisma.participant.update({
+    where: {
+      email
+    },
+    data: {
+      teamId
+    }
+  })
+
+  if (formerTeam && formerTeam.participants.length === 1)
+    await prisma.team.delete({
+      where: {
+        id: formerTeam.id
+      }
+    })
+
+  return await getParticipantByEmail(email)
 }
 
-export async function deleteTeams() {
+export async function deleteAllTeams() {
   const teams = await prisma.team.deleteMany()
   return teams
 }
