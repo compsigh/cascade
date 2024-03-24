@@ -8,10 +8,14 @@ import {
 export async function GET(request: Request) {
   const session = await auth()
   if (!session)
-    return { status: 401, body: 'Unauthorized' }
+    return new Response(
+      JSON.stringify({ message: 'Unauthorized' }), { status: 401 }
+    )
   const authed = checkAuth(session)
   if (!authed)
-    return { status: 403, body: 'Forbidden' }
+    return new Response(
+      JSON.stringify({ message: 'Forbidden' }), { status: 403 }
+    )
 
   const teams = await getAllTeams()
 
@@ -23,10 +27,14 @@ export async function GET(request: Request) {
 export async function DELETE(request: Request) {
   const session = await auth()
   if (!session)
-    return { status: 401, body: 'Unauthorized' }
+    return new Response(
+      JSON.stringify({ message: 'Unauthorized' }), { status: 401 }
+    )
   const authed = checkAuth(session)
   if (!authed)
-    return { status: 403, body: 'Forbidden' }
+    return new Response(
+      JSON.stringify({ message: 'Forbidden' }), { status: 403 }
+    )
 
   const deletedTeams = await deleteAllTeams()
 
