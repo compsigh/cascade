@@ -1,22 +1,8 @@
-import { auth } from '@/auth'
-import { checkAuth } from '@/functions/user-management'
+import { protectRoute } from '@/app/api/auth/[...nextauth]/route'
 import {
   deleteAllParticipantsAndTeams,
   getAllTeams
  } from '@/functions/db'
-
-async function protectRoute() {
-  const session = await auth()
-  if (!session)
-    return new Response(
-      JSON.stringify({ message: 'Unauthorized' }), { status: 401 }
-    )
-  const authed = checkAuth(session)
-  if (!authed)
-    return new Response(
-      JSON.stringify({ message: 'Forbidden' }), { status: 403 }
-    )
-}
 
 export async function GET(request: Request) {
   await protectRoute()
