@@ -1,7 +1,7 @@
 import { auth } from '@/auth'
 import { checkAuth } from '@/functions/user-management'
 import {
-  deleteAllTeams,
+  deleteAllParticipantsAndTeams,
   getAllTeams
  } from '@/functions/db'
 
@@ -28,7 +28,8 @@ export async function GET(request: Request) {
 
 export async function DELETE(request: Request) {
   await protectRoute()
+  const deletedParticipantsAndTeams = await deleteAllParticipantsAndTeams()
   return new Response(
-    JSON.stringify(deletedTeams), { status: 200 }
+    JSON.stringify(deletedParticipantsAndTeams), { status: 200 }
   )
 }

@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export async function getAllParticipants() {
@@ -84,7 +84,8 @@ export async function addParticipantToTeam(
   return await getParticipantByEmail(email)
 }
 
-export async function deleteAllTeams() {
+export async function deleteAllParticipantsAndTeams() {
+  const participants = await prisma.participant.deleteMany()
   const teams = await prisma.team.deleteMany()
-  return teams
+  return { participants, teams }
 }
