@@ -1,4 +1,4 @@
-import { protectRoute } from '@/app/api/auth/[...nextauth]/route'
+import { protectRoute } from '@/functions/protect-route'
 import {
   deleteAllParticipantsAndTeams,
   getAllTeams

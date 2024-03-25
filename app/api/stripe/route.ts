@@ -1,6 +1,6 @@
 import Stripe from 'stripe'
 import { redirect } from 'next/navigation'
-import { protectRoute } from '@/app/api/auth/[...nextauth]/route'
+import { protectRoute } from '@/functions/protect-route'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '')
 
