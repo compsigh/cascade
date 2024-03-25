@@ -61,7 +61,7 @@ async function Unregistered() {
       <ul>
         <li>
           {/* TODO: conditionally render */}
-          <Button type="stripe" text="Register" />
+          <Button type="stripe" text="register" />
         </li>
       </ul>
     </>
