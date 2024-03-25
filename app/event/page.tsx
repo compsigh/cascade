@@ -5,6 +5,8 @@ import { redirect } from 'next/navigation'
 import { Spacer } from '@/components/Spacer'
 import { isAuthed } from '@/functions/user-management'
 import { CountdownWrapper } from '@/components/CountdownWrapper'
+import { Button } from '@/components/Button'
+import { loadStripe } from '@stripe/stripe-js'
 
 export default async function Event() {
   const session = await auth()
@@ -25,7 +27,7 @@ export default async function Event() {
 }
 
 async function Content() {
-  const registered = true // TODO: implement with db + Stripe
+  const registered = false // TODO: implement with db + Stripe
   const started = await get('eventStarted')
 
   if (!registered)
@@ -48,7 +50,8 @@ function RegisteredAndWaiting() {
   )
 }
 
-function Unregistered() {
+async function Unregistered() {
+  await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
   return (
     <>
       <p>
@@ -57,8 +60,8 @@ function Unregistered() {
       <Spacer size={32} />
       <ul>
         <li>
-          <Link href="/">register</Link>
-          { /* TODO: replace with valid register route */ }
+          {/* TODO: conditionally render */}
+          <Button type="stripe" text="Register" />
         </li>
       </ul>
     </>

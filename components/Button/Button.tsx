@@ -5,7 +5,7 @@ import styles from './Button.module.css'
 
 export function Button(
   { type, text }:
-  { type: 'signIn', text: string }
+  { type: 'signIn' | 'stripe', text: string }
 ) {
   if (type === 'signIn')
     return (
@@ -16,5 +16,16 @@ export function Button(
         {text}
       </button>
     )
+
+  if (type === 'stripe')
+    return (
+      <button
+        onClick={() => fetch('/api/stripe', { method: 'POST' })}
+        className={styles.button}
+      >
+        {text}
+      </button>
+    )
+
   return <></>
 }
