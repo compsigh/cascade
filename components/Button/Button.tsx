@@ -19,12 +19,11 @@ export function Button(
 
   if (type === 'stripe')
     return (
-      <button
-        onClick={() => fetch('/api/stripe', { method: 'POST' })}
-        className={styles.button}
-      >
-        {text}
-      </button>
+      <form action='/api/stripe' method='POST'>
+        <button type='submit' className={styles.button}>
+          {text}
+        </button>
+      </form>
     )
 
   return <></>
