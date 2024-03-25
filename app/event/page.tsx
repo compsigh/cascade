@@ -3,15 +3,13 @@ import { auth } from '@/auth'
 import { get } from '@vercel/edge-config'
 import { redirect } from 'next/navigation'
 import { Spacer } from '@/components/Spacer'
-import { checkAuth } from '@/functions/user-management'
+import { isAuthed } from '@/functions/user-management'
 import { CountdownWrapper } from '@/components/CountdownWrapper'
 
 export default async function Event() {
   const session = await auth()
-  if (!session)
-    redirect('/api/auth/signin')
-  const authed = checkAuth(session)
-  if (!authed)
+  const authed = isAuthed(session)
+  if (!session || !authed)
     redirect('/')
 
   return (

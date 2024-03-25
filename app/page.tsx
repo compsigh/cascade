@@ -1,12 +1,12 @@
 import { Spacer } from '@/components/Spacer'
 import { auth } from '@/auth'
-import { checkAuth } from '@/functions/user-management'
+import { isAuthed } from '@/functions/user-management'
 import Link from 'next/link'
 import { Button } from '@/components/Button'
 
 export default async function Home() {
   const session = await auth()
-  const authed = checkAuth(session)
+  const authed = isAuthed(session)
 
   return (
     <>

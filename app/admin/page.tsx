@@ -1,5 +1,5 @@
 import { auth } from '@/auth'
-import { checkAuth } from '@/functions/user-management'
+import { isAuthed } from '@/functions/user-management'
 import {
   getAllTeams
  } from '@/functions/db'
@@ -8,10 +8,8 @@ import {
 
 export default async function AdminPanel() {
   const session = await auth()
-  if (!session)
-    redirect('/')
-  const authed = checkAuth(session)
-  if (!authed)
+  const authed = isAuthed(session)
+  if (!session || !authed)
     redirect('/')
 
   const teams = await getAllTeams()
