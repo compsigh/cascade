@@ -1,10 +1,10 @@
 import { auth } from '@/auth'
 import { checkAuth } from '@/functions/user-management'
 import {
-  getAllParticipants,
   getAllTeams
  } from '@/functions/db'
-import { redirect } from 'next/navigation'
+ import { redirect } from 'next/navigation'
+ import { Spacer } from '@/components/Spacer'
 
 export default async function AdminPanel() {
   const session = await auth()
@@ -14,22 +14,24 @@ export default async function AdminPanel() {
   if (!authed)
     redirect('/')
 
-  const participants = await getAllParticipants()
   const teams = await getAllTeams()
 
   return (
     <>
-      <h1>Admin Panel</h1>
-      <h2>Participants</h2>
-      <ul>
-        {participants.map(participant => (
-          <li key={participant.email}>{participant.email}</li>
-        ))}
-      </ul>
-      <h2>Teams</h2>
+      <h1 id='title'><code className="blackCode">cascade</code></h1>
+      <Spacer size={32} />
+      <h2>Admin Panel</h2>
+      <h3>Teams</h3>
       <ul>
         {teams.map(team => (
-          <li key={team.id}>{team.id}</li>
+          <>
+            <li key={team.id}>{team.id}</li>
+            <ul>
+              {team.participants.map(participant => (
+                <li key={participant.email}>{participant.email}</li>
+                ))}
+            </ul>
+          </>
         ))}
       </ul>
     </>
