@@ -5,7 +5,7 @@ import {
   getAllTeams
  } from '@/functions/db'
 
-export async function GET(request: Request) {
+async function protectRoute() {
   const session = await auth()
   if (!session)
     return new Response(
@@ -16,28 +16,18 @@ export async function GET(request: Request) {
     return new Response(
       JSON.stringify({ message: 'Forbidden' }), { status: 403 }
     )
+}
 
+export async function GET(request: Request) {
+  await protectRoute()
   const teams = await getAllTeams()
-
   return new Response(
     JSON.stringify(teams), { status: 200 }
   )
 }
 
 export async function DELETE(request: Request) {
-  const session = await auth()
-  if (!session)
-    return new Response(
-      JSON.stringify({ message: 'Unauthorized' }), { status: 401 }
-    )
-  const authed = checkAuth(session)
-  if (!authed)
-    return new Response(
-      JSON.stringify({ message: 'Forbidden' }), { status: 403 }
-    )
-
-  const deletedTeams = await deleteAllTeams()
-
+  await protectRoute()
   return new Response(
     JSON.stringify(deletedTeams), { status: 200 }
   )
