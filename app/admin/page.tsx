@@ -24,14 +24,14 @@ export default async function AdminPanel() {
       <h3>Teams</h3>
       <ul>
         {teams.map(team => (
-          <>
-            <li key={team.id}>{team.id}</li>
+          <li key={team.id}>
+            {team.id}
             <ul>
               {team.participants.map(participant => (
                 <li key={participant.email}>{participant.email}</li>
-                ))}
+              ))}
             </ul>
-          </>
+          </li>
         ))}
       </ul>
     </>
