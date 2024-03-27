@@ -1,11 +1,11 @@
 import Stripe from 'stripe'
 import { redirect } from 'next/navigation'
-import { protectRoute } from '@/functions/protect-route'
+import { Role, protectRoute } from '@/functions/protect-route'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '')
 
 export async function POST(request: Request) {
-  const userSession = await protectRoute()
+  const userSession = await protectRoute(Role.Participant)
   if (userSession instanceof Response)
     return userSession
 
