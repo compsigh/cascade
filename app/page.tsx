@@ -22,10 +22,10 @@ export default async function Home() {
         <li>participants form teams of 1-4 (solo is ok)</li>
         <li>teams work to answer a three-part riddle</li>
         <li>teams have 30 minutes to complete each part</li>
-        <li>each part consists of an input and output unique to your team</li>
-        <li>complete the riddle, matching your unique input to the output, in the shortest amount of time</li>
+        <li>each part consists of an input and output</li>
+        <li>complete the riddle in the shortest amount of time</li>
         <li>the team with the shortest total time-to-completion across the three parts wins</li>
-        <li>teams who do not complete a part within 30 minutes will receive the output needed to move on to the next part</li>
+        <li>teams who do not complete a part within 30 minutes will be able to move on regardless</li>
       </ul>
       <Spacer size={32} />
       <ul>
