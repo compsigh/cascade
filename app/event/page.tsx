@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { auth } from '@/auth'
 import { get } from '@vercel/edge-config'
 import { redirect } from 'next/navigation'
@@ -21,13 +20,13 @@ export default async function Event() {
       <p>
         welcome {session.user?.name?.split(' ')[0].toLowerCase() || 'user'},
       </p>
-      <Content />
+      <Countdown />
     </>
   )
 }
 
 async function Content() {
-  const registered = false // TODO: implement with db + Stripe
+  const registered = false // TODO: conditionally render based on data from db + Stripe
   const started = await get('eventStarted')
 
   if (!registered)
@@ -36,16 +35,25 @@ async function Content() {
     return <RegisteredAndWaiting />
 }
 
+function Countdown() {
+  return (
+    <p>
+      the event will begin in {' '}
+      <code className="blackCode">
+        <CountdownWrapper
+          date={1712971800000}
+          autoStart={true}
+        />
+      </code>
+    </p>
+  )
+}
+
 function RegisteredAndWaiting() {
   return (
     <>
       <p>you&apos;ve registered for compsigh <code>cascade</code></p>
-      <p>the event will begin in <code className="blackCode">
-          <CountdownWrapper
-            date={1712971800000}
-            autoStart={true}
-          />
-      </code></p>
+      <Countdown />
     </>
   )
 }
@@ -55,12 +63,11 @@ async function Unregistered() {
   return (
     <>
       <p>
-        to register for &amp; participate in compsigh <code>cascade</code>, please deposit $10 below
+        to register for &amp; participate in compsigh <code>cascade</code>, please grab your ticket below.
       </p>
       <Spacer size={32} />
       <ul>
         <li>
-          {/* TODO: conditionally render */}
           <Button type="stripe" text="register" />
         </li>
       </ul>
