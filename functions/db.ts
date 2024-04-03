@@ -138,6 +138,16 @@ export async function getInvitesToEmail(email: string) {
   return invites
 }
 
+export async function getInvitesFromEmail(email: string) {
+  const invites = await prisma.invite.findMany({
+    where: {
+      fromParticipantEmail: email
+    }
+  })
+
+  return invites
+}
+
 export async function acceptInvite(id: string) {
   const invite = await prisma.invite.findUnique({
     where: {
@@ -174,4 +184,8 @@ export async function declineInvite(id: string) {
   })
 
   return invite
+}
+
+export async function cancelInvite(id: string) {
+  return await declineInvite(id)
 }

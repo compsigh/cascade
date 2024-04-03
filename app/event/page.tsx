@@ -8,7 +8,9 @@ import { Button } from '@/components/Button'
 import { loadStripe } from '@stripe/stripe-js'
 import {
   acceptInvite,
+  cancelInvite,
   declineInvite,
+  getInvitesFromEmail,
   getInvitesToEmail,
   getParticipantByEmail,
   getTeamById,
@@ -64,8 +66,9 @@ function RegisteredAndWaiting({ email }: { email: string }) {
       <p>you&apos;ve registered for compsigh <code>cascade</code></p>
       <Countdown />
       <TeamView participantEmail={email} />
-      <InviteList participantEmail={email} />
+      <IncomingInviteList participantEmail={email} />
       <InviteForm participantEmail={email} />
+      <OutgoingInviteList participantEmail={email} />
     </>
   )
 }
@@ -134,7 +137,7 @@ async function InviteForm({ participantEmail }: { participantEmail: string }) {
   )
 }
 
-async function InviteList({ participantEmail }: { participantEmail: string }) {
+async function IncomingInviteList({ participantEmail }: { participantEmail: string }) {
   async function acceptInviteServerAction(formData: FormData) {
     'use server'
 
@@ -166,7 +169,7 @@ async function InviteList({ participantEmail }: { participantEmail: string }) {
   return (
     <>
       <Spacer size={16} />
-      <h2>invites</h2>
+      <h2>invites to you</h2>
       <ul>
         {invites.map((invite) => (
           <li key={invite.id}>
@@ -178,6 +181,41 @@ async function InviteList({ participantEmail }: { participantEmail: string }) {
             <form action={declineInviteServerAction}>
               <input type="hidden" name="id" value={invite.id} />
               <Button type="submit" text="decline" />
+            </form>
+          </li>
+        ))}
+      </ul>
+    </>
+  )
+}
+
+async function OutgoingInviteList({ participantEmail }: { participantEmail: string }) {
+  async function cancelInviteServerAction(formData: FormData) {
+    'use server'
+
+    const rawFormData = {
+      id: formData.get('id') as string
+    }
+
+    revalidatePath('/event')
+    return await cancelInvite(rawFormData.id)
+  }
+
+  const invites = await getInvitesFromEmail(participantEmail)
+  if (invites.length === 0)
+    return <></>
+
+  return (
+    <>
+      <Spacer size={16} />
+      <h2>invites you&apos;ve sent</h2>
+      <ul>
+        {invites.map((invite) => (
+          <li key={invite.id}>
+            <p>to: {invite.toParticipantEmail}</p>
+            <form action={cancelInviteServerAction}>
+              <input type="hidden" name="id" value={invite.id} />
+              <Button type="submit" text="cancel" />
             </form>
           </li>
         ))}
