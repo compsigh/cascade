@@ -140,7 +140,10 @@ async function InviteForm({ participantEmail }: { participantEmail: string }) {
     return await sendInvite(rawFormData.from, rawFormData.to)
   }
 
+  const participant = await getParticipantByEmail(participantEmail)
   const invitesSent = await getInvitesFromEmail(participantEmail)
+  const team = await getTeamById(participant!.teamId)
+  const teamSize = team!.participants.length
 
   return (
     <>
@@ -149,16 +152,21 @@ async function InviteForm({ participantEmail }: { participantEmail: string }) {
       <p>please be sure to enter their email exactly as it appears on their usf google account</p>
       <Spacer size={8} />
       {
-        invitesSent.length >= 3
-          ?
-            <p>you can have a maximum of 3 active invites; you&apos;ll have to cancel one to send a new one</p>
-          :
-            <form action={sendInviteServerAction}>
-              <input type="hidden" name="from" value={participantEmail || ''} />
-              <input type="email" name="to" placeholder="usf email" />
-              <Spacer size={8} />
-              <Button type="submit" text="send invite" />
-            </form>
+        invitesSent.length >= 3 &&
+          <p>you can have a maximum of 3 active invites; you&apos;ll have to cancel one to send a new one</p>
+      }
+      {
+        teamSize >= 4 &&
+          <p>you&apos;ve reached the maximum of 4 participants on your team</p>
+      }
+      {
+        invitesSent.length < 3 && teamSize < 4 &&
+          <form action={sendInviteServerAction}>
+            <input type="hidden" name="from" value={participantEmail || ''} />
+            <input type="email" name="to" placeholder="usf email" />
+            <Spacer size={8} />
+            <Button type="submit" text="send invite" />
+          </form>
       }
     </>
   )

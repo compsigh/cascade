@@ -12,11 +12,12 @@
 - [x] Team view
 - [x] Outgoing invite list + cancel button
 - [x] Leave team button
-- [/] Admin panel with toggleable flags
 - ~~Inputs: validation, rate limiting, and clearing fields on submit~~
   - ~~Formik?~~
   - Might come back to this later for QoL; instead:
   - [x] Active invite limits
+- [x] Team cap of 4
+- [/] Admin panel with toggleable flags
 - [ ] Stripe <> database, conditional rendering of event page
 - [ ] UI for riddle, parts, timer
 - [ ] Fetching riddle from Notion
