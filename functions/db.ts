@@ -89,3 +89,56 @@ export async function deleteAllParticipantsAndTeams() {
   const teams = await prisma.team.deleteMany()
   return { participants, teams }
 }
+
+export async function createInvite(from: string, to: string) {
+  const invite = await prisma.invite.create({
+    data: {
+      fromParticipantEmail: from,
+      toParticipantEmail: to
+    }
+  })
+
+  return invite
+}
+
+export async function getInvitesToEmail(email: string) {
+  const invites = await prisma.invite.findMany({
+    where: {
+      toParticipantEmail: email
+    }
+  })
+
+  return invites
+}
+
+export async function acceptInvite(id: string) {
+  const invite = await prisma.invite.findUnique({
+    where: {
+      id
+    }
+  })
+
+  if (!invite)
+    return null
+
+  const fromParticipant = await getParticipantByEmail(invite.fromParticipantEmail)
+  if (!fromParticipant)
+    return null
+  const fromParticipantTeamId = fromParticipant.teamId
+
+  const toParticipant = await getParticipantByEmail(invite.toParticipantEmail)
+  if (!toParticipant)
+    return null
+
+  return await addParticipantToTeam(toParticipant.email, fromParticipantTeamId)
+}
+
+export async function declineInvite(id: string) {
+  const invite = await prisma.invite.delete({
+    where: {
+      id
+    }
+  })
+
+  return invite
+}
