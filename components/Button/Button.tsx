@@ -32,7 +32,7 @@ export function Button(
 
   if (type === 'accept-invite')
     return (
-      <form action='/api/db/invites' method='POST'>
+      <form action='/api/db/invite' method='PUT'>
         <input type='hidden' name='id' value={inviteId} />
         <input type='hidden' name='action' value='accept' />
         <button type='submit' className={styles.button}>
@@ -43,7 +43,7 @@ export function Button(
 
   if (type === 'decline-invite')
     return (
-      <form action='/api/db/invites' method='POST'>
+      <form action='/api/db/invite' method='PUT'>
         <input type='hidden' name='id' value={inviteId} />
         <input type='hidden' name='action' value='decline' />
         <button type='submit' className={styles.button}>

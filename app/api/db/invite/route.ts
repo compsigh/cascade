@@ -1,10 +1,20 @@
 import { protectRoute, Role } from '@/functions/protect-route'
 import {
   acceptInvite,
-  declineInvite
+  declineInvite,
+  sendInvite
  } from '@/functions/db'
 
 export async function POST(request: Request) {
+  await protectRoute(Role.Participant)
+  const body = await request.json()
+  const { from, to } = body
+  return new Response(
+    JSON.stringify(await sendInvite(from, to)), { status: 200 }
+  )
+}
+
+export async function PUT(request: Request) {
   await protectRoute(Role.Participant)
   const body = await request.json()
   const { id, action } = body

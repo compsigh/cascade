@@ -90,7 +90,7 @@ export async function deleteAllParticipantsAndTeams() {
   return { participants, teams }
 }
 
-export async function createInvite(from: string, to: string) {
+export async function sendInvite(from: string, to: string) {
   const invite = await prisma.invite.create({
     data: {
       fromParticipantEmail: from,
