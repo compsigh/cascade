@@ -11,8 +11,8 @@
 - [x] Ability to send, accept, and decline team invites
 - [x] Team view
 - [x] Outgoing invite list + cancel button
+- [x] Leave team button
 - [/] Admin panel with toggleable flags
-- [ ] Leave team button
 - [ ] Stripe <> database, conditional rendering of event page
 - [ ] ~~Inputs: validation, rate limiting, and clearing fields on submit~~
   - ~~Formik?~~

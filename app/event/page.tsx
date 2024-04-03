@@ -14,6 +14,7 @@ import {
   getInvitesToEmail,
   getParticipantByEmail,
   getTeamById,
+  removeParticipantFromTeam,
   sendInvite
 } from '@/functions/db'
 import { revalidatePath } from 'next/cache'
@@ -91,6 +92,17 @@ async function Unregistered() {
 }
 
 async function TeamView({ participantEmail }: { participantEmail: string }) {
+  async function leaveTeamServerAction(formData: FormData) {
+    'use server'
+
+    const rawFormData = {
+      email: formData.get('email') as string
+    }
+
+    revalidatePath('/event')
+    return await removeParticipantFromTeam(rawFormData.email)
+  }
+
   const participant = await getParticipantByEmail(participantEmail)
   const team = await getTeamById(participant!.teamId)
   const participants = team!.participants
@@ -104,6 +116,13 @@ async function TeamView({ participantEmail }: { participantEmail: string }) {
           <li key={participant.name}>{participant.name.toLowerCase()}</li>
         ))}
       </ul>
+      {
+        participants.length > 1 &&
+        <form action={leaveTeamServerAction}>
+          <input type="hidden" name="email" value={participantEmail} />
+          <Button type="submit" text="leave team" />
+        </form>
+      }
     </>
   )
 }
