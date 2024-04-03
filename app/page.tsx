@@ -14,18 +14,19 @@ export default async function Home() {
       <Spacer size={32} />
       <p>welcome to compsigh <code>cascade</code> — <br />
       a one-night coding riddle competition.</p>
+      <p>april 12th, 2024 at 6:00pm</p>
       <Spacer size={16} />
       <h2>details</h2>
       <ul>
-        <li>each participant deposits $10</li>
+        <li>$10 per participant ticket</li>
+        <li>participants form teams of 1-4</li>
         <li>the prize for the winning team is $100</li>
-        <li>participants form teams of 1-4 (solo is ok)</li>
         <li>teams work to answer a three-part riddle</li>
-        <li>teams have 30 minutes to complete each part</li>
         <li>each part consists of an input and output</li>
+        <li>teams have 30 minutes to complete each part</li>
         <li>complete the riddle in the shortest amount of time</li>
-        <li>the team with the shortest total time-to-completion across the three parts wins</li>
-        <li>teams who do not complete a part within 30 minutes will be able to move on regardless</li>
+        <li>the team with the shortest overall completion time wins</li>
+        <li>teams who don&apos;t complete a part in 30 minutes still move on</li>
       </ul>
       <Spacer size={32} />
       <ul>
