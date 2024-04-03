@@ -86,3 +86,10 @@ code.blackCode, h1.blackCode code {
   background-color: var(--color-black);
   color: var(--color-white);
 }
+
+input {
+  padding: 0.5em;
+  border: 1px solid var(--color-gray);
+  border-radius: 8px;
+  font-family: var(--font-mono);
+}
