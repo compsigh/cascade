@@ -33,7 +33,7 @@ export default async function Event() {
 }
 
 async function Content({ email }: { email: string }) {
-  const registered = true // TODO: conditionally render based on data from db + Stripe
+  const registered = true
   const started = await get('eventStarted')
 
   if (!registered)
@@ -93,7 +93,6 @@ async function InviteForm({ participantEmail }: { participantEmail: string }) {
       to: formData.get('to') as string
     }
 
-    // TODO: validation, rate limiting, clearing input value on submit
     revalidatePath('/event')
     return await sendInvite(rawFormData.from, rawFormData.to)
   }
