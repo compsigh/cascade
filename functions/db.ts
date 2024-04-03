@@ -20,6 +20,19 @@ export async function getAllParticipants() {
   return participants
 }
 
+export async function getTeamById(id: string) {
+  const team = await prisma.team.findUnique({
+    where: {
+      id
+    },
+    include: {
+      participants: true
+    }
+  })
+
+  return team
+}
+
 export async function createParticipant(
   { name, email }:
   { name: string, email: string }

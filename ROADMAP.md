@@ -9,8 +9,8 @@
 - [x] Data layer: Vercel Postgres
 - [x] Registration: Stripe
 - [x] Ability to send, accept, and decline team invites
+- [x] Team view
 - [/] Admin panel with toggleable flags
-- [ ] Team view
 - [ ] Stripe <> database, conditional rendering of event page
 - [ ] Inputs: validation, rate limiting, and clearing fields on submit
   - Formik?

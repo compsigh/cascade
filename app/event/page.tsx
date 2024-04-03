@@ -10,6 +10,8 @@ import {
   acceptInvite,
   declineInvite,
   getInvitesToEmail,
+  getParticipantByEmail,
+  getTeamById,
   sendInvite
 } from '@/functions/db'
 import { revalidatePath } from 'next/cache'
@@ -25,7 +27,7 @@ export default async function Event() {
       <h1 id="title"><code className="blackCode">cascade</code></h1>
       <Spacer size={32} />
       <p>
-        welcome {session.user?.name?.split(' ')[0].toLowerCase() || 'user'},
+        welcome {session.user!.name!.split(' ')[0].toLowerCase()},
       </p>
       <Countdown />
     </>
@@ -61,6 +63,7 @@ function RegisteredAndWaiting({ email }: { email: string }) {
     <>
       <p>you&apos;ve registered for compsigh <code>cascade</code></p>
       <Countdown />
+      <TeamView participantEmail={email} />
       <InviteList participantEmail={email} />
       <InviteForm participantEmail={email} />
     </>
@@ -84,6 +87,24 @@ async function Unregistered() {
   )
 }
 
+async function TeamView({ participantEmail }: { participantEmail: string }) {
+  const participant = await getParticipantByEmail(participantEmail)
+  const team = await getTeamById(participant!.teamId)
+  const participants = team!.participants
+
+  return (
+    <>
+      <Spacer size={16} />
+      <h2>your team</h2>
+      <ul>
+        {participants.map((participant) => (
+          <li key={participant.name}>{participant.name.toLowerCase()}</li>
+        ))}
+      </ul>
+    </>
+  )
+}
+
 async function InviteForm({ participantEmail }: { participantEmail: string }) {
   async function createInvite(formData: FormData) {
     'use server'
@@ -100,12 +121,12 @@ async function InviteForm({ participantEmail }: { participantEmail: string }) {
   return (
     <>
       <Spacer size={16} />
-      <h2>invite a friend</h2>
-      <p>invite a friend to join your team</p>
+      <h2>invite a friend to join your team</h2>
       <p>please be sure to enter their email exactly as it appears on their usf google account</p>
+      <Spacer size={8} />
       <form action={createInvite}>
         <input type="hidden" name="from" value={participantEmail || ''} />
-        <input type="email" name="to" placeholder="email" />
+        <input type="email" name="to" placeholder="usf email" />
         <Spacer size={8} />
         <Button type="submit" text="send invite" />
       </form>
