@@ -13,11 +13,11 @@
 - [x] Outgoing invite list + cancel button
 - [x] Leave team button
 - [/] Admin panel with toggleable flags
-- [ ] Stripe <> database, conditional rendering of event page
-- [ ] ~~Inputs: validation, rate limiting, and clearing fields on submit~~
+- ~~Inputs: validation, rate limiting, and clearing fields on submit~~
   - ~~Formik?~~
   - Might come back to this later for QoL; instead:
-  - [ ] Active invite limits
+  - [x] Active invite limits
+- [ ] Stripe <> database, conditional rendering of event page
 - [ ] UI for riddle, parts, timer
 - [ ] Fetching riddle from Notion
 - [ ] API route for fetching riddle if `eventStarted` flag permits

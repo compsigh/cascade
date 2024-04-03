@@ -128,7 +128,7 @@ async function TeamView({ participantEmail }: { participantEmail: string }) {
 }
 
 async function InviteForm({ participantEmail }: { participantEmail: string }) {
-  async function createInvite(formData: FormData) {
+  async function sendInviteServerAction(formData: FormData) {
     'use server'
 
     const rawFormData = {
@@ -140,18 +140,26 @@ async function InviteForm({ participantEmail }: { participantEmail: string }) {
     return await sendInvite(rawFormData.from, rawFormData.to)
   }
 
+  const invitesSent = await getInvitesFromEmail(participantEmail)
+
   return (
     <>
       <Spacer size={16} />
       <h2>invite a friend to join your team</h2>
       <p>please be sure to enter their email exactly as it appears on their usf google account</p>
       <Spacer size={8} />
-      <form action={createInvite}>
-        <input type="hidden" name="from" value={participantEmail || ''} />
-        <input type="email" name="to" placeholder="usf email" />
-        <Spacer size={8} />
-        <Button type="submit" text="send invite" />
-      </form>
+      {
+        invitesSent.length >= 3
+          ?
+            <p>you can have a maximum of 3 active invites; you&apos;ll have to cancel one to send a new one</p>
+          :
+            <form action={sendInviteServerAction}>
+              <input type="hidden" name="from" value={participantEmail || ''} />
+              <input type="email" name="to" placeholder="usf email" />
+              <Spacer size={8} />
+              <Button type="submit" text="send invite" />
+            </form>
+      }
     </>
   )
 }
