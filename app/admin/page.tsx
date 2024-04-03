@@ -16,7 +16,7 @@ export default async function AdminPanel() {
 
   return (
     <>
-      <h1 id='title'><code className="blackCode">cascade</code></h1>
+      <h1 id="title"><code className="blackCode">cascade</code></h1>
       <Spacer size={32} />
       <h2>Admin Panel</h2>
       <h3>Teams</h3>
