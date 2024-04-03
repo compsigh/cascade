@@ -144,6 +144,12 @@ export async function acceptInvite(id: string) {
   if (!toParticipant)
     return null
 
+  await prisma.invite.delete({
+    where: {
+      id
+    }
+  })
+
   return await addParticipantToTeam(toParticipant.email, fromParticipantTeamId)
 }
 
