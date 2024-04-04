@@ -1,5 +1,4 @@
 import { auth } from '@/auth'
-import { get } from '@vercel/edge-config'
 import { redirect } from 'next/navigation'
 import { Spacer } from '@/components/Spacer'
 import { isAuthed } from '@/functions/user-management'
@@ -45,12 +44,10 @@ async function Content({ session }: { session: Session }) {
   if (registered && !participantExists)
     await createParticipant({ name: session.user!.name!, email: session.user!.email! })
 
-  const started = await get('eventStarted')
-
-  if (!registered)
-    return <Unregistered />
-  else if (registered && !started)
+  if (registered || participantExists)
     return <RegisteredAndWaiting participantEmail={session.user!.email!} />
+  else
+    return <Unregistered />
 }
 
 function Countdown() {

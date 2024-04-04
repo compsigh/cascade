@@ -20,5 +20,6 @@
 - [x] Stripe <> database, conditional rendering of event page
 - [/] Admin panel with toggleable flags
 - [ ] UI for riddle, parts, timer
+- [ ] Conditionally render UI based on `eventStarted` flag
 - [ ] Fetching riddle from Notion
 - [ ] API route for fetching riddle if `eventStarted` flag permits
