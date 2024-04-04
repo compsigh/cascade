@@ -5,10 +5,10 @@ import { Spacer } from '@/components/Spacer'
 import { isAuthed } from '@/functions/user-management'
 import { CountdownWrapper } from '@/components/CountdownWrapper'
 import { Button } from '@/components/Button'
-import { loadStripe } from '@stripe/stripe-js'
 import {
   acceptInvite,
   cancelInvite,
+  createParticipant,
   declineInvite,
   getInvitesFromEmail,
   getInvitesToEmail,
@@ -18,6 +18,8 @@ import {
   sendInvite
 } from '@/functions/db'
 import { revalidatePath } from 'next/cache'
+import { hasParticipantRegistered } from '@/functions/stripe'
+import type { Session } from 'next-auth'
 
 export default async function Event() {
   const session = await auth()
@@ -32,19 +34,23 @@ export default async function Event() {
       <p>
         welcome {session.user!.name!.split(' ')[0].toLowerCase()},
       </p>
-      <Countdown />
+      <Content session={session} />
     </>
   )
 }
 
-async function Content({ email }: { email: string }) {
-  const registered = true
+async function Content({ session }: { session: Session }) {
+  const registered = await hasParticipantRegistered(session.user!.email!)
+  const participantExists = await getParticipantByEmail(session.user!.email!)
+  if (registered && !participantExists)
+    await createParticipant({ name: session.user!.name!, email: session.user!.email! })
+
   const started = await get('eventStarted')
 
   if (!registered)
     return <Unregistered />
   else if (registered && !started)
-    return <RegisteredAndWaiting email={email} />
+    return <RegisteredAndWaiting participantEmail={session.user!.email!} />
 }
 
 function Countdown() {
@@ -61,21 +67,7 @@ function Countdown() {
   )
 }
 
-function RegisteredAndWaiting({ email }: { email: string }) {
-  return (
-    <>
-      <p>you&apos;ve registered for compsigh <code>cascade</code></p>
-      <Countdown />
-      <TeamView participantEmail={email} />
-      <IncomingInviteList participantEmail={email} />
-      <InviteForm participantEmail={email} />
-      <OutgoingInviteList participantEmail={email} />
-    </>
-  )
-}
-
 async function Unregistered() {
-  await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
   return (
     <>
       <p>
@@ -87,6 +79,19 @@ async function Unregistered() {
           <Button type="stripe" text="register" />
         </li>
       </ul>
+    </>
+  )
+}
+
+function RegisteredAndWaiting({ participantEmail }: { participantEmail: string }) {
+  return (
+    <>
+      <p>you&apos;ve registered for compsigh <code>cascade</code></p>
+      <Countdown />
+      <TeamView participantEmail={participantEmail} />
+      <IncomingInviteList participantEmail={participantEmail} />
+      <InviteForm participantEmail={participantEmail} />
+      <OutgoingInviteList participantEmail={participantEmail} />
     </>
   )
 }

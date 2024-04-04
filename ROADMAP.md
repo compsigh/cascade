@@ -17,8 +17,8 @@
   - Might come back to this later for QoL; instead:
   - [x] Active invite limits
 - [x] Team cap of 4
+- [x] Stripe <> database, conditional rendering of event page
 - [/] Admin panel with toggleable flags
-- [ ] Stripe <> database, conditional rendering of event page
 - [ ] UI for riddle, parts, timer
 - [ ] Fetching riddle from Notion
 - [ ] API route for fetching riddle if `eventStarted` flag permits
