@@ -40,13 +40,12 @@ export default async function AdminPanel() {
             {team.id}
             <ul>
               {team.participants.map((participant) => (
-                <>
-                <li key={participant.email}>{participant.email}</li>
-                <form action={removeFromTeamServerAction}>
-                  <input type="hidden" name="email" value={participant.email} />
-                  <Button type="submit" text="remove from team" />
-                </form>
-                </>
+                <li key={participant.email}>{participant.email}
+                  <form action={removeFromTeamServerAction}>
+                    <input type="hidden" name="email" value={participant.email} />
+                    <Button type="submit" text="remove from team" />
+                  </form>
+                </li>
               ))}
             </ul>
           </li>
