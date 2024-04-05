@@ -8,6 +8,7 @@ import { Spacer } from '@/components/Spacer'
 import { Button } from '@/components/Button'
 import { revalidatePath } from 'next/cache'
 import { removeParticipantFromTeam } from '@/functions/db'
+import { get } from '@vercel/edge-config'
 
 export default async function AdminPanel() {
   const session = await auth()
@@ -16,6 +17,7 @@ export default async function AdminPanel() {
     redirect('/')
 
   const teams = await getAllTeams()
+  const eventStarted = await get('eventStarted') as boolean
 
   async function removeFromTeamServerAction(formData: FormData) {
     'use server'
@@ -26,6 +28,35 @@ export default async function AdminPanel() {
 
     revalidatePath('/admin')
     return await removeParticipantFromTeam(rawFormData.email)
+  }
+
+  async function toggleEventStatusServerAction(formData: FormData) {
+    'use server'
+    try {
+      const result = await fetch(
+        `https://api.vercel.com/v1/edge-config/${process.env.EDGE_CONFIG_ID}/items?teamId=${process.env.VERCEL_TEAM_ID}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${process.env.VERCEL_API_TOKEN}`
+          },
+          body: JSON.stringify({
+            items: [{
+              operation: 'update',
+              key: 'eventStarted',
+              value: !eventStarted
+            }]
+          })
+        }).then(res => res.json())
+
+      revalidatePath('/admin')
+      return result
+    }
+    catch (error) {
+      console.error(error)
+      return error
+    }
   }
 
   return (
@@ -50,6 +81,15 @@ export default async function AdminPanel() {
             </ul>
           </li>
         ))}
+      </ul>
+      <h3>Flags</h3>
+      <ul>
+        <li>
+          <code>eventStarted</code>: {eventStarted?.toString()}
+          <form action={toggleEventStatusServerAction}>
+            <Button type="submit" text="toggle event status" />
+          </form>
+        </li>
       </ul>
     </>
   )
