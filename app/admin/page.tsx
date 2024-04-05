@@ -3,8 +3,11 @@ import { isAuthed, isOrganizer } from '@/functions/user-management'
 import {
   getAllTeams
  } from '@/functions/db'
- import { redirect } from 'next/navigation'
- import { Spacer } from '@/components/Spacer'
+import { redirect } from 'next/navigation'
+import { Spacer } from '@/components/Spacer'
+import { Button } from '@/components/Button'
+import { revalidatePath } from 'next/cache'
+import { removeParticipantFromTeam } from '@/functions/db'
 
 export default async function AdminPanel() {
   const session = await auth()
@@ -13,6 +16,17 @@ export default async function AdminPanel() {
     redirect('/')
 
   const teams = await getAllTeams()
+
+  async function removeFromTeamServerAction(formData: FormData) {
+    'use server'
+
+    const rawFormData = {
+      email: formData.get('email') as string
+    }
+
+    revalidatePath('/admin')
+    return await removeParticipantFromTeam(rawFormData.email)
+  }
 
   return (
     <>
@@ -25,8 +39,14 @@ export default async function AdminPanel() {
           <li key={team.id}>
             {team.id}
             <ul>
-              {team.participants.map(participant => (
+              {team.participants.map((participant) => (
+                <>
                 <li key={participant.email}>{participant.email}</li>
+                <form action={removeFromTeamServerAction}>
+                  <input type="hidden" name="email" value={participant.email} />
+                  <Button type="submit" text="remove from team" />
+                </form>
+                </>
               ))}
             </ul>
           </li>
