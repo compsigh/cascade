@@ -18,6 +18,7 @@ export default async function AdminPanel() {
 
   const teams = await getAllTeams()
   const eventStarted = await get('eventStarted') as boolean
+  const part = await get('part') as number
 
   async function removeFromTeamServerAction(formData: FormData) {
     'use server'
@@ -46,6 +47,40 @@ export default async function AdminPanel() {
               operation: 'update',
               key: 'eventStarted',
               value: !eventStarted
+            }]
+          })
+        }).then(res => res.json())
+
+      revalidatePath('/admin')
+      return result
+    }
+    catch (error) {
+      console.error(error)
+      return error
+    }
+  }
+
+  async function updatePartServerAction(formData: FormData) {
+    'use server'
+    const action = formData.get('action') as string
+    const newPart = action === 'increment' ? part + 1 : part - 1
+    if (newPart < 1 || newPart > 3)
+      return
+
+    try {
+      const result = await fetch(
+        `https://api.vercel.com/v1/edge-config/${process.env.EDGE_CONFIG_ID}/items?teamId=${process.env.VERCEL_TEAM_ID}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${process.env.VERCEL_API_TOKEN}`
+          },
+          body: JSON.stringify({
+            items: [{
+              operation: 'update',
+              key: 'part',
+              value: newPart
             }]
           })
         }).then(res => res.json())
@@ -88,6 +123,17 @@ export default async function AdminPanel() {
           <code>eventStarted</code>: {eventStarted?.toString()}
           <form action={toggleEventStatusServerAction}>
             <Button type="submit" text="toggle event status" />
+          </form>
+        </li>
+        <li>
+          <code>part</code>: {part?.toString()}
+          <form action={updatePartServerAction}>
+            <input type="hidden" name="action" value="increment" />
+            <Button type="submit" text="part++" />
+          </form>
+          <form action={updatePartServerAction}>
+            <input type="hidden" name="action" value="decrement" />
+            <Button type="submit" text="part--" />
           </form>
         </li>
       </ul>
