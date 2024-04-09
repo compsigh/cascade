@@ -98,8 +98,8 @@ export default async function AdminPanel() {
     <>
       <h1 id="title"><code className="blackCode">cascade</code></h1>
       <Spacer size={32} />
-      <h2>Admin Panel</h2>
-      <h3>Teams</h3>
+      <h2>admin panel</h2>
+      <h3>teams</h3>
       <ul>
         {teams.map(team => (
           <li key={team.id}>
@@ -117,7 +117,7 @@ export default async function AdminPanel() {
           </li>
         ))}
       </ul>
-      <h3>Flags</h3>
+      <h3>flags</h3>
       <ul>
         <li>
           <code>eventStarted</code>: {eventStarted?.toString()}

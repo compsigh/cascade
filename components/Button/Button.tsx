@@ -10,7 +10,7 @@ export function Button(
   if (type === 'signIn')
     return (
       <button
-        onClick={() => signIn("google", { callbackUrl: "/event" })}
+        onClick={() => signIn('google', { callbackUrl: '/event' })}
         className={styles.button}
       >
         {text}

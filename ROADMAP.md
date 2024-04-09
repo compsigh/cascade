@@ -19,7 +19,7 @@
 - [x] Team cap of 4
 - [x] Stripe <> database, conditional rendering of event page
 - [x] Create Welcome component
-- [/] Admin panel with toggleable flags
+- [x] Admin panel with toggleable flags
 - [/] UI for riddle, parts, timer
 - [ ] Conditionally render UI based on `eventStarted` flag
 - [ ] Fetching riddle from Notion
