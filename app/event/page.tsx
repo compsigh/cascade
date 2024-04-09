@@ -14,6 +14,7 @@ import { TeamView } from '@/components/TeamView'
 import { InviteForm } from '@/components/InviteForm'
 import { IncomingInviteList } from '@/components/IncomingInviteList'
 import { OutgoingInviteList } from '@/components/OutgoingInviteList'
+import { Welcome } from '@/components/Welcome'
 
 export default async function Event() {
   const session = await auth()
@@ -23,11 +24,6 @@ export default async function Event() {
 
   return (
     <>
-      <h1 id="title"><code className="blackCode">cascade</code></h1>
-      <Spacer size={32} />
-      <p>
-        welcome {session.user!.name!.split(' ')[0].toLowerCase()},
-      </p>
       <Content session={session} />
     </>
   )
@@ -62,6 +58,7 @@ function Countdown() {
 async function Unregistered() {
   return (
     <>
+      <Welcome />
       <p>
         to register for &amp; participate in compsigh <code>cascade</code>, please grab your ticket below.
       </p>
@@ -78,6 +75,7 @@ async function Unregistered() {
 function RegisteredAndWaiting({ participantEmail }: { participantEmail: string }) {
   return (
     <>
+      <Welcome />
       <p>you&apos;ve registered for compsigh <code>cascade</code></p>
       <Countdown />
       <TeamView participantEmail={participantEmail} />
