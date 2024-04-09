@@ -15,7 +15,6 @@ import { InviteForm } from '@/components/InviteForm'
 import { IncomingInviteList } from '@/components/IncomingInviteList'
 import { OutgoingInviteList } from '@/components/OutgoingInviteList'
 import { Welcome } from '@/components/Welcome'
-import { ProgressBar } from '@/components/ProgressBar'
 import { get } from '@vercel/edge-config'
 
 export default async function Event() {
@@ -26,24 +25,36 @@ export default async function Event() {
 
   return (
     <>
+      <Content session={session} />
     </>
   )
 }
 
 async function Content({ session }: { session: Session }) {
-  const registered = await hasParticipantRegistered(session.user!.email!)
-  const participantExists = await getParticipantByEmail(session.user!.email!)
+  const participantName = session.user!.name!
+  const participantEmail = session.user!.email!
+
+  const registered = await hasParticipantRegistered(participantEmail)
+  const participantExists = await getParticipantByEmail(participantEmail)
   const eventStarted = await get('eventStarted') as boolean
 
   if (registered && !participantExists)
-    await createParticipant({ name: session.user!.name!, email: session.user!.email! })
+    await createParticipant({
+      name: participantName,
+      email: participantEmail
+    })
 
   if (eventStarted)
     return <Started />
   else if (registered || participantExists)
-    return <RegisteredAndWaiting participantEmail={session.user!.email!} />
+    return (
+      <RegisteredAndWaiting
+        participantName={participantName}
+        participantEmail={participantEmail}
+      />
+    )
   else
-    return <Unregistered />
+    return <Unregistered participantName={participantName} />
 }
 
 function Countdown() {
@@ -60,10 +71,13 @@ function Countdown() {
   )
 }
 
-async function Unregistered() {
+async function Unregistered(
+  { participantName }:
+  { participantName: string }
+) {
   return (
     <>
-      <Welcome />
+      <Welcome participantName={participantName} />
       <p>
         to register for &amp; participate in compsigh <code>cascade</code>, please grab your ticket below.
       </p>
@@ -77,10 +91,13 @@ async function Unregistered() {
   )
 }
 
-function RegisteredAndWaiting({ participantEmail }: { participantEmail: string }) {
+function RegisteredAndWaiting(
+  { participantName, participantEmail }:
+  { participantName: string, participantEmail: string }
+) {
   return (
     <>
-      <Welcome />
+      <Welcome participantName={participantName} />
       <p>you&apos;ve registered for compsigh <code>cascade</code></p>
       <Countdown />
       <TeamView participantEmail={participantEmail} />
@@ -92,7 +109,6 @@ function RegisteredAndWaiting({ participantEmail }: { participantEmail: string }
 }
 
 function Started() {
-  'use client'
   return (
     <>
       <Spacer size={2} />
