@@ -15,6 +15,8 @@ import { InviteForm } from '@/components/InviteForm'
 import { IncomingInviteList } from '@/components/IncomingInviteList'
 import { OutgoingInviteList } from '@/components/OutgoingInviteList'
 import { Welcome } from '@/components/Welcome'
+import { ProgressBar } from '@/components/ProgressBar'
+import { get } from '@vercel/edge-config'
 
 export default async function Event() {
   const session = await auth()
@@ -24,7 +26,6 @@ export default async function Event() {
 
   return (
     <>
-      <Content session={session} />
     </>
   )
 }
@@ -32,10 +33,14 @@ export default async function Event() {
 async function Content({ session }: { session: Session }) {
   const registered = await hasParticipantRegistered(session.user!.email!)
   const participantExists = await getParticipantByEmail(session.user!.email!)
+  const eventStarted = await get('eventStarted') as boolean
+
   if (registered && !participantExists)
     await createParticipant({ name: session.user!.name!, email: session.user!.email! })
 
-  if (registered || participantExists)
+  if (eventStarted)
+    return <Started />
+  else if (registered || participantExists)
     return <RegisteredAndWaiting participantEmail={session.user!.email!} />
   else
     return <Unregistered />
@@ -82,6 +87,21 @@ function RegisteredAndWaiting({ participantEmail }: { participantEmail: string }
       <IncomingInviteList participantEmail={participantEmail} />
       <InviteForm participantEmail={participantEmail} />
       <OutgoingInviteList participantEmail={participantEmail} />
+    </>
+  )
+}
+
+function Started() {
+  'use client'
+  return (
+    <>
+      <Spacer size={2} />
+      <code className="blackCode centered">
+        <CountdownWrapper
+            autoStart={true}
+            date = {Date.now() + 1800000}
+          />
+        </code>
     </>
   )
 }

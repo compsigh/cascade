@@ -93,3 +93,10 @@ input {
   border-radius: 8px;
   font-family: var(--font-mono);
 }
+
+.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
