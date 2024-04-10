@@ -181,7 +181,8 @@ export async function removeParticipantFromTeam(email: string) {
   if (!currentTeam)
     return null
 
-  const newTeam = await prisma.team.create({
+  // Create a new solo team for the participant
+  await prisma.team.create({
     data: {
       participants: {
         connect: {
@@ -191,37 +192,29 @@ export async function removeParticipantFromTeam(email: string) {
     }
   })
 
-  await prisma.participant.update({
+  // Remove the participant from their former team
+  const otherParticipants = currentTeam.participants.filter(
+    participant => participant.email !== email
+  )
+
+  await prisma.team.update({
     where: {
-      email
+      id: currentTeam.id
     },
     data: {
-      teamId: newTeam.id
+      participants: {
+        set: otherParticipants
+      }
     }
   })
 
+  // Clean up former team if it has no participants other than the one removed
   if (currentTeam.participants.length === 1)
     await prisma.team.delete({
       where: {
         id: currentTeam.id
       }
     })
-  else {
-    const updatedParticipants = currentTeam.participants.filter(
-      (participant) => participant.email !== email
-    )
-
-    await prisma.team.update({
-      where: {
-        id: currentTeam.id
-      },
-      data: {
-        participants: {
-          set: updatedParticipants
-        }
-      }
-    })
-  }
 }
 
 export async function sendInvite(
