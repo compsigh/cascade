@@ -60,9 +60,37 @@ export async function getParticipantByEmail(email: string) {
   return participant
 }
 
+export async function deleteParticipant(email: string) {
+  const participant = await getParticipantByEmail(email)
+
+  if (!participant)
+    return null
+
+  await removeParticipantFromTeam(email)
+
+  return await prisma.participant.delete({
+    where: {
+      email
+    }
+  })
+}
+
 export async function deleteAllParticipants() {
   const users = await prisma.participant.deleteMany()
   return users
+}
+
+export async function deleteTeam(id: string) {
+  return await prisma.team.delete({
+    where: {
+      id
+    }
+  })
+}
+
+export async function deleteAllTeams() {
+  const teams = await prisma.team.deleteMany()
+  return teams
 }
 
 export async function getAllTeams() {
