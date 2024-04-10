@@ -18,7 +18,6 @@ export default async function Home() {
       <Spacer size={16} />
       <h2>details</h2>
       <ul>
-        <li>$10 per participant ticket</li>
         <li>participants form teams of 1-4</li>
         <li>the prize for the winning team is $100</li>
         <li>teams work to answer a three-part riddle</li>
@@ -29,15 +28,11 @@ export default async function Home() {
         <li>teams who don&apos;t complete a part in 30 minutes still move on</li>
       </ul>
       <Spacer size={32} />
-      <ul>
-        <li>
-          {
-            authed
-              ? <Link href="/event">go to event dashboard</Link>
-              : <Button type="signIn" text="sign in" />
-          }
-        </li>
-      </ul>
+      {
+        authed
+          ? <Link href="/event">go to event dashboard</Link>
+          : <Button type="signIn" text="sign in" />
+      }
     </>
   )
 }

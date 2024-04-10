@@ -1,22 +1,24 @@
 import { auth } from '@/auth'
+import type { Session } from 'next-auth'
 import { redirect } from 'next/navigation'
-import { Spacer } from '@/components/Spacer'
 import { isAuthed } from '@/functions/user-management'
-import { CountdownWrapper } from '@/components/CountdownWrapper'
-import { Button } from '@/components/Button'
 import {
   createParticipant,
   getParticipantByEmail,
 } from '@/functions/db'
-import { hasParticipantRegistered } from '@/functions/stripe'
-import type { Session } from 'next-auth'
+
+import { get } from '@vercel/edge-config'
+import { revalidatePath } from 'next/cache'
+import { fetchRiddleParts } from '@/functions/notion'
+
+import { Spacer } from '@/components/Spacer'
+import { Button } from '@/components/Button'
+import { Welcome } from '@/components/Welcome'
 import { TeamView } from '@/components/TeamView'
 import { InviteForm } from '@/components/InviteForm'
+import { CountdownWrapper } from '@/components/CountdownWrapper'
 import { IncomingInviteList } from '@/components/IncomingInviteList'
 import { OutgoingInviteList } from '@/components/OutgoingInviteList'
-import { Welcome } from '@/components/Welcome'
-import { get } from '@vercel/edge-config'
-import { fetchRiddleParts } from '@/functions/notion'
 
 export default async function Event() {
   const session = await auth()
@@ -35,27 +37,26 @@ async function Content({ session }: { session: Session }) {
   const participantName = session.user!.name!
   const participantEmail = session.user!.email!
 
-  const registered = await hasParticipantRegistered(participantEmail)
   const participantExists = await getParticipantByEmail(participantEmail)
   const eventStarted = await get('eventStarted') as boolean
 
-  if (registered && !participantExists)
-    await createParticipant({
-      name: participantName,
-      email: participantEmail
-    })
-
   if (eventStarted)
     return <Started />
-  else if (registered || participantExists)
+
+  if (participantExists)
     return (
       <RegisteredAndWaiting
         participantName={participantName}
         participantEmail={participantEmail}
       />
     )
-  else
-    return <Unregistered participantName={participantName} />
+
+  return (
+    <Unregistered
+      participantName={participantName}
+      participantEmail={participantEmail}
+    />
+  )
 }
 
 function Countdown() {
@@ -73,21 +74,26 @@ function Countdown() {
 }
 
 async function Unregistered(
-  { participantName }:
-  { participantName: string }
+  { participantName, participantEmail }:
+  { participantName: string, participantEmail: string }
 ) {
+  async function signUpServerAction(formData: FormData) {
+    'use server'
+    const participantExists = await getParticipantByEmail(participantEmail)
+    if (!participantExists)
+      await createParticipant(participantName, participantEmail)
+    revalidatePath('/event')
+  }
   return (
     <>
       <Welcome participantName={participantName} />
       <p>
-        to register for &amp; participate in compsigh <code>cascade</code>, please grab your ticket below.
+        to register for &amp; participate in compsigh <code>cascade</code>, lock in your spot below.
       </p>
       <Spacer size={32} />
-      <ul>
-        <li>
-          <Button type="stripe" text="register" />
-        </li>
-      </ul>
+      <form action={signUpServerAction}>
+        <Button type="submit" text="lock in" />
+      </form>
     </>
   )
 }

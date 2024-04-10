@@ -34,8 +34,8 @@ export async function getTeamById(id: string) {
 }
 
 export async function createParticipant(
-  { name, email }:
-  { name: string, email: string }
+  name: string,
+  email: string
 ) {
   const participant = await prisma.participant.create({
     data: {
