@@ -164,6 +164,21 @@ export async function removeParticipantFromTeam(email: string) {
   })
 }
 
+export async function removeParticipant(email: string) {
+  const participant = await getParticipantByEmail(email)
+
+  if (!participant)
+    return null
+
+  await removeParticipantFromTeam(email)
+
+  return await prisma.participant.delete({
+    where: {
+      email
+    }
+  })
+}
+
 export async function deleteAllParticipantsAndTeams() {
   const participants = await prisma.participant.deleteMany()
   const teams = await prisma.team.deleteMany()
