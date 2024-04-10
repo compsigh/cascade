@@ -93,6 +93,12 @@ export async function deleteAllTeams() {
   return teams
 }
 
+export async function deleteAllParticipantsAndTeams() {
+  const participants = await prisma.participant.deleteMany()
+  const teams = await prisma.team.deleteMany()
+  return { participants, teams }
+}
+
 export async function getAllTeams() {
   const teams = await prisma.team.findMany({
     include: {
@@ -112,15 +118,6 @@ export async function addParticipantToTeam(
   if (!participant)
     return null
 
-  const formerTeam = await prisma.team.findUnique({
-    where: {
-      id: participant.teamId
-    },
-    include: {
-      participants: true
-    }
-  })
-
   await prisma.participant.update({
     where: {
       email
@@ -129,22 +126,6 @@ export async function addParticipantToTeam(
       teamId
     }
   })
-
-  if (formerTeam && formerTeam.participants.length === 1)
-    await prisma.team.delete({
-      where: {
-        id: formerTeam.id
-      }
-    })
-
-  return await getParticipantByEmail(email)
-}
-
-export async function removeParticipantFromTeam(email: string) {
-  const participant = await getParticipantByEmail(email)
-
-  if (!participant)
-    return null
 
   const formerTeam = await prisma.team.findUnique({
     where: {
@@ -158,9 +139,47 @@ export async function removeParticipantFromTeam(email: string) {
   if (!formerTeam)
     return null
 
-  const updatedParticipants = formerTeam.participants.filter(
-    (participant) => participant.email !== email
-  )
+  if (formerTeam.participants.length === 1)
+    await prisma.team.delete({
+      where: {
+        id: formerTeam.id
+      }
+    })
+  else {
+    const updatedParticipants = formerTeam.participants.filter(
+      (participant) => participant.email !== email
+    )
+
+    await prisma.team.update({
+      where: {
+        id: formerTeam.id
+      },
+      data: {
+        participants: {
+          set: updatedParticipants
+        }
+      }
+    })
+  }
+}
+
+export async function removeParticipantFromTeam(email: string) {
+  const participant = await getParticipantByEmail(email)
+
+  if (!participant)
+    return null
+
+  const currentTeam = await prisma.team.findUnique({
+    where: {
+      id: participant.teamId
+    },
+    include: {
+      participants: true
+    }
+  })
+
+  if (!currentTeam)
+    return null
 
   const newTeam = await prisma.team.create({
     data: {
@@ -181,44 +200,28 @@ export async function removeParticipantFromTeam(email: string) {
     }
   })
 
-  await prisma.team.update({
-    where: {
-      id: formerTeam.id
-    },
-    data: {
-      participants: {
-        set: updatedParticipants
-      }
-    }
-  })
-
-  if (formerTeam.participants.length === 1)
+  if (currentTeam.participants.length === 1)
     await prisma.team.delete({
       where: {
-        id: formerTeam.id
+        id: currentTeam.id
       }
     })
-}
+  else {
+    const updatedParticipants = currentTeam.participants.filter(
+      (participant) => participant.email !== email
+    )
 
-export async function removeParticipant(email: string) {
-  const participant = await getParticipantByEmail(email)
-
-  if (!participant)
-    return null
-
-  await removeParticipantFromTeam(email)
-
-  return await prisma.participant.delete({
-    where: {
-      email
-    }
-  })
-}
-
-export async function deleteAllParticipantsAndTeams() {
-  const participants = await prisma.participant.deleteMany()
-  const teams = await prisma.team.deleteMany()
-  return { participants, teams }
+    await prisma.team.update({
+      where: {
+        id: currentTeam.id
+      },
+      data: {
+        participants: {
+          set: updatedParticipants
+        }
+      }
+    })
+  }
 }
 
 export async function sendInvite(
