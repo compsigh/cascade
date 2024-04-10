@@ -12,8 +12,9 @@
   },
   "private": true,
   "scripts": {
-    "dev": "rm -rf ./next && next dev",
-    "build": "rm -rf ./next && next build",
+    "predev": "npm i",
+    "dev": "rm -rf ./.next/ && next dev",
+    "build": "rm -rf ./.next/ && next build",
     "postinstall": "prisma generate",
     "start": "next start",
     "lint": "next lint",
