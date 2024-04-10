@@ -76,7 +76,8 @@ export async function getAllTeams() {
 }
 
 export async function addParticipantToTeam(
-  email: string, teamId: string
+  email: string,
+  teamId: string
 ) {
   const participant = await getParticipantByEmail(email)
 
@@ -162,6 +163,13 @@ export async function removeParticipantFromTeam(email: string) {
       }
     }
   })
+
+  if (formerTeam.participants.length === 1)
+    await prisma.team.delete({
+      where: {
+        id: formerTeam.id
+      }
+    })
 }
 
 export async function removeParticipant(email: string) {
@@ -185,7 +193,10 @@ export async function deleteAllParticipantsAndTeams() {
   return { participants, teams }
 }
 
-export async function sendInvite(from: string, to: string) {
+export async function sendInvite(
+  from: string,
+  to: string
+) {
   const invite = await prisma.invite.create({
     data: {
       fromParticipantEmail: from,
