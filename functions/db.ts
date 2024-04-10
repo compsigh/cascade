@@ -133,17 +133,6 @@ export async function removeParticipantFromTeam(email: string) {
     (participant) => participant.email !== email
   )
 
-  await prisma.team.update({
-    where: {
-      id: formerTeam.id
-    },
-    data: {
-      participants: {
-        set: updatedParticipants
-      }
-    }
-  })
-
   const newTeam = await prisma.team.create({
     data: {
       participants: {
@@ -160,6 +149,17 @@ export async function removeParticipantFromTeam(email: string) {
     },
     data: {
       teamId: newTeam.id
+    }
+  })
+
+  await prisma.team.update({
+    where: {
+      id: formerTeam.id
+    },
+    data: {
+      participants: {
+        set: updatedParticipants
+      }
     }
   })
 }
