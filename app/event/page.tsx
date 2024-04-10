@@ -16,6 +16,7 @@ import { IncomingInviteList } from '@/components/IncomingInviteList'
 import { OutgoingInviteList } from '@/components/OutgoingInviteList'
 import { Welcome } from '@/components/Welcome'
 import { get } from '@vercel/edge-config'
+import { fetchRiddleParts } from '@/functions/notion'
 
 export default async function Event() {
   const session = await auth()
@@ -108,7 +109,8 @@ function RegisteredAndWaiting(
   )
 }
 
-function Started() {
+async function Started() {
+  const riddleParts = await fetchRiddleParts()
   return (
     <>
       <Spacer size={2} />
@@ -116,8 +118,16 @@ function Started() {
         <CountdownWrapper
             autoStart={true}
             date = {Date.now() + 1800000}
-          />
-        </code>
+        />
+      </code>
+      <Spacer size={2} />
+      <ul>
+        {riddleParts.map((riddlePart, index) => (
+          <li key={index}>
+            {riddlePart}
+          </li>
+        ))}
+      </ul>
     </>
   )
 }

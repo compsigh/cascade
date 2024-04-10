@@ -20,6 +20,7 @@
     "migrate": "dotenv -e .env.development.local prisma migrate dev"
   },
   "dependencies": {
+    "@notionhq/client": "^2.2.14",
     "@prisma/client": "^5.11.0",
     "@stripe/stripe-js": "^3.2.0",
     "@vercel/edge-config": "^1.1.0",
