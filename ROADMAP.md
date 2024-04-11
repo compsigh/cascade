@@ -21,5 +21,6 @@
 - [x] Fetching riddle from Notion
 - [x] Start/stop timer flags & in-between screens (for breaks throughout the event)
 - [/] UI for riddle, parts, timer
+- [ ] Hook up `incrementTeamTimeServerAction` with component that verifies if they got the right answer, OR if the part has ended
 - [ ] Leaderboard logic
 - [ ] API route for fetching riddle if `eventStarted` flag permits

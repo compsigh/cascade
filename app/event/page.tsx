@@ -4,12 +4,11 @@ import { redirect } from 'next/navigation'
 import { isAuthed } from '@/functions/user-management'
 import {
   createParticipant,
-  getParticipantByEmail,
+  getParticipantByEmail
 } from '@/functions/db'
 
 import { get } from '@vercel/edge-config'
 import { revalidatePath } from 'next/cache'
-import { fetchRiddleParts } from '@/functions/notion'
 
 import { Spacer } from '@/components/Spacer'
 import { Button } from '@/components/Button'
@@ -17,6 +16,7 @@ import { Welcome } from '@/components/Welcome'
 import { TeamView } from '@/components/TeamView'
 import { InviteForm } from '@/components/InviteForm'
 import { CountdownWrapper } from '@/components/CountdownWrapper'
+import { RiddleWrapper } from '@/components/RiddleWrapper'
 import { IncomingInviteList } from '@/components/IncomingInviteList'
 import { OutgoingInviteList } from '@/components/OutgoingInviteList'
 
@@ -37,35 +37,36 @@ async function Content({ session }: { session: Session }) {
   const participantName = session.user!.name!
   const participantEmail = session.user!.email!
 
-  const participantExists = await getParticipantByEmail(participantEmail)
+  const participant = await getParticipantByEmail(participantEmail)
   const eventStarted = await get('eventStarted') as boolean
 
-  if (eventStarted)
-    return <Riddle />
-
-  if (participantExists)
+  if (!participant)
     return (
-      <RegisteredAndWaiting
+      <Unregistered
         participantName={participantName}
         participantEmail={participantEmail}
       />
     )
 
+  if (eventStarted)
+    return <RiddleWrapper />
+
   return (
-    <Unregistered
+    <RegisteredAndWaiting
       participantName={participantName}
       participantEmail={participantEmail}
     />
   )
 }
 
-function Countdown() {
+function EventCountdown() {
+  const EVENT_START_TIME = 1712971800000
   return (
     <p>
       the event will begin in {' '}
       <code className="blackCode">
         <CountdownWrapper
-          date={1712971800000}
+          date={EVENT_START_TIME}
           autoStart={true}
           revealedOnCompletion={<span>just a moment</span>}
         />
@@ -107,67 +108,11 @@ function RegisteredAndWaiting(
     <>
       <Welcome participantName={participantName} />
       <p>you&apos;ve registered for compsigh <code>cascade</code></p>
-      <Countdown />
+      <EventCountdown />
       <TeamView participantEmail={participantEmail} />
       <IncomingInviteList participantEmail={participantEmail} />
       <InviteForm participantEmail={participantEmail} />
       <OutgoingInviteList participantEmail={participantEmail} />
-    </>
-  )
-}
-
-function ThirtyMinuteTimer(
-  { on, millisecondsSinceStart }:
-  { on: boolean, millisecondsSinceStart: number }
-) {
-  return (
-    <>
-      <code className="blackCode centered">
-        <CountdownWrapper
-            autoStart={on}
-            date = {Date.now() + 1800000 - millisecondsSinceStart}
-        />
-      </code>
-    </>
-  )
-}
-
-async function RiddlePart(
-  { partNumber }:
-  { partNumber: number }
-) {
-  const riddleParts = await fetchRiddleParts()
-  return (
-    <>
-      <h2>part {partNumber}</h2>
-      <p>{riddleParts[partNumber - 1]}</p>
-    </>
-  )
-}
-
-async function Riddle() {
-  const part = await get('part') as number
-  const timerOn = await get('timerOn') as boolean
-  const timerToggleTimestamp = await get('timerToggleTimestamp') as number
-
-  if (!timerOn)
-    return (
-      <>
-        <h1 id="title"><code className="blackCode">cascade</code></h1>
-        <Spacer size={32} />
-        <p>the clock is not ticking at the moment.</p>
-        <p>feel free to chill &amp; hang out — we&apos;ll let you know when we&apos;re ready to go!</p>
-      </>
-    )
-
-  return (
-    <>
-      <ThirtyMinuteTimer
-        on={timerOn}
-        millisecondsSinceStart={Date.now() - timerToggleTimestamp}
-      />
-      <Spacer size={32} />
-      <RiddlePart partNumber={part} />
     </>
   )
 }
