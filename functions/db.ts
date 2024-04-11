@@ -103,6 +103,9 @@ export async function getAllTeams() {
   const teams = await prisma.team.findMany({
     include: {
       participants: true
+    },
+    orderBy: {
+      totalTime: 'asc'
     }
   })
 
