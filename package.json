@@ -18,7 +18,7 @@
     "postinstall": "prisma generate",
     "start": "next start",
     "lint": "next lint",
-    "migrate": "dotenv -e .env.development.local prisma migrate dev"
+    "migrate": "dotenv -e .env.local prisma migrate dev"
   },
   "dependencies": {
     "@notionhq/client": "^2.2.14",

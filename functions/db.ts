@@ -301,3 +301,34 @@ export async function declineInvite(id: string) {
 export async function cancelInvite(id: string) {
   return await declineInvite(id)
 }
+
+export async function resetTeamTime(id: string) {
+  return await prisma.team.update({
+    where: {
+      id
+    },
+    data: {
+      totalTime: 0
+    }
+  })
+}
+
+export async function incrementTeamTime(id: string, time: number) {
+  const team = await prisma.team.findUnique({
+    where: {
+      id
+    }
+  })
+
+  if (!team)
+    return null
+
+  return await prisma.team.update({
+    where: {
+      id
+    },
+    data: {
+      totalTime: team.totalTime + time
+    }
+  })
+}

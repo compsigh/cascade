@@ -20,6 +20,7 @@ model Participant {
 model Team {
   id           String        @id @default(uuid())
   participants Participant[]
+  totalTime    Int           @default(0)
 }
 
 model Invite {
