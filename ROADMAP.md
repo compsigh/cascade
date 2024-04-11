@@ -10,17 +10,16 @@
 - [x] Registration: Stripe
 - [x] Ability to send, accept, and decline team invites
 - [x] Team view
-- [x] Outgoing invite list + cancel button
-- [x] Leave team button
-- ~~Inputs: validation, rate limiting, and clearing fields on submit~~
-  - ~~Formik?~~
-  - Might come back to this later for QoL; instead:
-  - [x] Active invite limits
+- [x] Outgoing invite list
+- [x] Ability to cancel sent invites
+- [x] Ability to leave team
+- [x] Active invite limits
 - [x] Team cap of 4
 - [x] Stripe <> database, conditional rendering of event page
-- [x] Create Welcome component
 - [x] Admin panel with toggleable flags
+- [x] Conditionally render UI based on `eventStarted` flag
+- [x] Fetching riddle from Notion
 - [/] UI for riddle, parts, timer
-- [ ] Conditionally render UI based on `eventStarted` flag
-- [ ] Fetching riddle from Notion
+- [ ] Leaderboard logic
+- [ ] Start/stop timer flags & in-between screens (for breaks throughout the event)
 - [ ] API route for fetching riddle if `eventStarted` flag permits
