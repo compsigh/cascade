@@ -136,26 +136,6 @@ export default async function AdminPanel() {
       <h1 id="title"><code className="blackCode">cascade</code></h1>
       <Spacer size={32} />
       <h2>admin panel</h2>
-      <h3>teams</h3>
-      <ul>
-        {teams.map(team => (
-          <li key={team.id}>
-            {team.id}
-            <p>total team time: {team.totalTime}</p>
-            <ul>
-              {team.participants.map((participant) => (
-                <li key={participant.email}>{participant.email}
-                  <form action={removeFromTeamServerAction}>
-                    <input type="hidden" name="email" value={participant.email} />
-                    <Button type="submit" text="remove from team" />
-                  </form>
-                </li>
-              ))}
-            </ul>
-            <Spacer size={32} />
-          </li>
-        ))}
-      </ul>
       <h3>flags</h3>
       <ul>
         <li>
@@ -181,6 +161,26 @@ export default async function AdminPanel() {
             <Button type="submit" text="part--" />
           </form>
         </li>
+      </ul>
+      <h3>teams</h3>
+      <ul>
+        {teams.map(team => (
+          <li key={team.id}>
+            {team.id}
+            <p>total team time: {team.totalTime}</p>
+            <ul>
+              {team.participants.map((participant) => (
+                <li key={participant.email}>{participant.email}
+                  <form action={removeFromTeamServerAction}>
+                    <input type="hidden" name="email" value={participant.email} />
+                    <Button type="submit" text="remove from team" />
+                  </form>
+                </li>
+              ))}
+            </ul>
+            <Spacer size={32} />
+          </li>
+        ))}
       </ul>
     </>
   )
