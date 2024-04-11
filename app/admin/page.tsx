@@ -73,11 +73,18 @@ export default async function AdminPanel() {
             Authorization: `Bearer ${process.env.VERCEL_API_TOKEN}`
           },
           body: JSON.stringify({
-            items: [{
+            items: [
+              {
               operation: 'update',
               key: 'timerOn',
               value: !timerOn
-            }]
+            },
+            {
+              operation: 'update',
+              key: 'timerToggleTimestamp',
+              value: Date.now()
+            }
+          ]
           })
         }).then(res => res.json())
 

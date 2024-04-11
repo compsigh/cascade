@@ -41,7 +41,7 @@ async function Content({ session }: { session: Session }) {
   const eventStarted = await get('eventStarted') as boolean
 
   if (eventStarted)
-    return <Started />
+    return <Riddle />
 
   if (participantExists)
     return (
@@ -116,25 +116,48 @@ function RegisteredAndWaiting(
   )
 }
 
-async function Started() {
+function ThirtyMinuteTimer(
+  { on, millisecondsSinceStart }:
+  { on: boolean, millisecondsSinceStart: number }
+) {
+  return (
+    <>
+      <code className="blackCode centered">
+        <CountdownWrapper
+            autoStart={on}
+            date = {Date.now() + 1800000 - millisecondsSinceStart}
+        />
+      </code>
+    </>
+  )
+}
+
+async function RiddlePart(
+  { partNumber }:
+  { partNumber: number }
+) {
   const riddleParts = await fetchRiddleParts()
   return (
     <>
-      <Spacer size={2} />
-      <code className="blackCode centered">
-        <CountdownWrapper
-            autoStart={true}
-            date = {Date.now() + 1800000}
-        />
-      </code>
-      <Spacer size={2} />
-      <ul>
-        {riddleParts.map((riddlePart, index) => (
-          <li key={index}>
-            {riddlePart}
-          </li>
-        ))}
-      </ul>
+      <h2>part {partNumber}</h2>
+      <p>{riddleParts[partNumber - 1]}</p>
+    </>
+  )
+}
+
+async function Riddle() {
+  const part = await get('part') as number
+  const timerOn = await get('timerOn') as boolean
+  const timerToggleTimestamp = await get('timerToggleTimestamp') as number
+
+  return (
+    <>
+      <ThirtyMinuteTimer
+        on={timerOn}
+        millisecondsSinceStart={Date.now() - timerToggleTimestamp}
+      />
+      <Spacer size={32} />
+      <RiddlePart partNumber={part} />
     </>
   )
 }
