@@ -19,7 +19,7 @@
 - [x] Admin panel with toggleable flags
 - [x] Conditionally render UI based on `eventStarted` flag
 - [x] Fetching riddle from Notion
+- [x] Start/stop timer flags & in-between screens (for breaks throughout the event)
 - [/] UI for riddle, parts, timer
-- [/] Start/stop timer flags & in-between screens (for breaks throughout the event)
 - [ ] Leaderboard logic
 - [ ] API route for fetching riddle if `eventStarted` flag permits
