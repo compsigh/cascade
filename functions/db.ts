@@ -109,7 +109,7 @@ export async function getAllTeams() {
   return teams
 }
 
-export async function addParticipantToTeam(
+export async function updateParticipantTeam(
   email: string,
   teamId: string
 ) {
@@ -117,15 +117,6 @@ export async function addParticipantToTeam(
 
   if (!participant)
     return null
-
-  await prisma.participant.update({
-    where: {
-      email
-    },
-    data: {
-      teamId
-    }
-  })
 
   const formerTeam = await prisma.team.findUnique({
     where: {
@@ -139,28 +130,46 @@ export async function addParticipantToTeam(
   if (!formerTeam)
     return null
 
+  if (formerTeam.id === teamId)
+    return null
+
+  // Set new team's participants to include participant
+  await prisma.team.update({
+    where: {
+      id: teamId
+    },
+    data: {
+      participants: {
+        connect: {
+          email
+        }
+      }
+    }
+  })
+
+  // Remove the participant from their former team
+  const otherParticipants = formerTeam.participants.filter(
+    participant => participant.email !== email
+  )
+
+  await prisma.team.update({
+    where: {
+      id: formerTeam.id
+    },
+    data: {
+      participants: {
+        set: otherParticipants
+      }
+    }
+  })
+
+  // Clean up former team if it has no participants other than the one removed
   if (formerTeam.participants.length === 1)
     await prisma.team.delete({
       where: {
         id: formerTeam.id
       }
     })
-  else {
-    const updatedParticipants = formerTeam.participants.filter(
-      (participant) => participant.email !== email
-    )
-
-    await prisma.team.update({
-      where: {
-        id: formerTeam.id
-      },
-      data: {
-        participants: {
-          set: updatedParticipants
-        }
-      }
-    })
-  }
 }
 
 export async function removeParticipantFromTeam(email: string) {
@@ -276,7 +285,7 @@ export async function acceptInvite(id: string) {
     }
   })
 
-  return await addParticipantToTeam(toParticipant.email, fromParticipantTeamId)
+  return await updateParticipantTeam(toParticipant.email, fromParticipantTeamId)
 }
 
 export async function declineInvite(id: string) {
