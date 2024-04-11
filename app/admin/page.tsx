@@ -141,6 +141,7 @@ export default async function AdminPanel() {
         {teams.map(team => (
           <li key={team.id}>
             {team.id}
+            <p>total team time: {team.totalTime}</p>
             <ul>
               {team.participants.map((participant) => (
                 <li key={participant.email}>{participant.email}
@@ -151,6 +152,7 @@ export default async function AdminPanel() {
                 </li>
               ))}
             </ul>
+            <Spacer size={32} />
           </li>
         ))}
       </ul>
