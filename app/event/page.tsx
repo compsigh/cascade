@@ -67,6 +67,7 @@ function Countdown() {
         <CountdownWrapper
           date={1712971800000}
           autoStart={true}
+          revealedOnCompletion={<span>just a moment</span>}
         />
       </code>
     </p>
