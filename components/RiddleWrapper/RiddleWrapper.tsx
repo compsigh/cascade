@@ -4,6 +4,8 @@ import { fetchRiddleParts } from '@/functions/notion'
 
 import { Spacer } from '@/components/Spacer'
 import { RiddleTimer } from '@/components/RiddleTimer'
+import Link from 'next/link'
+import { Route } from 'next'
 
 export async function RiddleWrapper() {
   const riddleContent = await fetchRiddleParts()
@@ -11,7 +13,7 @@ export async function RiddleWrapper() {
   const timerOn = await get('timerOn') as boolean
   const timerToggleTimestamp = await get('timerToggleTimestamp') as number
 
-  async function incrementTeamTimeServerAction(
+  async function logTeamTimeServerAction(
     teamId: string,
     time: number
   ) {
@@ -36,8 +38,20 @@ export async function RiddleWrapper() {
         millisecondsSinceStart={Date.now() - timerToggleTimestamp}
       />
       <Spacer size={32} />
-      <h2>part {partNumber}</h2>
-      <p>{riddleContent[partNumber - 1]}</p>
+      <p>all of the parts are available now.</p>
+      <p>you have 90 minutes to complete all three.</p>
+      <p>good luck!</p>
+      <ul>
+        <li>
+          <Link href={'https://compsigh.notion.site/riddle-one-2aff8fe4a08d4ce6a2dec0c420ba7b65?pvs=4'}>riddle part one</Link>
+        </li>
+        <li>
+          <Link href={'https://compsigh.notion.site/riddle-two-34dae013c366434cb0f841924780b899?pvs=4'}>riddle part two</Link>
+        </li>
+        <li>
+          <Link href={'https://compsigh.notion.site/riddle-three-683fc44142324fc08eaff17c1f819209?pvs=4'}>riddle part three</Link>
+        </li>
+      </ul>
     </>
   )
 }
