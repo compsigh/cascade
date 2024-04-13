@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { redirect } from 'next/navigation'
 
 const prismaClientSingleton = () => {
   return new PrismaClient()
@@ -337,4 +338,47 @@ export async function logTeamTime(id: string, time: number) {
       totalTime: time
     }
   })
+}
+
+export async function updateTeamRiddleProgress(
+  teamId: string,
+  part: number,
+  status: boolean
+) {
+  let property: 'partOneDone' | 'partTwoDone' | 'partThreeDone'
+  if (part === 1)
+    property = 'partOneDone'
+  else if (part === 2)
+    property = 'partTwoDone'
+  else
+    property = 'partThreeDone'
+
+  return await prisma.team.update({
+    where: {
+      id: teamId
+    },
+    data: {
+      [property]: status
+    }
+  })
+}
+
+export async function validateInputServerAction(formData: FormData) {
+  'use server'
+  const teamId = formData.get('teamId') as string
+  const part = formData.get('part') as string
+  const answer = formData.get('answer') as string
+
+  let solution = ''
+  if (part === '1')
+    solution = process.env.SOLUTION_PART_ONE as string
+  if (part === '2')
+    solution = process.env.SOLUTION_PART_TWO as string
+  if (part === '3')
+    solution = process.env.SOLUTION_PART_THREE as string
+
+  if (answer === solution)
+    await updateTeamRiddleProgress(teamId, parseInt(part), true)
+
+  redirect('/event')
 }
