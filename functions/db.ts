@@ -316,7 +316,7 @@ export async function resetTeamTime(id: string) {
   })
 }
 
-export async function incrementTeamTime(id: string, time: number) {
+export async function logTeamTime(id: string, time: number) {
   const team = await prisma.team.findUnique({
     where: {
       id
@@ -326,12 +326,15 @@ export async function incrementTeamTime(id: string, time: number) {
   if (!team)
     return null
 
+  if (team.totalTime !== 0)
+    return null
+
   return await prisma.team.update({
     where: {
       id
     },
     data: {
-      totalTime: team.totalTime + time
+      totalTime: time
     }
   })
 }
