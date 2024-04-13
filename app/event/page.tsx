@@ -4,7 +4,8 @@ import { redirect } from 'next/navigation'
 import { isAuthed } from '@/functions/user-management'
 import {
   createParticipant,
-  getParticipantByEmail
+  getParticipantByEmail,
+  getTeamById
 } from '@/functions/db'
 
 import { get } from '@vercel/edge-config'
@@ -15,8 +16,8 @@ import { Button } from '@/components/Button'
 import { Welcome } from '@/components/Welcome'
 import { TeamView } from '@/components/TeamView'
 import { InviteForm } from '@/components/InviteForm'
-import { CountdownWrapper } from '@/components/CountdownWrapper'
 import { RiddleWrapper } from '@/components/RiddleWrapper'
+import { CountdownWrapper } from '@/components/CountdownWrapper'
 import { IncomingInviteList } from '@/components/IncomingInviteList'
 import { OutgoingInviteList } from '@/components/OutgoingInviteList'
 
@@ -38,6 +39,7 @@ async function Content({ session }: { session: Session }) {
   const participantEmail = session.user!.email!
 
   const participant = await getParticipantByEmail(participantEmail)
+  const team = await getTeamById(participant?.teamId || '')
   const eventStarted = await get('eventStarted') as boolean
 
   if (!participant)
@@ -48,8 +50,8 @@ async function Content({ session }: { session: Session }) {
       />
     )
 
-  if (eventStarted)
-    return <RiddleWrapper />
+  if (team && eventStarted)
+    return <RiddleWrapper teamId={team.id} />
 
   return (
     <RegisteredAndWaiting
