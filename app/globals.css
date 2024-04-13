@@ -99,30 +99,3 @@ input {
   justify-content: center;
   align-items: center;
 }
-
-.progress-bar {
-  width: 100%;
-  background-color: var(--color-gray);
-  height: 1px;
-  border-radius: 8px;
-  margin: 1em 0;
-}
-
-.progress-bar-fill {
-  height: 100%;
-  border: 1px solid var(--color-black);
-  border-radius: 8px;
-  transform: translateY(-25%);
-}
-
-.progress-bar-circle-fill{
-  box-sizing: border-box;
-  background: #141414;
-  border: 1px solid #141414;
-}
-
-.progress-bar-circle-unfill{
-  box-sizing: border-box;
-  background: #FFFFFF;
-  border: 1px solid #141414;
-}
