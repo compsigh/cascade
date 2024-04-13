@@ -18,9 +18,12 @@ model Participant {
 }
 
 model Team {
-  id           String        @id @default(uuid())
-  participants Participant[]
-  totalTime    Int           @default(0)
+  id            String        @id @default(uuid())
+  participants  Participant[]
+  totalTime     Int           @default(0)
+  partOneDone   Boolean       @default(false)
+  partTwoDone   Boolean       @default(false)
+  partThreeDone Boolean       @default(false)
 }
 
 model Invite {
