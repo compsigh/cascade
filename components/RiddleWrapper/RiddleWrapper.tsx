@@ -42,7 +42,7 @@ export async function RiddleWrapper(
         millisecondsSinceStart={Date.now() - timerToggleTimestamp}
       />
       <Spacer size={32} />
-      <p>all of the parts are available now.</p>
+      <p>all of the riddles are available now.</p>
       <p>you have 90 minutes to complete all three.</p>
       <p>good luck!</p>
       {
