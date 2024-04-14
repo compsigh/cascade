@@ -19,13 +19,11 @@ export default async function Home() {
       <h2>details</h2>
       <ul>
         <li>participants form teams of 1-4</li>
+        <li>teams work to answer three riddles</li>
         <li>the prize for the winning team is $100</li>
-        <li>teams work to answer a three-part riddle</li>
-        <li>each part consists of an input and output</li>
-        <li>teams have 30 minutes to complete each part</li>
-        <li>complete the riddle in the shortest amount of time</li>
+        <li>teams have 90 minutes to complete all riddles</li>
+        <li>complete the riddles in the shortest amount of time</li>
         <li>the team with the shortest overall completion time wins</li>
-        <li>teams who don&apos;t complete a part in 30 minutes still move on</li>
       </ul>
       <Spacer size={32} />
       {

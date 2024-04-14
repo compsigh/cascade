@@ -49,28 +49,28 @@ export async function RiddleWrapper(
         !partOneDone
           ?
             <p>
-              <Link href={'/one'}>riddle part one</Link>
+              <Link href={'/one'}>riddle one</Link>
             </p>
           :
-            <p><s>riddle part one</s></p>
+            <p><s>riddle one</s></p>
       }
       {
         !partTwoDone
           ?
             <p>
-              <Link href={'/two'}>riddle part two</Link>
+              <Link href={'/two'}>riddle two</Link>
             </p>
           :
-            <p><s>riddle part two</s></p>
+            <p><s>riddle two</s></p>
       }
       {
         !partThreeDone
           ?
             <p>
-              <Link href={'/three'}>riddle part three</Link>
+              <Link href={'/three'}>riddle three</Link>
             </p>
           :
-            <p><s>riddle part three</s></p>
+            <p><s>riddle three</s></p>
       }
     </>
   )

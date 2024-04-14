@@ -27,9 +27,9 @@ export default async function PartTwo() {
     <>
       <h1 id="title"><code className="blackCode">cascade</code></h1>
       <Spacer size={32} />
-      <p>part two is available now.</p>
+      <p>riddle two is available now.</p>
       <p>good luck!</p>
-      <p><Link href={'https://compsigh.notion.site/riddle-two-34dae013c366434cb0f841924780b899?pvs=4'}>open riddle part two</Link> (same tab)</p>
+      <p><Link href={'https://compsigh.notion.site/riddle-two-34dae013c366434cb0f841924780b899?pvs=4'}>open riddle two</Link> (same tab)</p>
       <Spacer size={32} />
       <form action={validateInputServerAction}>
         <input type="hidden" name="teamId" value={team.id} />
