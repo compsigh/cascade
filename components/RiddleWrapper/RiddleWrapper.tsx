@@ -45,33 +45,35 @@ export async function RiddleWrapper(
       <p>all of the riddles are available now.</p>
       <p>you have 90 minutes to complete all three.</p>
       <p>good luck!</p>
-      {
-        !partOneDone
-          ?
-            <p>
-              <Link href={'/one'}>riddle one</Link>
-            </p>
-          :
-            <p><s>riddle one</s></p>
-      }
-      {
-        !partTwoDone
-          ?
-            <p>
-              <Link href={'/two'}>riddle two</Link>
-            </p>
-          :
-            <p><s>riddle two</s></p>
-      }
-      {
-        !partThreeDone
-          ?
-            <p>
-              <Link href={'/three'}>riddle three</Link>
-            </p>
-          :
-            <p><s>riddle three</s></p>
-      }
+      <ul>
+        {
+          !partOneDone
+            ?
+              <li>
+                <Link href={'/one'}>riddle one</Link>
+              </li>
+            :
+              <li><s>riddle one</s></li>
+        }
+        {
+          !partTwoDone
+            ?
+              <li>
+                <Link href={'/two'}>riddle two</Link>
+              </li>
+            :
+              <li><s>riddle two</s></li>
+        }
+        {
+          !partThreeDone
+            ?
+              <li>
+                <Link href={'/three'}>riddle three</Link>
+              </li>
+            :
+              <li><s>riddle three</s></li>
+        }
+      </ul>
     </>
   )
 }
