@@ -1,7 +1,8 @@
 import { auth } from '@/auth'
 import { isAuthed, isOrganizer } from '@/functions/user-management'
 import {
-  getAllTeams
+  getAllTeams,
+  updateTeamRiddleProgressServerAction
  } from '@/functions/db'
 import { redirect } from 'next/navigation'
 import { Spacer } from '@/components/Spacer'
@@ -168,6 +169,24 @@ export default async function AdminPanel() {
           <li key={team.id}>
             {team.id}
             <p>total team time: {team.totalTime}</p>
+            <form action={updateTeamRiddleProgressServerAction}>
+              <input type="hidden" name="teamId" value={team.id} />
+              <input type="hidden" name="part" value="1" />
+              <input type="hidden" name="status" value="false" />
+              <Button type="submit" text="reset riddle one progress" />
+            </form>
+            <form action={updateTeamRiddleProgressServerAction}>
+              <input type="hidden" name="teamId" value={team.id} />
+              <input type="hidden" name="part" value="2" />
+              <input type="hidden" name="status" value="false" />
+              <Button type="submit" text="reset riddle two progress" />
+            </form>
+            <form action={updateTeamRiddleProgressServerAction}>
+              <input type="hidden" name="teamId" value={team.id} />
+              <input type="hidden" name="part" value="3" />
+              <input type="hidden" name="status" value="false" />
+              <Button type="submit" text="reset riddle three progress" />
+            </form>
             <ul>
               {team.participants.map((participant) => (
                 <li key={participant.email}>{participant.email}

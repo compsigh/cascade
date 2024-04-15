@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
 const prismaClientSingleton = () => {
@@ -361,6 +362,16 @@ export async function updateTeamRiddleProgress(
       [property]: status
     }
   })
+}
+
+export async function updateTeamRiddleProgressServerAction(formData: FormData) {
+  'use server'
+  const teamId = formData.get('teamId') as string
+  const part = parseInt(formData.get('part') as string)
+  const status = formData.get('status') === 'true'
+
+  await updateTeamRiddleProgress(teamId, part, status)
+  revalidatePath('/admin')
 }
 
 export async function validateInputServerAction(formData: FormData) {
