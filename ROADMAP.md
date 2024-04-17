@@ -1,5 +1,13 @@
 # Roadmap
 
+## v2
+
+- [ ] Info on project
+- [ ] Link to source
+- [ ] Dark mode
+
+## v1
+
 - [x] Content/details of event
 - [x] Styles
 - [x] Authentication
