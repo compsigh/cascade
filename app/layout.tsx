@@ -14,7 +14,7 @@ else metadataBase = new URL(`http://localhost:${process.env.PORT || 3000}`)
 export const metadata: Metadata = {
   metadataBase,
   title: 'compsigh cascade',
-  description: 'A one-night coding riddle competition for the compsigh community on April 12th 2024 at 6pm',
+  description: 'A one-night coding riddle competition for the compsigh community on October 18th 2024 at 6pm',
   openGraph: {
     images: [ '/og-image.png' ]
   }
