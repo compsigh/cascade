@@ -1,12 +1,11 @@
 'use client'
 
 import Countdown from 'react-countdown'
-import type { ReactElement } from 'react'
 import { useState, useEffect } from 'react'
 
 export function CountdownWrapper(
   { date, autoStart, revealedOnCompletion }:
-  { date: number, autoStart: boolean, revealedOnCompletion?: ReactElement}
+  { date: number, autoStart: boolean, revealedOnCompletion?: React.ReactElement}
 ) {
   const [isLoaded, setIsLoaded] = useState(false)
 

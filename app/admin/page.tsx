@@ -2,13 +2,13 @@ import { auth } from '@/auth'
 import { isAuthed, isOrganizer } from '@/functions/user-management'
 import {
   getAllTeams,
+  removeParticipantFromTeam,
   updateTeamRiddleProgressServerAction
  } from '@/functions/db'
 import { redirect } from 'next/navigation'
 import { Spacer } from '@/components/Spacer'
 import { Button } from '@/components/Button'
 import { revalidatePath } from 'next/cache'
-import { removeParticipantFromTeam } from '@/functions/db'
 import { get } from '@vercel/edge-config'
 
 export default async function AdminPanel() {
@@ -33,7 +33,7 @@ export default async function AdminPanel() {
     return await removeParticipantFromTeam(rawFormData.email)
   }
 
-  async function toggleEventStatusServerAction(formData: FormData) {
+  async function toggleEventStatusServerAction() {
     'use server'
     try {
       const result = await fetch(
@@ -62,7 +62,7 @@ export default async function AdminPanel() {
     }
   }
 
-  async function updateTimerStatusServerAction(formData: FormData) {
+  async function updateTimerStatusServerAction() {
     'use server'
     try {
       const result = await fetch(

@@ -25,12 +25,38 @@ export type PostProps = {
 }
 
 /**
+ * Recursively generate a list of slugs for Next.js' `generateStaticParams()` from all Markdown files in a folder and its subfolders. The slugs are relative to the `app/` directory. Does not modify the slug regardless of frontmatter; that is done in `generateStaticParams()`.
+ *
+ * @param {string} folder - The folder from where to scan for Markdown files.
+ * @example generateUnmodifiedSlugsFromMarkdownFiles('app') // Returns [{ slug: ['docs', '01-about'] }, { slug: ['docs', '02-values'] }, ...]
+ */
+async function generateUnmodifiedSlugsFromMarkdownFiles(folder: string) {
+  const folderContents = await fs.readdir(folder, { withFileTypes: true })
+  const files = folderContents.filter((file) => file.isFile())
+  const directories = folderContents.filter((file) => file.isDirectory())
+  let slugs = files
+    .filter((file) => file.name.endsWith('.md'))
+    .map((file) => file.name.replace(/\.md$/, ''))
+    .map((slug) => path.join(folder, slug))
+    .map((slug) => slug.split('/'))
+    .map((slug) => slug.slice(1))
+    .map((slug) => ({ slug }))
+
+  for (const directory of directories) {
+    const nestedSlugs = await generateUnmodifiedSlugsFromMarkdownFiles(path.join(folder, directory.name))
+    slugs = slugs.concat(nestedSlugs)
+  }
+
+  return slugs
+}
+
+/**
  * Given a route served by the Next.js App Router, read the Markdown file associated with the route.
  *
  * @param {string[]} segments - A route served by the Next.js App Router. The last element in the array is the filename, and each preceding element is a parent directory.
  * @example readMarkdownFileAtRoute(['docs', 'about']) // Reads `app/docs/about.md`
  */
-export async function readMarkdownFileAtRoute(segments: string[]) {
+async function readMarkdownFileAtRoute(segments: string[]) {
   try {
     const filePath = path.join(process.cwd(), 'app', ...segments) + '.md'
     const page = await fs.readFile(filePath, 'utf8')
@@ -86,35 +112,9 @@ export async function generateMetadata(
   return metadata
 }
 
-/**
- * Recursively generate a list of slugs for Next.js' `generateStaticParams()` from all Markdown files in a folder and its subfolders. The slugs are relative to the `app/` directory. Does not modify the slug regardless of frontmatter; that is done in `generateStaticParams()`.
- *
- * @param {string} folder - The folder from where to scan for Markdown files.
- * @example generateUnmodifiedSlugsFromMarkdownFiles('app') // Returns [{ slug: ['docs', '01-about'] }, { slug: ['docs', '02-values'] }, ...]
- */
-export async function generateUnmodifiedSlugsFromMarkdownFiles(folder: string) {
-  const folderContents = await fs.readdir(folder, { withFileTypes: true })
-  const files = folderContents.filter((file) => file.isFile())
-  const directories = folderContents.filter((file) => file.isDirectory())
-  let slugs = files
-    .filter((file) => file.name.endsWith('.md'))
-    .map((file) => file.name.replace(/\.md$/, ''))
-    .map((slug) => path.join(folder, slug))
-    .map((slug) => slug.split('/'))
-    .map((slug) => slug.slice(1))
-    .map((slug) => ({ slug }))
-
-  for (const directory of directories) {
-    const nestedSlugs = await generateUnmodifiedSlugsFromMarkdownFiles(path.join(folder, directory.name))
-    slugs = slugs.concat(nestedSlugs)
-  }
-
-  return slugs
-}
-
 export const dynamicParams = false
 export async function generateStaticParams() {
-  let slugs = await generateUnmodifiedSlugsFromMarkdownFiles('app')
+  const slugs = await generateUnmodifiedSlugsFromMarkdownFiles('app')
 
   // For each file:
   // 1. Read it

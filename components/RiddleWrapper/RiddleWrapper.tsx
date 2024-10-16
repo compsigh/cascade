@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { get } from '@vercel/edge-config'
-import { logTeamTime } from '@/functions/db'
-import { getTeamById } from '@/functions/db'
+import { getTeamById, logTeamTime } from '@/functions/db'
 
 import { Spacer } from '@/components/Spacer'
 import { RiddleTimer } from '@/components/RiddleTimer'
@@ -12,7 +11,7 @@ export async function RiddleWrapper(
   { teamId: string }
 ) {
   const timerOn = await get('timerOn') as boolean
-  if (!timerOn)
+  if (!timerOn) {
     return (
       <>
         <h1 id="title"><code className="invert">cascade</code></h1>
@@ -21,6 +20,7 @@ export async function RiddleWrapper(
         <p>feel free to chill &amp; hang out — we&apos;ll let you know when we&apos;re ready to go!</p>
       </>
     )
+  }
 
   const timerToggleTimestamp = await get('timerToggleTimestamp') as number
 

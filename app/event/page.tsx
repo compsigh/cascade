@@ -21,46 +21,6 @@ import { CountdownWrapper } from '@/components/CountdownWrapper'
 import { IncomingInviteList } from '@/components/IncomingInviteList'
 import { OutgoingInviteList } from '@/components/OutgoingInviteList'
 
-export default async function Event() {
-  const session = await auth()
-  const authed = isAuthed(session)
-  if (!session || !authed)
-    redirect('/')
-
-  return (
-    <>
-      <Content session={session} />
-    </>
-  )
-}
-
-async function Content({ session }: { session: Session }) {
-  const participantName = session.user!.name!
-  const participantEmail = session.user!.email!
-
-  const participant = await getParticipantByEmail(participantEmail)
-  const team = await getTeamById(participant?.teamId || '')
-  const eventStarted = await get('eventStarted') as boolean
-
-  if (!participant)
-    return (
-      <Unregistered
-        participantName={participantName}
-        participantEmail={participantEmail}
-      />
-    )
-
-  if (team && eventStarted)
-    return <RiddleWrapper teamId={team.id} />
-
-  return (
-    <RegisteredAndWaiting
-      participantName={participantName}
-      participantEmail={participantEmail}
-    />
-  )
-}
-
 function EventCountdown() {
   const EVENT_START_TIME = 1712971800000
   return (
@@ -77,11 +37,11 @@ function EventCountdown() {
   )
 }
 
-async function Unregistered(
+function Unregistered(
   { participantName, participantEmail }:
   { participantName: string, participantEmail: string }
 ) {
-  async function signUpServerAction(formData: FormData) {
+  async function signUpServerAction() {
     'use server'
     const participantExists = await getParticipantByEmail(participantEmail)
     if (!participantExists)
@@ -115,6 +75,47 @@ function RegisteredAndWaiting(
       <IncomingInviteList participantEmail={participantEmail} />
       <InviteForm participantEmail={participantEmail} />
       <OutgoingInviteList participantEmail={participantEmail} />
+    </>
+  )
+}
+
+async function Content({ session }: { session: Session }) {
+  const participantName = session.user!.name!
+  const participantEmail = session.user!.email!
+
+  const participant = await getParticipantByEmail(participantEmail)
+  const team = await getTeamById(participant?.teamId || '')
+  const eventStarted = await get('eventStarted') as boolean
+
+  if (!participant) {
+    return (
+      <Unregistered
+        participantName={participantName}
+        participantEmail={participantEmail}
+      />
+    )
+  }
+
+  if (team && eventStarted)
+    return <RiddleWrapper teamId={team.id} />
+
+  return (
+    <RegisteredAndWaiting
+      participantName={participantName}
+      participantEmail={participantEmail}
+    />
+  )
+}
+
+export default async function Event() {
+  const session = await auth()
+  const authed = isAuthed(session)
+  if (!session || !authed)
+    redirect('/')
+
+  return (
+    <>
+      <Content session={session} />
     </>
   )
 }

@@ -5,6 +5,19 @@ import { usePathname } from 'next/navigation'
 
 import styles from './Breadcrumbs.module.css'
 
+function Crumb(
+  { href, children }:
+  { href: string, children: React.ReactNode }
+) {
+  return (
+    <li>
+      <Link href={href}>
+        {children}
+      </Link>
+    </li>
+  )
+}
+
 export function Breadcrumbs() {
   const path = usePathname()
   if (path === '/') return null
@@ -28,18 +41,5 @@ export function Breadcrumbs() {
         ))}
       </ol>
     </nav>
-  )
-}
-
-function Crumb(
-  { href, children }:
-  { href: string, children: React.ReactNode }
-) {
-  return (
-    <li>
-      <Link href={href}>
-        {children}
-      </Link>
-    </li>
   )
 }

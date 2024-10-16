@@ -9,7 +9,6 @@ import {
   validateInputServerAction
 } from '@/functions/db'
 import { isAuthed } from '@/functions/user-management'
-import { RiddleTimer } from '@/components/RiddleTimer'
 
 export default async function PartOne() {
   const session = await auth()
