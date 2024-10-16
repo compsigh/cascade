@@ -89,7 +89,7 @@ code {
   font-family: var(--font-mono);
 }
 
-code.blackCode, h1.blackCode code {
+code.invert {
   background-color: var(--color-black);
   color: var(--color-white);
 }

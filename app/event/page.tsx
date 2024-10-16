@@ -66,7 +66,7 @@ function EventCountdown() {
   return (
     <p>
       the event will begin in {' '}
-      <code className="blackCode">
+      <code className="invert">
         <CountdownWrapper
           date={EVENT_START_TIME}
           autoStart={true}

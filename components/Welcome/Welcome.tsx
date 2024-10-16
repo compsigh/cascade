@@ -6,7 +6,7 @@ export function Welcome(
 ) {
   return (
     <>
-      <h1 id="title"><code className="blackCode">cascade</code></h1>
+      <h1 id="title"><code className="invert">cascade</code></h1>
       <Spacer size={32} />
       <p>welcome {participantName.split(' ')[0].toLowerCase()},</p>
     </>

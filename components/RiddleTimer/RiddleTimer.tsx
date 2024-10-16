@@ -6,7 +6,7 @@ export function RiddleTimer(
 ) {
   return (
     <>
-      <code className="blackCode centered">
+      <code className="invert centered">
         <CountdownWrapper
             autoStart={on}
             date = {Date.now() + 5400000 - millisecondsSinceStart}
