@@ -22,13 +22,13 @@ import { IncomingInviteList } from '@/components/IncomingInviteList'
 import { OutgoingInviteList } from '@/components/OutgoingInviteList'
 
 function EventCountdown() {
-  const EVENT_START_TIME = 1712971800000
+  const EVENT_START_TIME = 1729301400
   return (
     <p>
       the event will begin in {' '}
       <code className="invert">
         <CountdownWrapper
-          date={EVENT_START_TIME}
+          date={EVENT_START_TIME * 1000}
           autoStart={true}
           revealedOnCompletion={<span>just a moment</span>}
         />
