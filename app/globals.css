@@ -81,12 +81,47 @@ a {
 }
 
 code {
+  font-family: var(--font-mono);
+  counter-reset: line;
+}
+
+figure[data-rehype-pretty-code-figure] {
+  margin: 1em 0;
+}
+
+pre {
+  font-size: 0.8em;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
+pre > code {
+  background-color: var(--color-white);
+  border-radius: 0px;
+}
+
+pre > code > span[data-line] {
+  padding: 0 1em;
+}
+
+pre > code[data-line-numbers] > span[data-line]::before {
+  position: absolute;
+  margin-left: -5.5em;
+  width: 3em;
+  content: counter(line);
+  counter-increment: line;
+  text-align: right;
+  color: var(--color-black);
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+}
+
+:not(pre) > code {
   display: inline-block;
   padding: 2px 5px;
   border-radius: 8px;
   background-color: var(--color-gray);
   color: var(--color-black);
-  font-family: var(--font-mono);
 }
 
 code.invert {
