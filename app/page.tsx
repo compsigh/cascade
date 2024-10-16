@@ -14,7 +14,7 @@ export default async function Home() {
       <Spacer size={32} />
       <p>welcome to compsigh <code>cascade</code> — <br />
       a one-night coding riddle competition.</p>
-      <p>april 12th, 2024 at 6:00pm</p>
+      <p>october 18th, 2024 at 6:00pm</p>
       <Spacer size={16} />
       <h2>details</h2>
       <ul>
