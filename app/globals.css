@@ -58,12 +58,19 @@ ul > li {
 
 ul > li::before {
   position: absolute;
-  content: '>';
+  content: '—';
   margin-left: -2em;
 }
 
-ul ul > li::before {
-  content: '>>';
+ul ul {
+  margin: unset;
+}
+
+ul ul > li,
+ol ul > li,
+ul ol > li,
+ol ol > li {
+  margin-left: 1em;
 }
 
 a {
