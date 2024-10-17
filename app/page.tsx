@@ -1,12 +1,13 @@
 import { Spacer } from '@/components/Spacer'
 import { auth } from '@/auth'
-import { isAuthed } from '@/functions/user-management'
+import { isAuthed, isOrganizer } from '@/functions/user-management'
 import { Link } from 'next-view-transitions'
 import { Button } from '@/components/Button'
 
 export default async function Home() {
   const session = await auth()
   const authed = isAuthed(session)
+  const organizer = isOrganizer(session)
 
   return (
     <>
@@ -28,6 +29,14 @@ export default async function Home() {
         authed
           ? <Link href="/event">go to event dashboard</Link>
           : <Button type="signIn" text="sign in" />
+      }
+      {
+        organizer
+          &&
+            <>
+              <Spacer size={8} />
+              <Link href="/admin">go to admin panel</Link>
+            </>
       }
     </>
   )
