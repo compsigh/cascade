@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
+import { ViewTransitions } from 'next-view-transitions'
 import './globals.css'
 
 const GeistMono = localFont({
@@ -26,11 +27,15 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${GeistMono.variable}`}
-    >
-      <body>{children}</body>
-    </html>
+    <ViewTransitions>
+      <html
+        lang="en"
+        className={`${GeistMono.variable}`}
+      >
+        <body>
+          {children}
+        </body>
+      </html>
+    </ViewTransitions>
   )
 }

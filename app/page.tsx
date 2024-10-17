@@ -1,7 +1,7 @@
 import { Spacer } from '@/components/Spacer'
 import { auth } from '@/auth'
 import { isAuthed } from '@/functions/user-management'
-import Link from 'next/link'
+import { Link } from 'next-view-transitions'
 import { Button } from '@/components/Button'
 
 export default async function Home() {
