@@ -1,9 +1,13 @@
 "use server"
 
+import {
+  deleteParticipant,
+  removeParticipantFromTeam,
+  resetTeamTime
+} from "./db"
 import { revalidatePath } from "next/cache"
-import { removeParticipantFromTeam, resetTeamTime } from "./db"
 
-export async function removeFromTeamServerAction(formData: FormData) {
+export async function removeParticipantFromTeamServerAction(formData: FormData) {
   const rawFormData = {
     email: formData.get("email") as string
   }
@@ -12,7 +16,7 @@ export async function removeFromTeamServerAction(formData: FormData) {
   return await removeParticipantFromTeam(rawFormData.email)
 }
 
-export async function toggleEventStatusServerAction() {
+export async function toggleEventStatusServerAction(formData: FormData) {
   try {
     const result = await fetch(
       `https://api.vercel.com/v1/edge-config/${process.env.EDGE_CONFIG_ID}/items?teamId=${process.env.VERCEL_TEAM_ID}`,
@@ -26,7 +30,7 @@ export async function toggleEventStatusServerAction() {
           items: [{
             operation: "update",
             key: "eventStarted",
-            value: !eventStarted
+            value: !Boolean(formData.get("eventStarted"))
           }]
         })
       }).then(res => res.json())
@@ -40,7 +44,7 @@ export async function toggleEventStatusServerAction() {
   }
 }
 
-export async function updateTimerStatusServerAction() {
+export async function updateTimerStatusServerAction(formData: FormData) {
   try {
     const result = await fetch(
       `https://api.vercel.com/v1/edge-config/${process.env.EDGE_CONFIG_ID}/items?teamId=${process.env.VERCEL_TEAM_ID}`,
@@ -55,7 +59,7 @@ export async function updateTimerStatusServerAction() {
             {
             operation: "update",
             key: "timerOn",
-            value: !timerOn
+            value: !Boolean(formData.get("timerOn"))
           },
           {
             operation: "update",
@@ -75,42 +79,9 @@ export async function updateTimerStatusServerAction() {
   }
 }
 
-export async function updatePartServerAction(formData: FormData) {
-  const action = formData.get("action") as string
-  const newPart = action === "increment" ? part + 1 : part - 1
-  if (newPart < 1 || newPart > 3)
-    return
-
-  try {
-    const result = await fetch(
-      `https://api.vercel.com/v1/edge-config/${process.env.EDGE_CONFIG_ID}/items?teamId=${process.env.VERCEL_TEAM_ID}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.VERCEL_API_TOKEN}`
-        },
-        body: JSON.stringify({
-          items: [{
-            operation: "update",
-            key: "part",
-            value: newPart
-          }]
-        })
-      }).then(res => res.json())
-
-    revalidatePath("/admin")
-    return result
-  }
-  catch (error) {
-    console.error(error)
-    return error
-  }
-}
-
 export async function deleteParticipantServerAction(formData: FormData) {
   const email = formData.get("email") as string
-  await removeParticipantFromTeam(email)
+  await deleteParticipant(email)
   revalidatePath("/admin")
 }
 

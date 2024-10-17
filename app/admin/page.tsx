@@ -8,10 +8,9 @@ import {
 } from '@/functions/db'
 import {
   deleteParticipantServerAction,
-  removeFromTeamServerAction,
+  removeParticipantFromTeamServerAction,
   resetTeamTimeServerAction,
   toggleEventStatusServerAction,
-  updatePartServerAction,
   updateTimerStatusServerAction
 } from '@/functions/actions'
 
@@ -26,7 +25,6 @@ export default async function AdminPanel() {
   const teams = await getAllTeams()
   const eventStarted = await get('eventStarted') as boolean
   const timerOn = await get('timerOn') as boolean
-  const part = await get('part') as number
 
   return (
     <>
@@ -36,24 +34,15 @@ export default async function AdminPanel() {
         <li>
           <code>eventStarted</code>: {eventStarted?.toString()}
           <form action={toggleEventStatusServerAction}>
+            <input type="hidden" name="eventStarted" value={String(eventStarted)} />
             <Button type="submit" text="toggle event status" />
           </form>
         </li>
         <li>
           <code>timerOn</code>: {timerOn?.toString()}
           <form action={updateTimerStatusServerAction}>
+            <input type="hidden" name="timerOn" value={String(timerOn)} />
             <Button type="submit" text="toggle timer status" />
-          </form>
-        </li>
-        <li>
-          <code>part</code>: {part?.toString()}
-          <form action={updatePartServerAction}>
-            <input type="hidden" name="action" value="increment" />
-            <Button type="submit" text="part++" />
-          </form>
-          <form action={updatePartServerAction}>
-            <input type="hidden" name="action" value="decrement" />
-            <Button type="submit" text="part--" />
           </form>
         </li>
       </ul>
@@ -74,7 +63,7 @@ export default async function AdminPanel() {
                   {team.participants.map(participant => (
                     <li key={participant.email}>
                       {participant.email}
-                      <form action={removeFromTeamServerAction}>
+                      <form action={removeParticipantFromTeamServerAction}>
                         <input type="hidden" name="email" value={participant.email} />
                         <Button type="submit" text="remove from team" />
                       </form>
