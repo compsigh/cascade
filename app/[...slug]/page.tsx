@@ -138,7 +138,6 @@ export default async function Page(
     <>
       <Suspense>
         <MDX content={content} frontmatter={frontmatter} />
-        <Spacer size="20vh" />
       </Suspense>
     </>
   )

@@ -153,3 +153,28 @@ input {
   justify-content: center;
   align-items: center;
 }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin: 1em 0;
+  width: 100%;
+  word-break: break-word;
+  font-size: 0.875em;
+}
+
+tr {
+  border-top: 2px solid var(--color-black);
+  border-bottom: 2px solid var(--color-black);
+}
+
+th {
+  font-weight: 400;
+  background-color: var(--color-gray);
+  text-align: left;
+}
+
+th,
+td {
+  padding: 0.4em;
+}

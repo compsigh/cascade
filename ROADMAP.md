@@ -4,8 +4,14 @@
 
 - [x] Remove Stripe
 - [x] Markdown rendering
+- [ ] Secure Server Actions
 - [x] More prominent links & buttons
+- [x] Tabulate team data in admin panel
 - [x] Breadcrumbs or some kind of header navigation
+- [ ] Fun cascading text effect from compsigh web platform
+- [ ] Add removing of participants entirely, not just from teams
+- [ ] Remove Edge Config writing in favor of using the Vercel panel
+- [ ] Remove `part` incrementation/decrementation to match agnosticism
 
 ## v1
 

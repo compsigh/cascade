@@ -40,6 +40,7 @@ export default function RootLayout({
           <Breadcrumbs />
           <Spacer size={32} />
           {children}
+          <Spacer size={"20vh"} />
         </body>
       </html>
     </ViewTransitions>
