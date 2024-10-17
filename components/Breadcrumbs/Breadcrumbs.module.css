@@ -1,5 +1,6 @@
 nav#breadcrumbs ol {
   display: flex;
+  align-items: baseline;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -16,6 +17,10 @@ nav#breadcrumbs ol li:last-child {
 nav#breadcrumbs ol li::after {
   content: "/";
   margin-left: 8px;
+}
+
+nav#breadcrumbs ol li:first-child:last-child::after {
+  content: "";
 }
 
 nav#breadcrumbs ol li a {

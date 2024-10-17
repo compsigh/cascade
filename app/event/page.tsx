@@ -13,13 +13,23 @@ import { revalidatePath } from 'next/cache'
 
 import { Spacer } from '@/components/Spacer'
 import { Button } from '@/components/Button'
-import { Welcome } from '@/components/Welcome'
 import { TeamView } from '@/components/TeamView'
 import { InviteForm } from '@/components/InviteForm'
 import { RiddleWrapper } from '@/components/RiddleWrapper'
 import { CountdownWrapper } from '@/components/CountdownWrapper'
 import { IncomingInviteList } from '@/components/IncomingInviteList'
 import { OutgoingInviteList } from '@/components/OutgoingInviteList'
+
+function Welcome(
+  { participantName }:
+  { participantName: string }
+) {
+  return (
+    <>
+      <p>welcome {participantName.split(' ')[0].toLowerCase()},</p>
+    </>
+  )
+}
 
 function EventCountdown() {
   const EVENT_START_TIME = 1729301400

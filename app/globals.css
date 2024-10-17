@@ -38,8 +38,10 @@ h6 {
 }
 
 h1#title {
+  display: inline-block;
   margin-top: 150px;
   font-weight: 400;
+  text-transform: lowercase;
 }
 
 p,

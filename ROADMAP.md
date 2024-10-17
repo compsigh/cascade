@@ -5,6 +5,7 @@
 - [x] Remove Stripe
 - [x] Markdown rendering
 - [x] More prominent links & buttons
+- [x] Breadcrumbs or some kind of header navigation
 
 ## v1
 

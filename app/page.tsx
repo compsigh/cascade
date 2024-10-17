@@ -10,8 +10,6 @@ export default async function Home() {
 
   return (
     <>
-      <h1 id="title"><code className="invert">cascade</code></h1>
-      <Spacer size={32} />
       <p>welcome to compsigh <code>cascade</code> — <br />
       a one-night coding riddle competition.</p>
       <p>october 18th, 2024 at 6:00pm</p>

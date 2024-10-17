@@ -14,8 +14,6 @@ export async function RiddleWrapper(
   if (!timerOn) {
     return (
       <>
-        <h1 id="title"><code className="invert">cascade</code></h1>
-        <Spacer size={32} />
         <p>the clock is not ticking at the moment.</p>
         <p>feel free to chill &amp; hang out — we&apos;ll let you know when we&apos;re ready to go!</p>
       </>

@@ -1,6 +1,10 @@
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import { ViewTransitions } from 'next-view-transitions'
+
+import { Spacer } from '@/components/Spacer'
+import { Breadcrumbs } from '@/components/Breadcrumbs'
+
 import './globals.css'
 
 const GeistMono = localFont({
@@ -33,6 +37,8 @@ export default function RootLayout({
         className={`${GeistMono.variable}`}
       >
         <body>
+          <Breadcrumbs />
+          <Spacer size={32} />
           {children}
         </body>
       </html>

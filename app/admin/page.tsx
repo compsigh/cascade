@@ -134,8 +134,6 @@ export default async function AdminPanel() {
 
   return (
     <>
-      <h1 id="title"><code className="invert">cascade</code></h1>
-      <Spacer size={32} />
       <h2>admin panel</h2>
       <h3>flags</h3>
       <ul>

@@ -20,7 +20,6 @@ function Crumb(
 
 export function Breadcrumbs() {
   const path = usePathname()
-  if (path === '/') return null
   const crumbs = path.split('/').filter(Boolean)
   crumbs.pop()
 
@@ -30,7 +29,9 @@ export function Breadcrumbs() {
       aria-label="Breadcrumb"
     >
       <ol>
-        <Crumb key="/" href="/">cascade</Crumb>
+        <Crumb key="/" href="/">
+          <h1 id="title"><code className="invert">cascade</code></h1>
+        </Crumb>
         {crumbs.map((text, i) => (
           <Crumb
             key={i}
