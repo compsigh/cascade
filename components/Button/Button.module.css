@@ -11,7 +11,16 @@ button.button {
   font-size: 1.125rem;
   line-height: 1.6em;
   text-decoration-line: underline;
-  text-decoration-color: var(--color-black);
-  text-decoration-style: solid;
   text-decoration-thickness: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+button.button:hover {
+  text-decoration-line: none;
+}
+
+button.button:active {
+  color: var(--color-white);
+  background-color: var(--color-black);
 }

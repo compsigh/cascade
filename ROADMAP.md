@@ -2,9 +2,9 @@
 
 ## v2
 
-- [ ] Info on project
-- [ ] Link to source
-- [ ] Dark mode
+- [x] Remove Stripe
+- [x] Markdown rendering
+- [x] More prominent links & buttons
 
 ## v1
 

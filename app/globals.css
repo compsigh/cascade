@@ -75,9 +75,19 @@ ol ol > li {
 
 a {
   color: inherit;
-  text-decoration-line: underline;
-  text-decoration-style: solid;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-decoration: underline;
   text-decoration-thickness: 2px;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+a:active {
+  color: var(--color-white);
+  background-color: var(--color-black);
 }
 
 code {
