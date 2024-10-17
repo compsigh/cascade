@@ -46,11 +46,11 @@ export async function IncomingInviteList({ participantEmail }: { participantEmai
             <p>from: {invite.fromParticipantEmail}</p>
             <form action={acceptInviteServerAction}>
               <input type="hidden" name="id" value={invite.id} />
-              <Button type="submit" text="accept" />
+              <Button type="submit">accept</Button>
             </form>
             <form action={declineInviteServerAction}>
               <input type="hidden" name="id" value={invite.id} />
-              <Button type="submit" text="decline" />
+              <Button type="submit">decline</Button>
             </form>
           </li>
         ))}

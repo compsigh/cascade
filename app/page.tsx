@@ -1,8 +1,10 @@
-import { Spacer } from '@/components/Spacer'
 import { auth } from '@/auth'
 import { isAuthed, isOrganizer } from '@/functions/user-management'
+
 import { Link } from 'next-view-transitions'
+import { Spacer } from '@/components/Spacer'
 import { Button } from '@/components/Button'
+import { TextStream } from '@/components/TextStream'
 
 export default async function Home() {
   const session = await auth()
@@ -15,27 +17,26 @@ export default async function Home() {
       a one-night coding riddle competition.</p>
       <p>october 18th, 2024 at 6:00pm</p>
       <Spacer size={16} />
-      <h2>details</h2>
+      <h2><TextStream duration={0.6} text="details" /></h2>
       <ul>
-        <li>participants form teams of 1-4</li>
-        <li>teams work to answer three riddles</li>
-        <li>the prize for the winning team is $100</li>
-        <li>teams have 90 minutes to complete all riddles</li>
-        <li>complete the riddles in the shortest amount of time</li>
-        <li>the team with the shortest overall completion time wins</li>
+        <li><TextStream duration={1} text="participants form teams of 1-4" /></li>
+        <li><TextStream duration={1.2} text="teams work to answer three riddles" /></li>
+        <li><TextStream duration={1.4} text="the prize for the winning team is $100" /></li>
+        <li><TextStream duration={1.6} text="teams have 90 minutes to complete all riddles" /></li>
+        <li><TextStream duration={1.8} text="the team with the shortest completion time wins" /></li>
       </ul>
       <Spacer size={32} />
       {
         authed
-          ? <Link href="/event">go to event dashboard</Link>
-          : <Button type="signIn" text="sign in" />
+          ? <Link href="/event"><TextStream duration={0.8} text="go to event dashboard" /></Link>
+          : <Button type="signIn"><TextStream duration={0.8} text="sign in" /></Button>
       }
       {
         organizer
           &&
             <>
               <Spacer size={8} />
-              <Link href="/admin">go to admin panel</Link>
+              <Link href="/admin"><TextStream duration={0.8} text="go to admin panel" /></Link>
             </>
       }
     </>

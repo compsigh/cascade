@@ -36,7 +36,7 @@ export async function TeamView({ participantEmail }: { participantEmail: string 
         participants.length > 1 &&
         <form action={leaveTeamServerAction}>
           <input type="hidden" name="email" value={participantEmail} />
-          <Button type="submit" text="leave team" />
+          <Button type="submit">leave team</Button>
         </form>
       }
     </>

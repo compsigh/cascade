@@ -46,7 +46,7 @@ export async function InviteForm({ participantEmail }: { participantEmail: strin
             <input type="hidden" name="from" value={participantEmail || ''} />
             <input type="email" name="to" placeholder="usf email" />
             <Spacer size={8} />
-            <Button type="submit" text="send invite" />
+            <Button type="submit">send invite</Button>
           </form>
       }
     </>

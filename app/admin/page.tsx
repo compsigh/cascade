@@ -35,14 +35,14 @@ export default async function AdminPanel() {
           <code>eventStarted</code>: {eventStarted?.toString()}
           <form action={toggleEventStatusServerAction}>
             <input type="hidden" name="eventStarted" value={String(eventStarted)} />
-            <Button type="submit" text="toggle event status" />
+            <Button type="submit">toggle event status</Button>
           </form>
         </li>
         <li>
           <code>timerOn</code>: {timerOn?.toString()}
           <form action={updateTimerStatusServerAction}>
             <input type="hidden" name="timerOn" value={String(timerOn)} />
-            <Button type="submit" text="toggle timer status" />
+            <Button type="submit">toggle timer status</Button>
           </form>
         </li>
       </ul>
@@ -65,11 +65,11 @@ export default async function AdminPanel() {
                       {participant.email}
                       <form action={removeParticipantFromTeamServerAction}>
                         <input type="hidden" name="email" value={participant.email} />
-                        <Button type="submit" text="remove from team" />
+                        <Button type="submit">remove from team</Button>
                       </form>
                       <form action={deleteParticipantServerAction}>
                         <input type="hidden" name="email" value={participant.email} />
-                        <Button type="submit" text="remove from event" />
+                        <Button type="submit">remove from event</Button>
                       </form>
                     </li>
                   ))}
@@ -83,7 +83,7 @@ export default async function AdminPanel() {
                       <input type="hidden" name="teamId" value={team.id} />
                       <input type="hidden" name="part" value="1" />
                       <input type="hidden" name="status" value="false" />
-                      <Button type="submit" text="reset riddle one" />
+                      <Button type="submit">reset riddle one</Button>
                     </form>
                 }
                 {
@@ -92,7 +92,7 @@ export default async function AdminPanel() {
                       <input type="hidden" name="teamId" value={team.id} />
                       <input type="hidden" name="part" value="2" />
                       <input type="hidden" name="status" value="false" />
-                      <Button type="submit" text="reset riddle two" />
+                      <Button type="submit">reset riddle two</Button>
                     </form>
                 }
                 {
@@ -101,12 +101,12 @@ export default async function AdminPanel() {
                       <input type="hidden" name="teamId" value={team.id} />
                       <input type="hidden" name="part" value="3" />
                       <input type="hidden" name="status" value="false" />
-                      <Button type="submit" text="reset riddle three" />
+                      <Button type="submit">reset riddle three</Button>
                     </form>
                 }
                 <form action={resetTeamTimeServerAction}>
                   <input type="hidden" name="teamId" value={team.id} />
-                  <Button type="submit" text="reset time" />
+                  <Button type="submit">reset time</Button>
                 </form>
               </td>
             </tr>

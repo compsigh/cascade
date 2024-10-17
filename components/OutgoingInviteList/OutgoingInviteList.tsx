@@ -32,7 +32,7 @@ export async function OutgoingInviteList({ participantEmail }: { participantEmai
             <p>to: {invite.toParticipantEmail}</p>
             <form action={cancelInviteServerAction}>
               <input type="hidden" name="id" value={invite.id} />
-              <Button type="submit" text="cancel" />
+              <Button type="submit">cancel</Button>
             </form>
           </li>
         ))}

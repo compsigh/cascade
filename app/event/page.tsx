@@ -66,7 +66,7 @@ function Unregistered(
       </p>
       <Spacer size={32} />
       <form action={signUpServerAction}>
-        <Button type="submit" text="lock in" />
+        <Button type="submit">lock in</Button>
       </form>
     </>
   )

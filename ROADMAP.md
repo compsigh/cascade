@@ -8,7 +8,7 @@
 - [x] More prominent links & buttons
 - [x] Tabulate team data in admin panel
 - [x] Breadcrumbs or some kind of header navigation
-- [ ] Fun cascading text effect from compsigh web platform
+- [x] Fun cascading text effect from compsigh web platform
 - [x] Add removing of participants entirely, not just from teams
 - [x] Remove `part` incrementation/decrementation to match agnosticism
 

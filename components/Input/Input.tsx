@@ -11,7 +11,7 @@ export function Input({ teamId, part }: { teamId: string, part: number }) {
         <input type="hidden" name="part" value={part.toString()} />
         <input type="text" name="answer" placeholder="answer" />
         <Spacer size={8} />
-        <Button type="submit" text="submit" />
+        <Button type="submit">submit</Button>
       </form>
     </>
   )

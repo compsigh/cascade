@@ -4,8 +4,8 @@ import { signIn } from 'next-auth/react'
 import styles from './Button.module.css'
 
 export function Button(
-  { type, text }:
-  { type: 'signIn' | 'submit', text: string }
+  { type, children }:
+  { type: 'signIn' | 'submit', children: React.ReactNode }
 ) {
   if (type === 'signIn') {
     return (
@@ -13,7 +13,7 @@ export function Button(
         onClick={() => signIn('google', { callbackUrl: '/event' })}
         className={styles.button}
       >
-        {text}
+        {children}
       </button>
     )
   }
@@ -21,7 +21,7 @@ export function Button(
   if (type === 'submit') {
     return (
       <button type="submit" className={styles.button}>
-        {text}
+        {children}
       </button>
     )
   }
