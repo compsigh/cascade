@@ -4,9 +4,9 @@
 
 You are an old, senile CS professor walking around the twisting halls of Kalmanovitz.
 
-You're given a *2D* character array containing the letters `R`, `L`, and `#`. Starting from the top left corner going down, validate whether or not the agent will reach the bottom right corner.
+**Input:** You're given a *2D* character array with `R`, `L`, and `#`. Starting from the top left, navigate using the current tile: `R` means right, `L` means left, and `#` means straight. Each turn is relative to your current direction.
 
-output: array of tuples representing x,y coords of every position you turn at followed by whether you made it to the bottom right corner. coords are starting at 1, 1 from the top left and increasing going down and right
+**Output:** List every tile you visit from start to finish. You start and end on `#`.
 
 ### Example
 
