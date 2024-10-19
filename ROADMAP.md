@@ -1,5 +1,12 @@
 # Roadmap
 
+## v3
+
+- [ ] Whole-night event, till midnight rather than 90 mins
+- [ ] Ladder, similar to Advent of Code, rather than just three
+- [ ] Solution is all one related riddle (find a way to make refactoring not a pain in the ass) and should work on previous inputs
+- [ ] Private riddle repo just to store the riddles and a protected API server that returns a Markdown string; open-source platform
+
 ## v2
 
 - [x] Remove Stripe
@@ -10,7 +17,6 @@
 - [ ] One minute cooldown for submitting answers
 - [x] Breadcrumbs or some kind of header navigation
 - [x] Fun cascading text effect from compsigh web platform
-- [ ] Solution stored in and fetched from Markdown frontmatter
 - [x] Add removing of participants entirely, not just from teams
 - [x] Remove `part` incrementation/decrementation to match agnosticism
 
