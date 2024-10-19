@@ -24,3 +24,31 @@ R # # #
 ```
 
 ## Riddle two
+You are given a jumbled sentence encoded with a Caesar Cipher and a 2D grid of words.
+
+**Input:** A string `text` encoded with a Caesar Cipher, an integer `shift` representing the cipher shift, and a 2D list `grid` containing words.
+
+**Output:** The decoded sentence and the list of indices where each word of the decoded sentence appears in the grid.
+
+### Example
+
+**Input:**
+```
+text: "cqrb rb j cnbc"
+shift: 9
+grid: [
+    ["hello", "test", "what"],
+    ["cascade", "october", "is"],
+    ["a", "this", "output", "compsigh"]
+]
+```
+
+**Output:**
+```
+Decoded Text: "this is a test"
+Indices: (2, 1), (1, 2), (2, 0), (0, 1)
+```
+TODO: @edward how do you want the output formatted?
+
+## Riddle three
+
