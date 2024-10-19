@@ -7,8 +7,10 @@
 - [ ] Secure Server Actions
 - [x] More prominent links & buttons
 - [x] Tabulate team data in admin panel
+- [ ] One minute cooldown for submitting answers
 - [x] Breadcrumbs or some kind of header navigation
 - [x] Fun cascading text effect from compsigh web platform
+- [ ] Solution stored in and fetched from Markdown frontmatter
 - [x] Add removing of participants entirely, not just from teams
 - [x] Remove `part` incrementation/decrementation to match agnosticism
 
