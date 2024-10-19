@@ -7,6 +7,11 @@
 - [ ] Solution is all one related riddle (find a way to make refactoring not a pain in the ass) and should work on previous inputs
 - [ ] Private riddle repo just to store the riddles and a protected API server that returns a Markdown string; open-source platform
 
+### Areas of confusion & improvement
+
+- Some people tried to check their emails for a notification
+- Some people weren't sure why you had to reload the page to see an invite
+
 ## v2
 
 - [x] Remove Stripe
