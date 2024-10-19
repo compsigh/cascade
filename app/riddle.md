@@ -36,4 +36,4 @@ Should yield an output of:
 
 Grab the input file [here](/input.txt).
 
-<Input />
+<Input part={1} />

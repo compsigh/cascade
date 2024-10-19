@@ -53,6 +53,15 @@ export async function RiddleWrapper(
             :
               <li><s>open riddle</s></li>
         }
+        {
+          !partThreeDone
+            ?
+              <li>
+                <Link href={'/riddles/three'}>open the next riddle</Link>
+              </li>
+            :
+              <li><s>open the next riddle</s></li>
+        }
       </ul>
     </>
   )
