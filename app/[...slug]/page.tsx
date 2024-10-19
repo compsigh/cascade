@@ -11,6 +11,7 @@ import rehypeSlug from 'rehype-slug'
 import rehypePrettyCode, { type Options } from 'rehype-pretty-code'
 
 import { MDX } from '@/components/MDX'
+import { Input } from '@/components/Input'
 import { Spacer } from '@/components/Spacer'
 
 export type Frontmatter = {
@@ -67,7 +68,7 @@ async function readMarkdownFileAtRoute(segments: string[]) {
 
     const { content, frontmatter } = await compileMDX<Frontmatter>({
       source: page,
-      components: { Link, Spacer },
+      components: { Input, Link, Spacer },
       options: {
         parseFrontmatter: true,
         mdxOptions: {

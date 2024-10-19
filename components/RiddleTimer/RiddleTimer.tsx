@@ -9,7 +9,7 @@ export function RiddleTimer(
       <code className="invert centered">
         <CountdownWrapper
             autoStart={on}
-            date = {Date.now() + 5400000 - millisecondsSinceStart}
+            date = {Date.now() + 1800000 - millisecondsSinceStart}
         />
       </code>
     </>

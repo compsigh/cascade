@@ -40,36 +40,18 @@ export async function RiddleWrapper(
         millisecondsSinceStart={Date.now() - timerToggleTimestamp}
       />
       <Spacer size={32} />
-      <p>all of the riddles are available now.</p>
-      <p>you have 90 minutes to complete all three.</p>
+      <p>the riddle is available now!</p>
+      <p>you have 30 minutes to complete it.</p>
       <p>good luck!</p>
       <ul>
         {
           !partOneDone
             ?
               <li>
-                <Link href={'/one'}>riddle one</Link>
+                <Link href={'/riddle'}>open riddle</Link>
               </li>
             :
-              <li><s>riddle one</s></li>
-        }
-        {
-          !partTwoDone
-            ?
-              <li>
-                <Link href={'/two'}>riddle two</Link>
-              </li>
-            :
-              <li><s>riddle two</s></li>
-        }
-        {
-          !partThreeDone
-            ?
-              <li>
-                <Link href={'/three'}>riddle three</Link>
-              </li>
-            :
-              <li><s>riddle three</s></li>
+              <li><s>open riddle</s></li>
         }
       </ul>
     </>
