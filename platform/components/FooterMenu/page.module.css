@@ -8,10 +8,6 @@
     text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.32);
 }
 
-.selected {
-    color: var(--text-black);
-}
-
 .signInButton {
     font-size: 1rem;
     font-weight: normal;

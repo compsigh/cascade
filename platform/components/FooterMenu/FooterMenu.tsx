@@ -14,7 +14,7 @@ function getSignInItem(signedIn: boolean) {
 }
 
 function getLinkItem(text: string, href: string, currPath: string) {
-  const style = href === currPath ? styles.selected : "";
+  const style = href === currPath ? "selectedText" : "";
   return (
     <Link href={href} className={style}>
       {text}

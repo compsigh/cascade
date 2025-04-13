@@ -1,4 +1,3 @@
-import styles from "./page.module.css";
 import { FooterMenu } from "@/components/FooterMenu";
 import { auth } from "@/auth";
 import { isAuthed } from "@/functions/user-management";
@@ -18,11 +17,11 @@ export default async function Team() {
 
   return (
     <div className="page">
+      <h1>cascade</h1>
       <main>
-        <h1>cascade</h1>
-        <h2 className={styles.normalText}>your team:</h2>
-        <ul className={styles.normalText}>
-          <li>nishil</li>
+        <h2 className="normalText">your team:</h2>
+        <ul className="normalText">
+          <li className="selectedText">nishil</li>
           <li>gursh</li>
           <li>edward</li>
           <li>quinn</li>

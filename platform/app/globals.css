@@ -55,3 +55,14 @@ a {
   align-items: center;
   text-align: center;
 }
+
+.normalText {
+  font-size: 3.6rem;
+  font-weight: 500;
+  list-style: none;
+  line-height: 210%;
+}
+
+.selectedText {
+  color: var(--text-black);
+}
