@@ -1,26 +1,37 @@
 "use client";
 
+import { signIn, signOut } from "next-auth/react";
 import styles from "./page.module.css";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-function getLinkItem(href: string, currPath: string) {
+function getSignInItem(signedIn: boolean) {
+  return (
+    signedIn ?
+      <Link href="/" onClick={() => signOut()}>sign out</Link>
+      : <Link href="/" onClick={() => signIn('google', { callbackUrl: '/' })}>sign in</Link>
+  );
+}
+
+function getLinkItem(text: string, href: string, currPath: string) {
   const style = href === currPath ? styles.selected : "";
   return (
     <Link href={href} className={style}>
-      {href === "/" ? "cascade" : href}
+      {text}
     </Link>
   );
 }
 
-export function FooterMenu() {
+export function FooterMenu(
+  { signedIn }: { signedIn: boolean }
+) {
   const currentPath = usePathname();
 
   return (
     <nav className={styles.footer}>
-      {getLinkItem("/", currentPath)}
-      {getLinkItem("details", currentPath)}
-      {getLinkItem("sign-in", currentPath)}
+      {getLinkItem("cascade", "/", currentPath)}
+      {getLinkItem("details", "details", currentPath)}
+      {getSignInItem(signedIn)}
     </nav>
   );
 }

@@ -11,3 +11,13 @@
 .selected {
     color: var(--text-black);
 }
+
+.signInButton {
+    font-size: 1rem;
+    font-weight: normal;
+    text-shadow: none;
+    color: inherit;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
