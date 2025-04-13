@@ -10,7 +10,9 @@ export default async function Home() {
 
   return (
     <div className={styles.page}>
-      <main className={styles.main}>
+      <main>
+        <h1>cascade</h1>
+        <p className={styles.subtitle}>a one-night coding riddle competition</p>
       </main>
 
       <FooterMenu signedIn={authed} />
