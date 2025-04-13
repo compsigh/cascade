@@ -1,7 +1,7 @@
 "use client";
 
-import { signIn, signOut } from "next-auth/react";
 import styles from "./page.module.css";
+import { signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -30,7 +30,8 @@ export function FooterMenu(
   return (
     <nav className={styles.footer}>
       {getLinkItem("cascade", "/", currentPath)}
-      {getLinkItem("details", "details", currentPath)}
+      {getLinkItem("details", "/details", currentPath)}
+      {signedIn && getLinkItem("team", "/team", currentPath)}
       {getSignInItem(signedIn)}
     </nav>
   );

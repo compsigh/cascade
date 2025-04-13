@@ -27,8 +27,13 @@ body {
 
 h1 {
   color: var(--text-black);
-  font-size: 7rem;
+  font-size: 6rem;
   font-weight: bold;
+  text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  top: 6%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 a {
@@ -36,8 +41,17 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
+} */
+
+.page {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
