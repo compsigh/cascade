@@ -1,0 +1,13 @@
+.footer {
+    display: flex;
+    gap: 35px;
+    position: fixed;
+    bottom: 4.1%;
+    font-size: 3rem;
+    font-weight: bold;
+    text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.40);
+}
+
+.selected {
+    color: var(--text-black);
+}
