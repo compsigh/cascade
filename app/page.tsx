@@ -13,6 +13,7 @@ export default async function Home() {
       <main>
         <h1 className={styles.title}>cascade</h1>
         <p className={styles.subtitle}>a one-night coding riddle competition</p>
+        <p className={styles.subtitle}>friday, april 25th, 6pm @ the hive</p>
       </main>
 
       <FooterMenu signedIn={authed} />
