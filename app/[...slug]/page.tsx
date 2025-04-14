@@ -21,7 +21,10 @@ export type Frontmatter = {
 };
 
 export type PostProps = {
-  content: React.ReactElement<any, string | React.JSXElementConstructor<any>>;
+  content: React.ReactElement<
+    unknown,
+    string | React.JSXElementConstructor<unknown>
+  >;
   frontmatter: Frontmatter;
 };
 
@@ -83,10 +86,10 @@ async function readMarkdownFileAtRoute(segments: string[]) {
       },
     });
     return { content, frontmatter };
-  } catch (error) {
+  } catch (error: unknown) {
     // If a Markdown file does not exist at the route provided, it's possible the route is a slug alias
     // For each Markdown file, read it and compare its frontmatter `slug` to the route provided
-    if ((error as any).code === "ENOENT") {
+    if (error instanceof Error && "code" in error && error.code === "ENOENT") {
       const slugs = await generateUnmodifiedSlugsFromMarkdownFiles("app");
       for (const { slug } of slugs) {
         const { frontmatter } = await readMarkdownFileAtRoute(slug);
