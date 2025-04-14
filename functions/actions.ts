@@ -1,19 +1,21 @@
-"use server"
+"use server";
 
 import {
   deleteParticipant,
   removeParticipantFromTeam,
-  resetTeamTime
-} from "./db"
-import { revalidatePath } from "next/cache"
+  resetTeamTime,
+} from "./db";
+import { revalidatePath } from "next/cache";
 
-export async function removeParticipantFromTeamServerAction(formData: FormData) {
+export async function removeParticipantFromTeamServerAction(
+  formData: FormData,
+) {
   const rawFormData = {
-    email: formData.get("email") as string
-  }
+    email: formData.get("email") as string,
+  };
 
-  revalidatePath("/admin")
-  return await removeParticipantFromTeam(rawFormData.email)
+  revalidatePath("/admin");
+  return await removeParticipantFromTeam(rawFormData.email);
 }
 
 export async function toggleEventStatusServerAction(formData: FormData) {
@@ -24,23 +26,25 @@ export async function toggleEventStatusServerAction(formData: FormData) {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.VERCEL_API_TOKEN}`
+          Authorization: `Bearer ${process.env.VERCEL_API_TOKEN}`,
         },
         body: JSON.stringify({
-          items: [{
-            operation: "update",
-            key: "eventStarted",
-            value: !Boolean(formData.get("eventStarted"))
-          }]
-        })
-      }).then(res => res.json())
+          items: [
+            {
+              operation: "update",
+              key: "eventStarted",
+              value: !Boolean(formData.get("eventStarted")),
+            },
+          ],
+        }),
+      },
+    ).then((res) => res.json());
 
-    revalidatePath("/admin")
-    return result
-  }
-  catch (error) {
-    console.error(error)
-    return error
+    revalidatePath("/admin");
+    return result;
+  } catch (error) {
+    console.error(error);
+    return error;
   }
 }
 
@@ -52,41 +56,41 @@ export async function updateTimerStatusServerAction(formData: FormData) {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.VERCEL_API_TOKEN}`
+          Authorization: `Bearer ${process.env.VERCEL_API_TOKEN}`,
         },
         body: JSON.stringify({
           items: [
             {
-            operation: "update",
-            key: "timerOn",
-            value: !Boolean(formData.get("timerOn"))
-          },
-          {
-            operation: "update",
-            key: "timerToggleTimestamp",
-            value: Date.now()
-          }
-        ]
-        })
-      }).then(res => res.json())
+              operation: "update",
+              key: "timerOn",
+              value: !Boolean(formData.get("timerOn")),
+            },
+            {
+              operation: "update",
+              key: "timerToggleTimestamp",
+              value: Date.now(),
+            },
+          ],
+        }),
+      },
+    ).then((res) => res.json());
 
-    revalidatePath("/admin")
-    return result
-  }
-  catch (error) {
-    console.error(error)
-    return error
+    revalidatePath("/admin");
+    return result;
+  } catch (error) {
+    console.error(error);
+    return error;
   }
 }
 
 export async function deleteParticipantServerAction(formData: FormData) {
-  const email = formData.get("email") as string
-  await deleteParticipant(email)
-  revalidatePath("/admin")
+  const email = formData.get("email") as string;
+  await deleteParticipant(email);
+  revalidatePath("/admin");
 }
 
 export async function resetTeamTimeServerAction(formData: FormData) {
-  const teamId = formData.get("teamId") as string
-  await resetTeamTime(teamId)
-  revalidatePath("/admin")
+  const teamId = formData.get("teamId") as string;
+  await resetTeamTime(teamId);
+  revalidatePath("/admin");
 }

@@ -1,29 +1,36 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import { RandomReveal } from 'react-random-reveal'
+import { useEffect, useState } from "react";
+import { RandomReveal } from "react-random-reveal";
 
-export function TextStream(
-  { text, duration = 2 }:
-  { text: string, duration?: number }
-) {
-  const [isLoaded, setIsLoaded] = useState(false)
-  const CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?'.split('')
+export function TextStream({
+  text,
+  duration = 2,
+}: {
+  text: string;
+  duration?: number;
+}) {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const CHARACTERS =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?".split(
+      "",
+    );
 
   useEffect(() => {
-    setIsLoaded(true)
-  }, [])
+    setIsLoaded(true);
+  }, []);
 
-  return isLoaded
-    ?
-      <span>
-        <RandomReveal
-          isPlaying
-          characters={text}
-          duration={duration}
-          characterSet={CHARACTERS}
-          ignoreCharacterSet={[' ']}
-        />
-      </span>
-    : <span>{text}</span>
+  return isLoaded ? (
+    <span>
+      <RandomReveal
+        isPlaying
+        characters={text}
+        duration={duration}
+        characterSet={CHARACTERS}
+        ignoreCharacterSet={[" "]}
+      />
+    </span>
+  ) : (
+    <span>{text}</span>
+  );
 }

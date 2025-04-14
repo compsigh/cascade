@@ -1,1 +1,1 @@
-export { OutgoingInviteList } from './OutgoingInviteList'
+export { OutgoingInviteList } from "./OutgoingInviteList";

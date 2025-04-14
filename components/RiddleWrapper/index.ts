@@ -1,1 +1,1 @@
-export { RiddleWrapper } from './RiddleWrapper'
+export { RiddleWrapper } from "./RiddleWrapper";

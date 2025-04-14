@@ -1,24 +1,18 @@
-import type { Session } from 'next-auth'
+import type { Session } from "next-auth";
 
 export function isAuthed(session: Session | null) {
-  if (!session)
-    return false
-  if (!session.user)
-    return false
-  if (!session.user.email)
-    return false
-  if (!session.user.email.endsWith('usfca.edu'))
-    return false
+  if (!session) return false;
+  if (!session.user) return false;
+  if (!session.user.email) return false;
+  if (!session.user.email.endsWith("usfca.edu")) return false;
 
-  return true
+  return true;
 }
 
 export function isOrganizer(session: Session | null) {
-  if (!isAuthed(session))
-    return false
+  if (!isAuthed(session)) return false;
 
-  if (process.env.ORGANIZERS?.includes(session!.user!.email!))
-    return true
+  if (process.env.ORGANIZERS?.includes(session!.user!.email!)) return true;
 
-  return false
+  return false;
 }

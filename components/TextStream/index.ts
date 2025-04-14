@@ -1,1 +1,1 @@
-export { TextStream } from './TextStream'
+export { TextStream } from "./TextStream";
