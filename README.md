@@ -1,54 +1,36 @@
-# compsigh cascade
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Roadmap
+## Getting Started
 
-### v3
+First, run the development server:
 
-- [ ] Whole-night event, till midnight rather than 90 mins
-- [ ] Ladder, similar to Advent of Code, rather than just three
-- [ ] Solution is all one related riddle (find a way to make refactoring not a pain in the ass) and should work on previous inputs
-- [ ] Private riddle repo just to store the riddles and a protected API server that returns a Markdown string; open-source platform
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-#### Areas of confusion & improvement
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-- Some people tried to check their emails for a notification
-- Some people weren't sure why you had to reload the page to see an invite
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-### v2
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-- [x] Remove Stripe
-- [x] Markdown rendering
-- [ ] Secure Server Actions
-- [x] More prominent links & buttons
-- [x] Tabulate team data in admin panel
-- [ ] One minute cooldown for submitting answers
-- [x] Breadcrumbs or some kind of header navigation
-- [x] Fun cascading text effect from compsigh web platform
-- [x] Add removing of participants entirely, not just from teams
-- [x] Remove `part` incrementation/decrementation to match agnosticism
+## Learn More
 
-### v1
+To learn more about Next.js, take a look at the following resources:
 
-- [x] Content/details of event
-- [x] Styles
-- [x] Authentication
-- [x] Countdown to event start
-- [x] Configurable state of event: Vercel Edge Config
-- [x] Conditional rendering of content based on state of event
-- [x] Data layer: Vercel Postgres
-- [x] Registration: Stripe
-- [x] Ability to send, accept, and decline team invites
-- [x] Team view
-- [x] Outgoing invite list
-- [x] Ability to cancel sent invites
-- [x] Ability to leave team
-- [x] Active invite limits
-- [x] Team cap of 4
-- [x] Stripe <> database, conditional rendering of event page
-- [x] Admin panel with toggleable flags
-- [x] Conditionally render UI based on `eventStarted` flag
-- [x] Fetching riddle from Notion
-- [x] Start/stop timer flags & in-between screens (for breaks throughout the event)
-- [x] Leaderboard logic
-- [x] UI for riddle, parts, timer
-- [x] Riddle output validation
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
