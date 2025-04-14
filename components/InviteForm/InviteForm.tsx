@@ -13,7 +13,7 @@ export async function InviteForm({
 }: {
   participantEmail: string;
 }) {
-  async function sendInviteServerAction(formData: FormData) {
+  async function sendInviteServerAction(formData: FormData): Promise<void> {
     "use server";
 
     const rawFormData = {
@@ -22,7 +22,7 @@ export async function InviteForm({
     };
 
     revalidatePath("/event");
-    return await sendInvite(rawFormData.from, rawFormData.to);
+    await sendInvite(rawFormData.from, rawFormData.to);
   }
 
   const participant = await getParticipantByEmail(participantEmail);

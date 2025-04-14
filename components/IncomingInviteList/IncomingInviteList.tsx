@@ -8,7 +8,7 @@ export async function IncomingInviteList({
 }: {
   participantEmail: string;
 }) {
-  async function acceptInviteServerAction(formData: FormData) {
+  async function acceptInviteServerAction(formData: FormData): Promise<void> {
     "use server";
 
     const rawFormData = {
@@ -17,10 +17,10 @@ export async function IncomingInviteList({
     };
 
     revalidatePath("/event");
-    return await acceptInvite(rawFormData.id);
+    await acceptInvite(rawFormData.id);
   }
 
-  async function declineInviteServerAction(formData: FormData) {
+  async function declineInviteServerAction(formData: FormData): Promise<void> {
     "use server";
 
     const rawFormData = {
@@ -29,7 +29,7 @@ export async function IncomingInviteList({
     };
 
     revalidatePath("/event");
-    return await declineInvite(rawFormData.id);
+    await declineInvite(rawFormData.id);
   }
 
   const invites = await getInvitesToEmail(participantEmail);

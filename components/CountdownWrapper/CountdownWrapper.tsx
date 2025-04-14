@@ -10,7 +10,7 @@ export function CountdownWrapper({
 }: {
   date: number;
   autoStart: boolean;
-  revealedOnCompletion?: React.ReactElement;
+  revealedOnCompletion?: React.ReactElement<any>;
 }) {
   const [isLoaded, setIsLoaded] = useState(false);
 

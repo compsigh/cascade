@@ -9,16 +9,18 @@ import { revalidatePath } from "next/cache";
 
 export async function removeParticipantFromTeamServerAction(
   formData: FormData,
-) {
+): Promise<void> {
   const rawFormData = {
     email: formData.get("email") as string,
   };
 
   revalidatePath("/admin");
-  return await removeParticipantFromTeam(rawFormData.email);
+  await removeParticipantFromTeam(rawFormData.email);
 }
 
-export async function toggleEventStatusServerAction(formData: FormData) {
+export async function toggleEventStatusServerAction(
+  formData: FormData,
+): Promise<void> {
   try {
     const result = await fetch(
       `https://api.vercel.com/v1/edge-config/${process.env.EDGE_CONFIG_ID}/items?teamId=${process.env.VERCEL_TEAM_ID}`,
@@ -41,14 +43,16 @@ export async function toggleEventStatusServerAction(formData: FormData) {
     ).then((res) => res.json());
 
     revalidatePath("/admin");
-    return result;
+    result;
   } catch (error) {
     console.error(error);
-    return error;
+    error;
   }
 }
 
-export async function updateTimerStatusServerAction(formData: FormData) {
+export async function updateTimerStatusServerAction(
+  formData: FormData,
+): Promise<void> {
   try {
     const result = await fetch(
       `https://api.vercel.com/v1/edge-config/${process.env.EDGE_CONFIG_ID}/items?teamId=${process.env.VERCEL_TEAM_ID}`,
@@ -76,20 +80,24 @@ export async function updateTimerStatusServerAction(formData: FormData) {
     ).then((res) => res.json());
 
     revalidatePath("/admin");
-    return result;
+    result;
   } catch (error) {
     console.error(error);
-    return error;
+    error;
   }
 }
 
-export async function deleteParticipantServerAction(formData: FormData) {
+export async function deleteParticipantServerAction(
+  formData: FormData,
+): Promise<void> {
   const email = formData.get("email") as string;
   await deleteParticipant(email);
   revalidatePath("/admin");
 }
 
-export async function resetTeamTimeServerAction(formData: FormData) {
+export async function resetTeamTimeServerAction(
+  formData: FormData,
+): Promise<void> {
   const teamId = formData.get("teamId") as string;
   await resetTeamTime(teamId);
   revalidatePath("/admin");

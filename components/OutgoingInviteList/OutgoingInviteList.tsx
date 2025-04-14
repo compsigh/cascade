@@ -16,7 +16,7 @@ export async function OutgoingInviteList({
     };
 
     revalidatePath("/event");
-    return await cancelInvite(rawFormData.id);
+    await cancelInvite(rawFormData.id);
   }
 
   const invites = await getInvitesFromEmail(participantEmail);
