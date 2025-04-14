@@ -8,7 +8,7 @@ import {
 import { revalidatePath } from 'next/cache'
 
 export async function TeamView({ participantEmail }: { participantEmail: string }) {
-  async function leaveTeamServerAction(formData: FormData) {
+  async function leaveTeamServerAction(formData: FormData): Promise<void> {
     'use server'
 
     const rawFormData = {
@@ -16,7 +16,7 @@ export async function TeamView({ participantEmail }: { participantEmail: string 
     }
 
     revalidatePath('/event')
-    return await removeParticipantFromTeam(rawFormData.email)
+    await removeParticipantFromTeam(rawFormData.email)
   }
 
   const participant = await getParticipantByEmail(participantEmail)

@@ -8,29 +8,26 @@ import {
 import { revalidatePath } from 'next/cache'
 
 export async function IncomingInviteList({ participantEmail }: { participantEmail: string }) {
-  async function acceptInviteServerAction(formData: FormData) {
+    async function acceptInviteServerAction(formData: FormData): Promise<void> {
     'use server'
-
     const rawFormData = {
       id: formData.get('id') as string,
       action: 'accept'
     }
-
     revalidatePath('/event')
-    return await acceptInvite(rawFormData.id)
+    await acceptInvite(rawFormData.id)
   }
 
-  async function declineInviteServerAction(formData: FormData) {
+  async function declineInviteServerAction(formData: FormData): Promise<void> {
     'use server'
-
     const rawFormData = {
       id: formData.get('id') as string,
       action: 'decline'
     }
-
     revalidatePath('/event')
-    return await declineInvite(rawFormData.id)
+    await declineInvite(rawFormData.id)
   }
+
 
   const invites = await getInvitesToEmail(participantEmail)
   if (invites.length === 0)

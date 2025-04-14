@@ -1,10 +1,10 @@
 import { auth } from '@/auth'
 import { isAuthed, isOrganizer } from '@/functions/user-management'
 
-import { Link } from 'next-view-transitions'
 import { Spacer } from '@/components/Spacer'
 import { Button } from '@/components/Button'
 import { TextStream } from '@/components/TextStream'
+import Link from 'next/link'
 
 export default async function Home() {
   const session = await auth()

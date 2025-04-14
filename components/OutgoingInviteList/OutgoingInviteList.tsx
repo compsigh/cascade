@@ -7,7 +7,7 @@ import {
 import { revalidatePath } from 'next/cache'
 
 export async function OutgoingInviteList({ participantEmail }: { participantEmail: string }) {
-  async function cancelInviteServerAction(formData: FormData) {
+  async function cancelInviteServerAction(formData: FormData): Promise<void>{
     'use server'
 
     const rawFormData = {
@@ -15,7 +15,7 @@ export async function OutgoingInviteList({ participantEmail }: { participantEmai
     }
 
     revalidatePath('/event')
-    return await cancelInvite(rawFormData.id)
+    await cancelInvite(rawFormData.id)
   }
 
   const invites = await getInvitesFromEmail(participantEmail)

@@ -1,9 +1,9 @@
 'use client'
 
-import { Link } from 'next-view-transitions'
 import { usePathname } from 'next/navigation'
 
 import styles from './Breadcrumbs.module.css'
+import Link from 'next/link'
 
 function Crumb(
   { href, children }:

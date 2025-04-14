@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 
 export function CountdownWrapper(
   { date, autoStart, revealedOnCompletion }:
-  { date: number, autoStart: boolean, revealedOnCompletion?: React.ReactElement}
+  { date: number, autoStart: boolean, revealedOnCompletion?: React.ReactElement<any>}
 ) {
   const [isLoaded, setIsLoaded] = useState(false)
 

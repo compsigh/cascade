@@ -9,16 +9,15 @@ import {
 import { revalidatePath } from 'next/cache'
 
 export async function InviteForm({ participantEmail }: { participantEmail: string }) {
-  async function sendInviteServerAction(formData: FormData) {
+   async function sendInviteServerAction(formData: FormData): Promise<void> {
     'use server'
-
     const rawFormData = {
       from: formData.get('from') as string,
       to: formData.get('to') as string
     }
 
     revalidatePath('/event')
-    return await sendInvite(rawFormData.from, rawFormData.to)
+    await sendInvite(rawFormData.from, rawFormData.to)
   }
 
   const participant = await getParticipantByEmail(participantEmail)
