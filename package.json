@@ -43,11 +43,14 @@
     "@types/node": "^20",
     "@types/react": "19.1.1",
     "@types/react-dom": "19.1.2",
+    "@typescript-eslint/eslint-plugin": "^8.29.1",
+    "@typescript-eslint/parser": "^8.29.1",
     "dotenv-cli": "^7.4.2",
-    "eslint": "^8",
+    "eslint": "^8.57.1",
     "eslint-config-next": "15.3.0",
+    "eslint-config-prettier": "^10.1.2",
     "prisma": "^6.6.0",
-    "typescript": "^5"
+    "typescript": "^5.8.3"
   },
   "overrides": {
     "@types/react": "19.1.1",

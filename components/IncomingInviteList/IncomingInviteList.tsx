@@ -1,37 +1,33 @@
-import { Button } from '@/components/Button'
-import { Spacer } from '@/components/Spacer'
-import {
-  acceptInvite,
-  declineInvite,
-  getInvitesToEmail
-} from '@/functions/db'
-import { revalidatePath } from 'next/cache'
+import { Button } from "@/components/Button";
+import { Spacer } from "@/components/Spacer";
+import { acceptInvite, declineInvite, getInvitesToEmail } from "@/functions/db";
+import { revalidatePath } from "next/cache";
 
 export async function IncomingInviteList({ participantEmail }: { participantEmail: string }) {
-    async function acceptInviteServerAction(formData: FormData): Promise<void> {
-    'use server'
+  async function acceptInviteServerAction(formData: FormData): Promise<void> {
+    "use server";
     const rawFormData = {
-      id: formData.get('id') as string,
-      action: 'accept'
-    }
-    revalidatePath('/event')
-    await acceptInvite(rawFormData.id)
+      id: formData.get("id") as string,
+      action: "accept",
+    };
+    revalidatePath("/event");
+    await acceptInvite(rawFormData.id);
   }
 
   async function declineInviteServerAction(formData: FormData): Promise<void> {
-    'use server'
+    "use server";
     const rawFormData = {
-      id: formData.get('id') as string,
-      action: 'decline'
-    }
-    revalidatePath('/event')
-    await declineInvite(rawFormData.id)
+      id: formData.get("id") as string,
+      action: "decline",
+    };
+    revalidatePath("/event");
+    await declineInvite(rawFormData.id);
   }
 
-
-  const invites = await getInvitesToEmail(participantEmail)
-  if (invites.length === 0)
-    return <></>
+  const invites = await getInvitesToEmail(participantEmail);
+  if (invites.length === 0) {
+    return <></>;
+  }
 
   return (
     <>
@@ -53,5 +49,5 @@ export async function IncomingInviteList({ participantEmail }: { participantEmai
         ))}
       </ul>
     </>
-  )
+  );
 }

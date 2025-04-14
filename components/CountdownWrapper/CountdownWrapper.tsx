@@ -1,20 +1,24 @@
-'use client'
+"use client";
 
-import Countdown from 'react-countdown'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from "react";
+import Countdown from "react-countdown";
 
 export function CountdownWrapper(
-  { date, autoStart, revealedOnCompletion }:
-  { date: number, autoStart: boolean, revealedOnCompletion?: React.ReactElement<any>}
+  { date, autoStart, revealedOnCompletion }: {
+    date: number;
+    autoStart: boolean;
+    revealedOnCompletion?: React.ReactElement<any>;
+  },
 ) {
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    setIsLoaded(true)
-  }, [])
+    setIsLoaded(true);
+  }, []);
 
-  if (!isLoaded)
-    return <span>00:00:30:00</span>
+  if (!isLoaded) {
+    return <span>00:00:30:00</span>;
+  }
 
   return (
     <>
@@ -25,5 +29,5 @@ export function CountdownWrapper(
         {revealedOnCompletion}
       </Countdown>
     </>
-  )
+  );
 }

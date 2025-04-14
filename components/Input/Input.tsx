@@ -1,18 +1,19 @@
-import { getParticipantByEmail, validateInputServerAction } from '@/functions/db'
+import { getParticipantByEmail, validateInputServerAction } from "@/functions/db";
 
-import { auth } from '@/auth'
-import { Spacer } from '@/components/Spacer'
-import { Button } from '@/components/Button'
-import { isAuthed } from '@/functions/user-management'
+import { auth } from "@/auth";
+import { Button } from "@/components/Button";
+import { Spacer } from "@/components/Spacer";
+import { isAuthed } from "@/functions/user-management";
 
 export async function Input({ part }: { part: number }) {
-  const session = await auth()
-  const authed = isAuthed(session)
-  if (!session || !authed)
-    return null
+  const session = await auth();
+  const authed = isAuthed(session);
+  if (!session || !authed) {
+    return null;
+  }
 
-  const participant = await getParticipantByEmail(session.user!.email!)
-  const teamId = participant?.teamId
+  const participant = await getParticipantByEmail(session.user!.email!);
+  const teamId = participant?.teamId;
   return (
     <>
       <form action={validateInputServerAction}>
@@ -23,5 +24,5 @@ export async function Input({ part }: { part: number }) {
         <Button type="submit">submit</Button>
       </form>
     </>
-  )
+  );
 }

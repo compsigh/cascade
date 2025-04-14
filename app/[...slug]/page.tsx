@@ -1,29 +1,29 @@
-import path from 'node:path'
-import Link from 'next/link'
-import { Suspense } from 'react'
-import fs from 'node:fs/promises'
-import { type Metadata } from 'next'
-import { notFound } from 'next/navigation'
-import { compileMDX } from 'next-mdx-remote/rsc'
+import { type Metadata } from "next";
+import { compileMDX } from "next-mdx-remote/rsc";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import fs from "node:fs/promises";
+import path from "node:path";
+import { Suspense } from "react";
 
-import remarkGfm from 'remark-gfm'
-import rehypeSlug from 'rehype-slug'
-import rehypePrettyCode, { type Options } from 'rehype-pretty-code'
+import rehypePrettyCode, { type Options } from "rehype-pretty-code";
+import rehypeSlug from "rehype-slug";
+import remarkGfm from "remark-gfm";
 
-import { MDX } from '@/components/MDX'
-import { Input } from '@/components/Input'
-import { Spacer } from '@/components/Spacer'
+import { Input } from "@/components/Input";
+import { MDX } from "@/components/MDX";
+import { Spacer } from "@/components/Spacer";
 
 export type Frontmatter = {
-  title: string
-  description: string
-  slug?: string
-}
+  title: string;
+  description: string;
+  slug?: string;
+};
 
 export type PostProps = {
-  content: React.ReactElement<any, string | React.JSXElementConstructor<any>>,
-  frontmatter: Frontmatter
-}
+  content: React.ReactElement<any, string | React.JSXElementConstructor<any>>;
+  frontmatter: Frontmatter;
+};
 
 /**
  * Recursively generate a list of slugs for Next.js' `generateStaticParams()` from all Markdown files in a folder and its subfolders. The slugs are relative to the `app/` directory. Does not modify the slug regardless of frontmatter; that is done in `generateStaticParams()`.
@@ -32,23 +32,23 @@ export type PostProps = {
  * @example generateUnmodifiedSlugsFromMarkdownFiles('app') // Returns [{ slug: ['docs', '01-about'] }, { slug: ['docs', '02-values'] }, ...]
  */
 async function generateUnmodifiedSlugsFromMarkdownFiles(folder: string) {
-  const folderContents = await fs.readdir(folder, { withFileTypes: true })
-  const files = folderContents.filter((file) => file.isFile())
-  const directories = folderContents.filter((file) => file.isDirectory())
+  const folderContents = await fs.readdir(folder, { withFileTypes: true });
+  const files = folderContents.filter((file) => file.isFile());
+  const directories = folderContents.filter((file) => file.isDirectory());
   let slugs = files
-    .filter((file) => file.name.endsWith('.md'))
-    .map((file) => file.name.replace(/\.md$/, ''))
+    .filter((file) => file.name.endsWith(".md"))
+    .map((file) => file.name.replace(/\.md$/, ""))
     .map((slug) => path.join(folder, slug))
-    .map((slug) => slug.split('/'))
+    .map((slug) => slug.split("/"))
     .map((slug) => slug.slice(1))
-    .map((slug) => ({ slug }))
+    .map((slug) => ({ slug }));
 
   for (const directory of directories) {
-    const nestedSlugs = await generateUnmodifiedSlugsFromMarkdownFiles(path.join(folder, directory.name))
-    slugs = slugs.concat(nestedSlugs)
+    const nestedSlugs = await generateUnmodifiedSlugsFromMarkdownFiles(path.join(folder, directory.name));
+    slugs = slugs.concat(nestedSlugs);
   }
 
-  return slugs
+  return slugs;
 }
 
 /**
@@ -59,12 +59,12 @@ async function generateUnmodifiedSlugsFromMarkdownFiles(folder: string) {
  */
 async function readMarkdownFileAtRoute(segments: string[]) {
   try {
-    const filePath = path.join(process.cwd(), 'app', ...segments) + '.md'
-    const page = await fs.readFile(filePath, 'utf8')
+    const filePath = path.join(process.cwd(), "app", ...segments) + ".md";
+    const page = await fs.readFile(filePath, "utf8");
 
     const rehypePrettyCodeOptions: Options = {
-      theme: 'github-light'
-    }
+      theme: "github-light",
+    };
 
     const { content, frontmatter } = await compileMDX<Frontmatter>({
       source: page,
@@ -75,48 +75,48 @@ async function readMarkdownFileAtRoute(segments: string[]) {
           remarkPlugins: [remarkGfm],
           rehypePlugins: [
             [rehypePrettyCode, rehypePrettyCodeOptions],
-            rehypeSlug
-          ]
-        }
-      }
-    })
-    return { content, frontmatter }
+            rehypeSlug,
+          ],
+        },
+      },
+    });
+    return { content, frontmatter };
   } catch (error) {
     // If a Markdown file does not exist at the route provided, it's possible the route is a slug alias
     // For each Markdown file, read it and compare its frontmatter `slug` to the route provided
-    if ((error as any).code === 'ENOENT') {
-      const slugs = await generateUnmodifiedSlugsFromMarkdownFiles('app')
+    if ((error as any).code === "ENOENT") {
+      const slugs = await generateUnmodifiedSlugsFromMarkdownFiles("app");
       for (const { slug } of slugs) {
-        const { frontmatter } = await readMarkdownFileAtRoute(slug)
-        if (frontmatter.slug === segments.join('/'))
-          return readMarkdownFileAtRoute(slug)
+        const { frontmatter } = await readMarkdownFileAtRoute(slug);
+        if (frontmatter.slug === segments.join("/")) {
+          return readMarkdownFileAtRoute(slug);
+        }
       }
     }
-    notFound()
+    notFound();
   }
 }
 
 export async function generateMetadata(
-  props:
-  { params: Promise<{ slug: string[] }> }
+  props: { params: Promise<{ slug: string[] }> },
 ) {
   const params = await props.params;
-  const { frontmatter } = await readMarkdownFileAtRoute(params.slug)
+  const { frontmatter } = await readMarkdownFileAtRoute(params.slug);
   const metadata: Metadata = {
     title: frontmatter.title,
     description: frontmatter.description,
     openGraph: {
-      siteName: 'compsigh cascade',
-      images: '/public/og-image.png'
-    }
-  }
+      siteName: "compsigh cascade",
+      images: "/public/og-image.png",
+    },
+  };
 
-  return metadata
+  return metadata;
 }
 
-export const dynamicParams = false
+export const dynamicParams = false;
 export async function generateStaticParams() {
-  const slugs = await generateUnmodifiedSlugsFromMarkdownFiles('app')
+  const slugs = await generateUnmodifiedSlugsFromMarkdownFiles("app");
 
   // For each file:
   // 1. Read it
@@ -124,24 +124,24 @@ export async function generateStaticParams() {
   // 3. Determine if it has a `slug` key
   // 4. If it does, replace the entry in `slugs` with the new slug
   for (const [index, { slug: route }] of slugs.entries()) {
-    const { frontmatter } = await readMarkdownFileAtRoute(route)
-    if (frontmatter.slug)
-      slugs[index] = { slug: frontmatter.slug.split('/') }
+    const { frontmatter } = await readMarkdownFileAtRoute(route);
+    if (frontmatter.slug) {
+      slugs[index] = { slug: frontmatter.slug.split("/") };
+    }
   }
-  return slugs
+  return slugs;
 }
 
 export default async function Page(
-  props:
-  { params: Promise<{ slug: string[] }> }
+  props: { params: Promise<{ slug: string[] }> },
 ) {
   const params = await props.params;
-  const { content, frontmatter } = await readMarkdownFileAtRoute(params.slug)
+  const { content, frontmatter } = await readMarkdownFileAtRoute(params.slug);
   return (
     <>
       <Suspense>
         <MDX content={content} frontmatter={frontmatter} />
       </Suspense>
     </>
-  )
+  );
 }

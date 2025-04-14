@@ -1,41 +1,36 @@
-import { auth } from '@/auth'
-import type { Session } from 'next-auth'
-import { redirect } from 'next/navigation'
-import { isAuthed } from '@/functions/user-management'
-import {
-  createParticipant,
-  getParticipantByEmail,
-  getTeamById
-} from '@/functions/db'
+import { auth } from "@/auth";
+import { createParticipant, getParticipantByEmail, getTeamById } from "@/functions/db";
+import { isAuthed } from "@/functions/user-management";
+import type { Session } from "next-auth";
+import { redirect } from "next/navigation";
 
-import { get } from '@vercel/edge-config'
-import { revalidatePath } from 'next/cache'
+import { get } from "@vercel/edge-config";
+import { revalidatePath } from "next/cache";
 
-import { Spacer } from '@/components/Spacer'
-import { Button } from '@/components/Button'
-import { TeamView } from '@/components/TeamView'
-import { InviteForm } from '@/components/InviteForm'
-import { RiddleWrapper } from '@/components/RiddleWrapper'
-import { CountdownWrapper } from '@/components/CountdownWrapper'
-import { IncomingInviteList } from '@/components/IncomingInviteList'
-import { OutgoingInviteList } from '@/components/OutgoingInviteList'
+import { Button } from "@/components/Button";
+import { CountdownWrapper } from "@/components/CountdownWrapper";
+import { IncomingInviteList } from "@/components/IncomingInviteList";
+import { InviteForm } from "@/components/InviteForm";
+import { OutgoingInviteList } from "@/components/OutgoingInviteList";
+import { RiddleWrapper } from "@/components/RiddleWrapper";
+import { Spacer } from "@/components/Spacer";
+import { TeamView } from "@/components/TeamView";
 
 function Welcome(
-  { participantName }:
-  { participantName: string }
+  { participantName }: { participantName: string },
 ) {
   return (
     <>
-      <p>welcome {participantName.split(' ')[0].toLowerCase()},</p>
+      <p>welcome {participantName.split(" ")[0].toLowerCase()},</p>
     </>
-  )
+  );
 }
 
 function EventCountdown() {
-  const EVENT_START_TIME = 1729301400
+  const EVENT_START_TIME = 1729301400;
   return (
     <p>
-      the event will begin in {' '}
+      the event will begin in{"  "}
       <code className="invert">
         <CountdownWrapper
           date={EVENT_START_TIME * 1000}
@@ -44,19 +39,19 @@ function EventCountdown() {
         />
       </code>
     </p>
-  )
+  );
 }
 
 function Unregistered(
-  { participantName, participantEmail }:
-  { participantName: string, participantEmail: string }
+  { participantName, participantEmail }: { participantName: string; participantEmail: string },
 ) {
   async function signUpServerAction() {
-    'use server'
-    const participantExists = await getParticipantByEmail(participantEmail)
-    if (!participantExists)
-      await createParticipant(participantName, participantEmail)
-    revalidatePath('/event')
+    "use server";
+    const participantExists = await getParticipantByEmail(participantEmail);
+    if (!participantExists) {
+      await createParticipant(participantName, participantEmail);
+    }
+    revalidatePath("/event");
   }
   return (
     <>
@@ -69,33 +64,34 @@ function Unregistered(
         <Button type="submit">lock in</Button>
       </form>
     </>
-  )
+  );
 }
 
 function RegisteredAndWaiting(
-  { participantName, participantEmail }:
-  { participantName: string, participantEmail: string }
+  { participantName, participantEmail }: { participantName: string; participantEmail: string },
 ) {
   return (
     <>
       <Welcome participantName={participantName} />
-      <p>you&apos;ve registered for compsigh <code>cascade</code></p>
+      <p>
+        you&apos;ve registered for compsigh <code>cascade</code>
+      </p>
       <EventCountdown />
       <TeamView participantEmail={participantEmail} />
       <IncomingInviteList participantEmail={participantEmail} />
       <InviteForm participantEmail={participantEmail} />
       <OutgoingInviteList participantEmail={participantEmail} />
     </>
-  )
+  );
 }
 
 async function Content({ session }: { session: Session }) {
-  const participantName = session.user!.name!
-  const participantEmail = session.user!.email!
+  const participantName = session.user!.name!;
+  const participantEmail = session.user!.email!;
 
-  const participant = await getParticipantByEmail(participantEmail)
-  const team = await getTeamById(participant?.teamId || '')
-  const eventStarted = await get('eventStarted') as boolean
+  const participant = await getParticipantByEmail(participantEmail);
+  const team = await getTeamById(participant?.teamId || "");
+  const eventStarted = await get("eventStarted") as boolean;
 
   if (!participant) {
     return (
@@ -103,29 +99,31 @@ async function Content({ session }: { session: Session }) {
         participantName={participantName}
         participantEmail={participantEmail}
       />
-    )
+    );
   }
 
-  if (team && eventStarted)
-    return <RiddleWrapper teamId={team.id} />
+  if (team && eventStarted) {
+    return <RiddleWrapper teamId={team.id} />;
+  }
 
   return (
     <RegisteredAndWaiting
       participantName={participantName}
       participantEmail={participantEmail}
     />
-  )
+  );
 }
 
 export default async function Event() {
-  const session = await auth()
-  const authed = isAuthed(session)
-  if (!session || !authed)
-    redirect('/')
+  const session = await auth();
+  const authed = isAuthed(session);
+  if (!session || !authed) {
+    redirect("/");
+  }
 
   return (
     <>
       <Content session={session} />
     </>
-  )
+  );
 }

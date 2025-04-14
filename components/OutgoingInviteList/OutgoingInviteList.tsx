@@ -1,26 +1,24 @@
-import { Button } from '@/components/Button'
-import { Spacer } from '@/components/Spacer'
-import {
-  cancelInvite,
-  getInvitesFromEmail
-} from '@/functions/db'
-import { revalidatePath } from 'next/cache'
+import { Button } from "@/components/Button";
+import { Spacer } from "@/components/Spacer";
+import { cancelInvite, getInvitesFromEmail } from "@/functions/db";
+import { revalidatePath } from "next/cache";
 
 export async function OutgoingInviteList({ participantEmail }: { participantEmail: string }) {
-  async function cancelInviteServerAction(formData: FormData): Promise<void>{
-    'use server'
+  async function cancelInviteServerAction(formData: FormData): Promise<void> {
+    "use server";
 
     const rawFormData = {
-      id: formData.get('id') as string
-    }
+      id: formData.get("id") as string,
+    };
 
-    revalidatePath('/event')
-    await cancelInvite(rawFormData.id)
+    revalidatePath("/event");
+    await cancelInvite(rawFormData.id);
   }
 
-  const invites = await getInvitesFromEmail(participantEmail)
-  if (invites.length === 0)
-    return <></>
+  const invites = await getInvitesFromEmail(participantEmail);
+  if (invites.length === 0) {
+    return <></>;
+  }
 
   return (
     <>
@@ -38,5 +36,5 @@ export async function OutgoingInviteList({ participantEmail }: { participantEmai
         ))}
       </ul>
     </>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { PostProps } from '@/app/[...slug]/page'
+import { PostProps } from "@/app/[...slug]/page";
 
 export function MDX({ content }: PostProps) {
   return (
@@ -7,5 +7,5 @@ export function MDX({ content }: PostProps) {
         {content}
       </article>
     </>
-  )
+  );
 }

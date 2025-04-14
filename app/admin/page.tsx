@@ -1,30 +1,28 @@
-import { auth } from '@/auth'
-import { get } from '@vercel/edge-config'
-import { redirect } from 'next/navigation'
-import { isAuthed, isOrganizer } from '@/functions/user-management'
-import {
-  getAllTeams,
-  updateTeamRiddleProgressServerAction
-} from '@/functions/db'
+import { auth } from "@/auth";
 import {
   deleteParticipantServerAction,
   removeParticipantFromTeamServerAction,
   resetTeamTimeServerAction,
   toggleEventStatusServerAction,
-  updateTimerStatusServerAction
-} from '@/functions/actions'
+  updateTimerStatusServerAction,
+} from "@/functions/actions";
+import { getAllTeams, updateTeamRiddleProgressServerAction } from "@/functions/db";
+import { isAuthed, isOrganizer } from "@/functions/user-management";
+import { get } from "@vercel/edge-config";
+import { redirect } from "next/navigation";
 
-import { Button } from '@/components/Button'
+import { Button } from "@/components/Button";
 
 export default async function AdminPanel() {
-  const session = await auth()
-  const authed = isAuthed(session) && isOrganizer(session)
-  if (!session || !authed)
-    redirect('/')
+  const session = await auth();
+  const authed = isAuthed(session) && isOrganizer(session);
+  if (!session || !authed) {
+    redirect("/");
+  }
 
-  const teams = await getAllTeams()
-  const eventStarted = await get('eventStarted') as boolean
-  const timerOn = await get('timerOn') as boolean
+  const teams = await getAllTeams();
+  const eventStarted = await get("eventStarted") as boolean;
+  const timerOn = await get("timerOn") as boolean;
 
   return (
     <>
@@ -77,33 +75,33 @@ export default async function AdminPanel() {
               </td>
               <td>{team.totalTime}</td>
               <td>
-                {
-                  team.partOneDone &&
+                {team.partOneDone
+                  && (
                     <form action={updateTeamRiddleProgressServerAction}>
                       <input type="hidden" name="teamId" value={team.id} />
                       <input type="hidden" name="part" value="1" />
                       <input type="hidden" name="status" value="false" />
                       <Button type="submit">reset riddle one</Button>
                     </form>
-                }
-                {
-                  team.partTwoDone &&
+                  )}
+                {team.partTwoDone
+                  && (
                     <form action={updateTeamRiddleProgressServerAction}>
                       <input type="hidden" name="teamId" value={team.id} />
                       <input type="hidden" name="part" value="2" />
                       <input type="hidden" name="status" value="false" />
                       <Button type="submit">reset riddle two</Button>
                     </form>
-                }
-                {
-                  team.partThreeDone &&
+                  )}
+                {team.partThreeDone
+                  && (
                     <form action={updateTeamRiddleProgressServerAction}>
                       <input type="hidden" name="teamId" value={team.id} />
                       <input type="hidden" name="part" value="3" />
                       <input type="hidden" name="status" value="false" />
                       <Button type="submit">reset riddle three</Button>
                     </form>
-                }
+                  )}
                 <form action={resetTeamTimeServerAction}>
                   <input type="hidden" name="teamId" value={team.id} />
                   <Button type="submit">reset time</Button>
@@ -114,5 +112,5 @@ export default async function AdminPanel() {
         </tbody>
       </table>
     </>
-  )
+  );
 }
