@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../generated/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
