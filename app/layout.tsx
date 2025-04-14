@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { ViewTransitions } from "next-view-transitions";
 
 import { Spacer } from "@/components/Spacer";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
@@ -33,15 +32,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ViewTransitions>
-      <html lang="en" className={`${GeistMono.variable}`}>
-        <body>
-          <Breadcrumbs />
-          <Spacer size={32} />
-          {children}
-          <Spacer size={"20vh"} />
-        </body>
-      </html>
-    </ViewTransitions>
+    <html lang="en" className={`${GeistMono.variable}`}>
+      <body>
+        <Breadcrumbs />
+        <Spacer size={32} />
+        {children}
+        <Spacer size={"20vh"} />
+      </body>
+    </html>
   );
 }

@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { isAuthed, isOrganizer } from "@/functions/user-management";
 
-import { Link } from "next-view-transitions";
+import Link from "next/link";
 import { Spacer } from "@/components/Spacer";
 import { Button } from "@/components/Button";
 import { TextStream } from "@/components/TextStream";
