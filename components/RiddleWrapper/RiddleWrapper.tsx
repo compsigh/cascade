@@ -23,9 +23,9 @@ export async function RiddleWrapper({ teamId }: { teamId: string }) {
 
   const team = await getTeamById(teamId);
   if (!team) return null;
-  const partOneDone = team.partOneDone;
-  const partTwoDone = team.partTwoDone;
-  const partThreeDone = team.partThreeDone;
+  const partOneDone = false;
+  const partTwoDone = false;
+  const partThreeDone = false;
   const millisecondsSinceStart = Date.now() - timerToggleTimestamp;
 
   if (partOneDone && partTwoDone && partThreeDone)

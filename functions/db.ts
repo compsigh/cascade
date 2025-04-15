@@ -1,6 +1,6 @@
 import { PrismaClient } from "../generated/client";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+
+import { get } from "@vercel/edge-config";
 
 const prismaClientSingleton = () => {
   return new PrismaClient();
@@ -94,19 +94,6 @@ export async function deleteAllParticipantsAndTeams() {
   const participants = await prisma.participant.deleteMany();
   const teams = await prisma.team.deleteMany();
   return { participants, teams };
-}
-
-export async function getAllTeams() {
-  const teams = await prisma.team.findMany({
-    include: {
-      participants: true,
-    },
-    orderBy: {
-      totalTime: "asc",
-    },
-  });
-
-  return teams;
 }
 
 export async function updateParticipantTeam(email: string, teamId: string) {
@@ -325,49 +312,289 @@ export async function logTeamTime(id: string, time: number) {
   });
 }
 
-export async function updateTeamRiddleProgress(
-  teamId: string,
-  part: number,
-  status: boolean,
-) {
-  let property: "partOneDone" | "partTwoDone" | "partThreeDone";
-  if (part === 1) property = "partOneDone";
-  else if (part === 2) property = "partTwoDone";
-  else property = "partThreeDone";
+// Get all riddles
+export async function getAllRiddles() {
+  return prisma.riddle.findMany();
+}
 
-  return await prisma.team.update({
+// Get all progresses for a riddle given a riddle number
+export async function getRiddleProgresses(riddleNumber: number) {
+  return prisma.riddleProgress.findMany({
     where: {
-      id: teamId,
+      riddleNumber: riddleNumber,
+    },
+  });
+}
+
+// Get the progress of a riddle for a team given riddle number and team number
+export async function getTeamRiddleProgress(
+  riddleNumber: number,
+  teamId: string,
+) {
+  return prisma.riddleProgress.findUnique({
+    where: {
+      teamId_riddleNumber: {
+        riddleNumber: riddleNumber,
+        teamId: teamId,
+      },
+    },
+  });
+}
+
+// Function that populates all teams with riddle progresses
+export async function populateAllTeamsWithRiddleProgresses() {
+  const teams = await prisma.team.findMany();
+
+  for (const team of teams) {
+    const riddles = await prisma.riddle.findMany();
+
+    for (const riddle of riddles) {
+      // Check if a progress entry already exists for this team and riddle
+      const existingProgress = await prisma.riddleProgress.findUnique({
+        where: {
+          teamId_riddleNumber: {
+            riddleNumber: riddle.number,
+            teamId: team.id,
+          },
+        },
+      });
+
+      // If progress entry doesn't exist, create a new one
+      if (!existingProgress) {
+        await prisma.riddleProgress.create({
+          data: {
+            riddleNumber: riddle.number,
+            teamId: team.id,
+            completed: false, // Initialize as not completed
+          },
+        });
+      }
+    }
+  }
+}
+
+export async function resetAllTeamsRiddleProgresses() {
+  const teams = await prisma.team.findMany();
+
+  for (const team of teams) {
+    const riddles = await prisma.riddle.findMany();
+
+    for (const riddle of riddles) {
+
+        await prisma.riddleProgress.create({
+          data: {
+            riddleNumber: riddle.number,
+            teamId: team.id,
+            completed: false, // Initialize as not completed
+          },
+        });
+    }
+  }
+}
+
+export async function createRiddleProgress(
+  riddleNumber: number,
+  teamId: string,
+) {
+  return prisma.riddleProgress.create({
+    data: {
+      riddleNumber: riddleNumber,
+      teamId: teamId,
+    },
+  });
+}
+
+// Create a riddle given the strings
+export async function createRiddle(
+  riddleNumber: number,
+  text: string,
+  input: string,
+  solution: string,
+) {
+  return prisma.riddle.create({
+    data: {
+      number: riddleNumber,
+      text: text,
+      input: input,
+      solution: solution,
+    },
+  });
+}
+
+// Check if a riddle for a team was last submitted in the past n seconds
+export async function isRiddleSubmittedRecently(
+  riddleNumber: number,
+  teamId: string,
+): Promise<{ canSubmit: boolean; timeLeft: number }> {
+  const progress = await prisma.riddleProgress.findUnique({
+    where: {
+      teamId_riddleNumber: {
+        riddleNumber: riddleNumber,
+        teamId: teamId,
+      },
+    },
+  });
+
+  const cooldownSeconds = ((await get("cooldownTimer")) as number) || 60; // Default to 60 seconds if not configured
+
+  if (!progress || !progress.mostRecentSubmission) {
+    return { canSubmit: true, timeLeft: 0 };
+  }
+
+  const lastSubmittedTime = progress.mostRecentSubmission.getTime();
+  const currentTime = Date.now();
+  const diff = currentTime - lastSubmittedTime;
+  const timeLeft = Math.max(0, cooldownSeconds - diff / 1000); // Time left in seconds
+
+  return { canSubmit: diff >= cooldownSeconds * 1000, timeLeft: timeLeft };
+}
+
+// Check if a team has completed every riddle
+export async function hasTeamCompletedEveryRiddle(teamId: string) {
+  const riddles = await prisma.riddle.findMany();
+  const riddleCount = riddles.length;
+
+  const completedRiddlesCount = await prisma.riddleProgress.count({
+    where: {
+      teamId: teamId,
+      completed: true,
+    },
+  });
+
+  return completedRiddlesCount === riddleCount;
+}
+
+// Get the progress a team has over every riddle (how many riddles have they finished)
+export async function getNumberOfCorrectRiddles(
+  teamId: string,
+): Promise<number> {
+  return prisma.riddleProgress.count({
+    where: {
+      teamId: teamId,
+      completed: true,
+    },
+  });
+}
+
+// Function that returns if a string is the same as a riddle's solution
+export async function isCorrectSolution(
+  riddleNumber: number,
+  submission: string,
+): Promise<boolean> {
+  const riddle = await prisma.riddle.findUnique({
+    where: {
+      number: riddleNumber,
+    },
+  });
+
+  if (!riddle) {
+    return false; // Riddle not found
+  }
+
+  return submission === riddle.solution;
+}
+
+// Function that updates the most recent submission time on a riddle for a team to be now
+export async function updateSubmissionTime(
+  riddleNumber: number,
+  teamId: string,
+) {
+  return prisma.riddleProgress.update({
+    where: {
+      teamId_riddleNumber: {
+        riddleNumber: riddleNumber,
+        teamId: teamId,
+      },
     },
     data: {
-      [property]: status,
+      mostRecentSubmission: new Date(),
+    },
+  });
+}
+
+// Function that updates a team's riddle completion to be complete
+export async function completeTeamRiddle(riddleNumber: number, teamId: string) {
+  return prisma.riddleProgress.update({
+    where: {
+      teamId_riddleNumber: {
+        riddleNumber: riddleNumber,
+        teamId: teamId,
+      },
+    },
+    data: {
+      completed: true,
+    },
+  });
+}
+
+export async function updateTeamRiddleProgress(
+  teamId: string,
+  riddleNumber: number,
+  complete: boolean,
+) {
+  return prisma.riddleProgress.update({
+    where: {
+      teamId_riddleNumber: {
+        riddleNumber: riddleNumber,
+        teamId: teamId,
+      },
+    },
+    data: {
+      completed: complete,
     },
   });
 }
 
 export async function updateTeamRiddleProgressServerAction(formData: FormData) {
-  "use server";
   const teamId = formData.get("teamId") as string;
-  const part = parseInt(formData.get("part") as string);
-  const status = formData.get("status") === "true";
+  const number = parseInt(formData.get("number") as string);
+  const complete = formData.get("complete") === "true";
 
-  await updateTeamRiddleProgress(teamId, part, status);
-  revalidatePath("/admin");
+  await updateTeamRiddleProgress(teamId, number, complete);
+
+}
+
+// Modify getAllTeams to include riddle progresses
+export async function getAllTeamsParticipants() {
+  const teams = await prisma.team.findMany({
+    include: {
+      participants: true,
+      riddlesProgresses: true,
+    },
+    orderBy: {
+      totalTime: "asc",
+    },
+  });
+  return teams;
+}
+
+// New function to fetch all riddle completions
+export async function getAllRiddleProgresses() {
+  return prisma.riddleProgress.findMany({
+    include: {
+      team: true,
+      riddle: true,
+    },
+  });
 }
 
 export async function validateInputServerAction(formData: FormData) {
-  "use server";
   const teamId = formData.get("teamId") as string;
-  const part = formData.get("part") as string;
-  const answer = formData.get("answer") as string;
+  const riddleNumber = parseInt(formData.get("riddleNumber") as string);
+  const solution = formData.get("solution") as string;
 
-  let solution = "";
-  if (part === "1") solution = process.env.SOLUTION_PART_ONE as string;
-  if (part === "2") solution = process.env.SOLUTION_PART_TWO as string;
-  if (part === "3") solution = process.env.SOLUTION_PART_THREE as string;
+  const submissionCheck = await isRiddleSubmittedRecently(riddleNumber, teamId);
 
-  if (answer === solution)
-    await updateTeamRiddleProgress(teamId, parseInt(part), true);
+  if (!submissionCheck.canSubmit) {
+    // return { correct: false, timeLeft: submissionCheck.timeLeft };
+  }
 
-  redirect("/event");
-}
+  const isCorrect = await isCorrectSolution(riddleNumber, solution);
+
+  if (isCorrect) {
+    await completeTeamRiddle(riddleNumber, teamId);
+  }
+
+  await updateSubmissionTime(riddleNumber, teamId);
+
+  // return { correct: isCorrect, timeLeft: 0 };

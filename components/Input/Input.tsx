@@ -8,7 +8,7 @@ import { Spacer } from "@/components/Spacer";
 import { Button } from "@/components/Button";
 import { isAuthed } from "@/functions/user-management";
 
-export async function Input({ part }: { part: number }) {
+export async function Input({ riddleNumber }: { riddleNumber: number }) {
   const session = await auth();
   const authed = isAuthed(session);
   if (!session || !authed) return null;
@@ -19,8 +19,8 @@ export async function Input({ part }: { part: number }) {
     <>
       <form action={validateInputServerAction}>
         <input type="hidden" name="teamId" value={teamId} />
-        <input type="hidden" name="part" value={part} />
-        <input type="text" name="answer" placeholder="answer" />
+        <input type="hidden" name="riddleNumber" value={riddleNumber} />
+        <input type="text" name="solution" placeholder="solution" />
         <Spacer size={8} />
         <Button type="submit">submit</Button>
       </form>

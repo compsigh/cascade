@@ -1,4 +1,9 @@
 "use server";
+import {
+  createRiddle,
+  populateAllTeamsWithRiddleProgresses,
+  resetAllTeamsRiddleProgresses,
+} from "@/functions/db";
 
 import {
   deleteParticipant,
@@ -101,4 +106,25 @@ export async function resetTeamTimeServerAction(
   const teamId = formData.get("teamId") as string;
   await resetTeamTime(teamId);
   revalidatePath("/admin");
+}
+
+export async function createRiddleServerAction(
+  riddleNumber: number,
+  text: string,
+  input: string,
+  solution: string,
+) {
+  try {
+    await createRiddle(riddleNumber, text, input, solution);
+    await populateAllTeamsWithRiddleProgresses();
+    revalidatePath("/admin");
+    return { success: true, message: "Riddle created successfully!" };
+  } catch (error) {
+    console.error("Error creating riddle:", error);
+    return { success: false, message: "Error creating riddle." };
+  }
+}
+
+export async function resetAllTeamsRiddleProgressesAction() {
+  await resetAllTeamsRiddleProgresses();
 }

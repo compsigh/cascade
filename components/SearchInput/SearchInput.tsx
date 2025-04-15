@@ -47,9 +47,8 @@ export function SearchInput({ participants, onSelect }: SearchInputProps) {
         !inputRef.current.contains(event.target as Node) &&
         resultsRef.current &&
         !resultsRef.current.contains(event.target as Node)
-      ) {
+      )
         setIsOpen(false);
-      }
     }
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -58,17 +57,15 @@ export function SearchInput({ participants, onSelect }: SearchInputProps) {
     };
   }, []);
 
-  const handleSelect = (participant: Participant) => {
+  function handleSelect(participant: Participant) {
     setSelectedEmail(participant.email);
     setSelectedName(participant.name);
     setSearch(participant.name);
     setIsOpen(false);
 
     // Call the onSelect callback if provided
-    if (onSelect) {
-      onSelect(participant.email);
-    }
-  };
+    if (onSelect) onSelect(participant.email);
+  }
 
   return (
     <div className={styles.searchContainer}>

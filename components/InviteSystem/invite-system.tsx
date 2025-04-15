@@ -1,7 +1,5 @@
 "use client";
 
-import type React from "react";
-
 import { useState, useTransition } from "react";
 import { Button } from "@/components/Button";
 import { Spacer } from "@/components/Spacer";
@@ -65,7 +63,7 @@ export function InviteSystem({
     effectiveInviteCount < maxInvites;
 
   // Handle sending an invite with optimistic update
-  const handleSendInvite = async (e: React.FormEvent) => {
+  function handleSendInvite(e: React.FormEvent) {
     e.preventDefault();
 
     if (!selectedEmail || !canSendInvite) return;
@@ -104,10 +102,10 @@ export function InviteSystem({
         });
       }
     });
-  };
+  }
 
   // Handle canceling an invite with optimistic update
-  const handleCancelInvite = async (inviteId: string) => {
+  function handleCancelInvite(inviteId: string) {
     // Find the invite to cancel
     const inviteToCancel = invitesSent.find((invite) => invite.id === inviteId);
     if (!inviteToCancel) return;
@@ -135,7 +133,7 @@ export function InviteSystem({
         });
       }
     });
-  };
+  }
 
   return (
     <div>
