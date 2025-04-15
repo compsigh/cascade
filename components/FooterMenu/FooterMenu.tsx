@@ -32,6 +32,7 @@ export function FooterMenu(
       {getLinkItem("cascade", "/", currentPath)}
       {getLinkItem("details", "/details", currentPath)}
       {signedIn && getLinkItem("team", "/team", currentPath)}
+      {signedIn && getLinkItem("riddles", "/riddles", currentPath)}
       {getSignInItem(signedIn)}
     </nav>
   );
