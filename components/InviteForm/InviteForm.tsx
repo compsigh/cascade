@@ -5,9 +5,11 @@ import {
   getInvitesFromEmail,
   getTeamById,
   sendInvite,
+  getAllParticipants,
 } from "@/functions/db";
 import { revalidatePath } from "next/cache";
 import { get } from "@vercel/edge-config";
+import { SearchInput } from "@/components/SearchInput";
 
 export async function InviteForm({
   participantEmail,
@@ -33,6 +35,8 @@ export async function InviteForm({
 
   const maxTeamSize = await get<number>("maxTeamSize");
   const maxInvites = await get<number>("maxInvites");
+
+  const allParticipants = await getAllParticipants();
 
   return (
     <>
@@ -61,10 +65,10 @@ export async function InviteForm({
         teamSize < maxTeamSize! && (
           <form action={sendInviteServerAction}>
             <input type="hidden" name="from" value={participantEmail || ""} />
-            <input
-              type="email"
-              name="to"
-              placeholder="example1@dons.usfca.edu"
+            <SearchInput
+              participants={allParticipants.filter(
+                (p) => p.email !== participantEmail,
+              )}
             />
             <Spacer size={8} />
             <Button type="submit">send invite</Button>
