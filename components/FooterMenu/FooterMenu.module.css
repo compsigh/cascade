@@ -17,3 +17,16 @@
     background: none;
     cursor: pointer;
 }
+
+@media (max-width: 768px) {
+    .footer {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer {
+        flex-direction: column;
+        gap: 1px;
+    }
+}

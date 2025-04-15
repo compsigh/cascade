@@ -17,6 +17,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.125);
+  text-align: center;
+  text-wrap: balance;
 }
 
 * {
@@ -41,6 +43,10 @@ a {
   text-decoration: none;
 }
 
+ul {
+  list-style: none;
+}
+
 /* @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
@@ -54,13 +60,14 @@ a {
   justify-content: center;
   align-items: center;
   text-align: center;
+  padding: 20px 40px;
 }
 
 .normalText {
   font-size: 3.6rem;
   font-weight: 500;
-  list-style: none;
-  line-height: 210%;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .selectedText {
@@ -73,4 +80,29 @@ a {
 
 .hoverableText:hover {
   color: var(--text-black);
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 4rem;
+  }
+
+  .normalText {
+    font-size: 2.4rem;
+    line-height: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    top: 8%;
+  }
+
+  main {
+    transform: translateY(-10%);
+  }
+
+  .normalText {
+    font-size: 2rem;
+  }
 }

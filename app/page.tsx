@@ -12,8 +12,8 @@ export default async function Home() {
     <div className="page">
       <main>
         <h1 className={styles.title}>cascade</h1>
-        <p className={styles.subtitle}>a one-night coding riddle competition</p>
-        <p className={styles.subtitle}>friday, april 25th, 6pm @ the hive</p>
+        <p className={`normalText ${styles.subtitle}`}>a one-night coding riddle competition</p>
+        <p className={`normalText ${styles.subtitle}`}>friday, april 25th, 6pm @ the hive</p>
       </main>
 
       <FooterMenu signedIn={authed} />
