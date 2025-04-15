@@ -6,9 +6,11 @@ import styles from "./Button.module.css";
 export function Button({
   type,
   children,
+  disabled = false,
 }: {
   type: "signIn" | "submit";
   children: React.ReactNode;
+  disabled?: boolean;
 }) {
   if (type === "signIn") {
     return (
@@ -23,7 +25,7 @@ export function Button({
 
   if (type === "submit") {
     return (
-      <button type="submit" className={styles.button}>
+      <button type="submit" className={styles.button} disabled={disabled}>
         {children}
       </button>
     );

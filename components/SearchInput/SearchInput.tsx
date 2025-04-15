@@ -1,7 +1,5 @@
 "use client";
 
-"use client";
-
 import * as React from "react";
 import Fuse from "fuse.js";
 import styles from "./search-input.module.css";
@@ -14,13 +12,14 @@ type Participant = {
 
 interface SearchInputProps {
   participants: Participant[];
+  onSelect?: (email: string) => void;
 }
 
-export function SearchInput({ participants }: SearchInputProps) {
+export function SearchInput({ participants, onSelect }: SearchInputProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
   const [selectedEmail, setSelectedEmail] = React.useState("");
-  const [selectedName, setSelectedName] = React.useState("");
+  const [, setSelectedName] = React.useState("");
   const inputRef = React.useRef<HTMLInputElement>(null);
   const resultsRef = React.useRef<HTMLDivElement>(null);
 
@@ -64,6 +63,11 @@ export function SearchInput({ participants }: SearchInputProps) {
     setSelectedName(participant.name);
     setSearch(participant.name);
     setIsOpen(false);
+
+    // Call the onSelect callback if provided
+    if (onSelect) {
+      onSelect(participant.email);
+    }
   };
 
   return (
