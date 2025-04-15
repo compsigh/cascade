@@ -1,11 +1,6 @@
 import { FooterMenu } from "@/components/FooterMenu";
-import { auth } from "@/auth";
-import { isAuthed } from "@/functions/user-management";
 
 export default async function Details() {
-  const session = await auth();
-  const authed = isAuthed(session);
-
   return (
     <div className="page">
       <h1>cascade</h1>
@@ -18,7 +13,7 @@ export default async function Details() {
         </ul>
       </main>
 
-      <FooterMenu signedIn={authed} />
+      <FooterMenu />
     </div>
   );
 }
