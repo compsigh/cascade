@@ -18,6 +18,7 @@
     "postinstall": "prisma generate",
     "start": "next start",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
     "format": "prettier . --check",
     "format:fix": "prettier . --write",
     "migrate": "dotenv -e .env.local prisma migrate dev"

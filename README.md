@@ -26,10 +26,19 @@ npm run dev
 
 ### Linting & Formatting
 
-- **Lint rules** (ESLint 8 with `eslint:recommended`, `next`, `next/core-web-vitals`, `next/typescript`, and `prettier` configurations):
+> [!IMPORTANT]
+> Run a [format](https://prettier.io/docs/why-prettier) and [lint](https://eslint.org/docs/latest/about/) before pushing.
+
+- **Check linting** (ESLint 8 with `eslint:recommended`, [`next`, `next/core-web-vitals`, `next/typescript`](https://nextjs.org/docs/app/api-reference/config/eslint), and [`prettier`](https://github.com/prettier/eslint-config-prettier) configurations):
 
   ```bash
   npm run lint
+  ```
+
+- **Automatically fix linting issues**:
+
+  ```bash
+  npm run lint:fix
   ```
 
 - **Check formatting** (Prettier):
