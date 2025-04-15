@@ -41,6 +41,8 @@
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "19.1.2",
+    "@typescript-eslint/eslint-plugin": "^8.30.1",
+    "@typescript-eslint/parser": "^8.30.1",
     "dotenv-cli": "^7.4.2",
     "eslint": "^8.57.1",
     "eslint-config-next": "^15.3.0",

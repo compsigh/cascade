@@ -33,7 +33,12 @@ export async function IncomingInviteList({
   }
 
   const invites = await getInvitesToEmail(participantEmail);
-  if (invites.length === 0) return <></>;
+  if (invites.length === 0)
+    return (
+      <>
+        <h2>no invites to you</h2>
+      </>
+    );
 
   return (
     <>

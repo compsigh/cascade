@@ -5,11 +5,13 @@ import Link from "next/link";
 import { Spacer } from "@/components/Spacer";
 import { Button } from "@/components/Button";
 import { TextStream } from "@/components/TextStream";
+import { get } from "@vercel/edge-config";
 
 export default async function Home() {
   const session = await auth();
   const authed = isAuthed(session);
   const organizer = isOrganizer(session);
+  const maxTeamSize = await get<number>("maxTeamSize");
 
   return (
     <>
@@ -24,7 +26,10 @@ export default async function Home() {
       </h2>
       <ul>
         <li>
-          <TextStream duration={1} text="participants form teams of 1-4" />
+          <TextStream
+            duration={1}
+            text={`participants form teams of 1-${maxTeamSize !== null ? maxTeamSize : "N/A"}`}
+          />
         </li>
         <li>
           <TextStream duration={1.2} text="teams work to answer the riddle" />

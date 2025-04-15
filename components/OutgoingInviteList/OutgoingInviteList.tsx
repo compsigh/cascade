@@ -20,7 +20,12 @@ export async function OutgoingInviteList({
   }
 
   const invites = await getInvitesFromEmail(participantEmail);
-  if (invites.length === 0) return <></>;
+  if (invites.length === 0)
+    return (
+      <>
+        <h2>no invites sent</h2>
+      </>
+    );
 
   return (
     <>

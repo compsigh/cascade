@@ -7,6 +7,7 @@ import {
   sendInvite,
 } from "@/functions/db";
 import { revalidatePath } from "next/cache";
+import { get } from "@vercel/edge-config";
 
 export async function InviteForm({
   participantEmail,
@@ -30,6 +31,9 @@ export async function InviteForm({
   const team = await getTeamById(participant!.teamId);
   const teamSize = team!.participants.length;
 
+  const maxTeamSize = await get<number>("maxTeamSize");
+  const maxInvites = await get<number>("maxInvites");
+
   return (
     <>
       <Spacer size={16} />
@@ -39,23 +43,33 @@ export async function InviteForm({
         google account
       </p>
       <Spacer size={8} />
-      {invitesSent.length >= 3 && (
+      {maxTeamSize !== null && teamSize >= maxTeamSize! && (
         <p>
-          you can have a maximum of 3 active invites; you&apos;ll have to cancel
-          one to send a new one
+          you&apos;ve reached the maximum of {maxTeamSize!} participants on your
+          team
         </p>
       )}
-      {teamSize >= 4 && (
-        <p>you&apos;ve reached the maximum of 4 participants on your team</p>
+      {maxInvites !== null && invitesSent.length >= maxInvites! && (
+        <p>
+          you can have a maximum of {maxInvites!} active invites; you&apos;ll
+          have to cancel one to send a new one
+        </p>
       )}
-      {invitesSent.length < 3 && teamSize < 4 && (
-        <form action={sendInviteServerAction}>
-          <input type="hidden" name="from" value={participantEmail || ""} />
-          <input type="email" name="to" placeholder="usf email" />
-          <Spacer size={8} />
-          <Button type="submit">send invite</Button>
-        </form>
-      )}
+      {maxTeamSize !== null &&
+        maxInvites !== null &&
+        invitesSent.length < maxInvites! &&
+        teamSize < maxTeamSize! && (
+          <form action={sendInviteServerAction}>
+            <input type="hidden" name="from" value={participantEmail || ""} />
+            <input
+              type="email"
+              name="to"
+              placeholder="example1@dons.usfca.edu"
+            />
+            <Spacer size={8} />
+            <Button type="submit">send invite</Button>
+          </form>
+        )}
     </>
   );
 }
