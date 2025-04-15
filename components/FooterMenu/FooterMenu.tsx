@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "./page.module.css";
+import styles from "./FooterMenu.module.css";
 import { signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

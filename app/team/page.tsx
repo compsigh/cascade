@@ -21,10 +21,10 @@ export default async function Team() {
       <main>
         <h2 className="normalText">your team:</h2>
         <ul className="normalText">
-          <li className="selectedText">nishil</li>
-          <li>gursh</li>
-          <li>edward</li>
-          <li>quinn</li>
+          <li className="hoverableText">nishil</li>
+          <li className="hoverableText">gursh</li>
+          <li className="hoverableText">edward</li>
+          <li className="hoverableText">quinn</li>
         </ul>
       </main>
 
