@@ -1,13 +1,7 @@
 import styles from "./page.module.css";
 import { FooterMenu } from "@/components/FooterMenu";
-import { auth } from "@/auth";
-import { isAuthed, isOrganizer } from "@/functions/user-management";
 
-export default async function Home() {
-  const session = await auth();
-  const authed = isAuthed(session);
-  const organizer = isOrganizer(session);
-
+export default function Home() {
   return (
     <div className="page">
       <main>
@@ -16,7 +10,7 @@ export default async function Home() {
         <p className={styles.subtitle}>friday, april 25th, 6pm @ the hive</p>
       </main>
 
-      <FooterMenu signedIn={authed} />
+      <FooterMenu />
     </div>
   );
 }
