@@ -19,7 +19,7 @@ export default async function Home() {
         welcome to compsigh <code>cascade</code> — <br />a one-night coding
         riddle competition.
       </p>
-      <p>october 18th, 2024 at 6:00pm</p>
+      <p>april 25th, 2025 at 6:00pm</p>
       <Spacer size={16} />
       <h2>
         <TextStream duration={0.6} text="details" />
@@ -33,12 +33,6 @@ export default async function Home() {
         </li>
         <li>
           <TextStream duration={1.2} text="teams work to answer the riddle" />
-        </li>
-        <li>
-          <TextStream
-            duration={1.6}
-            text="teams have 30 minutes to complete it"
-          />
         </li>
         <li>
           <TextStream
