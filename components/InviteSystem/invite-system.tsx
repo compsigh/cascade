@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { Button } from "@/components/Button";
 import { Spacer } from "@/components/Spacer";
-import { SearchInput } from "@/components/SearchInput";
+import { SearchParticipants } from "@/components/SearchParticipants";
 import { Participant } from "@/generated/client";
 
 type Invite = {
@@ -161,13 +161,19 @@ export function InviteSystem({
 
       {canSendInvite && (
         <form onSubmit={handleSendInvite}>
-          <SearchInput
+          <SearchParticipants
             participants={availableParticipants}
             onSelect={(email) => setSelectedEmail(email)}
           />
           <Spacer size={8} />
           <Button type="submit" disabled={!selectedEmail || isPending}>
-            {isPending ? "sending..." : "send invite"}
+            {(() => {
+              if (isPending) return "sending...";
+
+              if (selectedEmail) return "send invite";
+
+              return "select participant";
+            })()}
           </Button>
         </form>
       )}

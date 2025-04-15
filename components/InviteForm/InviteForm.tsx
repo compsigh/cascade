@@ -9,7 +9,7 @@ import {
 } from "@/functions/db";
 import { revalidatePath } from "next/cache";
 import { get } from "@vercel/edge-config";
-import { SearchInput } from "@/components/SearchInput";
+import { SearchParticipants } from "@/components/SearchParticipants";
 
 export async function InviteForm({
   participantEmail,
@@ -65,7 +65,7 @@ export async function InviteForm({
         teamSize < maxTeamSize! && (
           <form action={sendInviteServerAction}>
             <input type="hidden" name="from" value={participantEmail || ""} />
-            <SearchInput
+            <SearchParticipants
               participants={allParticipants.filter(
                 (p) => p.email !== participantEmail,
               )}

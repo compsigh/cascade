@@ -2,23 +2,30 @@ import { auth } from "@/auth";
 import { get } from "@vercel/edge-config";
 import { redirect } from "next/navigation";
 import { isAuthed, isOrganizer } from "@/functions/user-management";
-import { getAllTeamsParticipants } from "@/functions/db";
 import {
+  deleteAllParticipantsServerAction,
+  deleteAllRiddlesServerAction,
+  dissolveAllTeamsServerAction,
+  resetAllTeamRiddleProgressAction,
   toggleEventStatusServerAction,
   updateTimerStatusServerAction,
 } from "@/functions/actions";
 import { Button } from "@/components/Button";
-import AdminPanelClient from "./AdminPanelClient";
-import TeamTable from "./TeamTable"; // Create this component
+import TeamTable from "./TeamTable";
+import CreateParticipantAdminPanel from "./CreateParticipantAdminPanel";
+import CreateRiddleAdminPanel from "./CreateRiddleAdminPanel";
+import AddParticipantToTeamAdminPanel from "./AddParticipantToTeamAdminPanel";
+import { getAllParticipants, getAllTeams } from "@/functions/db";
 
 export default async function AdminPanel() {
   const session = await auth();
   const authed = isAuthed(session) && isOrganizer(session);
   if (!session || !authed) redirect("/");
 
-  const teams = await getAllTeamsParticipants();
   const eventStarted = (await get("eventStarted")) as boolean;
   const timerOn = (await get("timerOn")) as boolean;
+  const teams = await getAllTeams();
+  const participants = await getAllParticipants();
 
   return (
     <>
@@ -43,11 +50,34 @@ export default async function AdminPanel() {
             <Button type="submit">toggle timer status</Button>
           </form>
         </li>
+        <li>
+          <form action={resetAllTeamRiddleProgressAction}>
+            <Button type="submit">reset all team progresses</Button>
+          </form>
+        </li>
+        <li>
+          <form action={deleteAllParticipantsServerAction}>
+            <Button type="submit">delete all participants</Button>
+          </form>
+        </li>
+        <li>
+          <form action={dissolveAllTeamsServerAction}>
+            <Button type="submit">dissolve all teams</Button>
+          </form>
+        </li>
+        <li>
+          <form action={deleteAllRiddlesServerAction}>
+            <Button type="submit">delete all riddles</Button>
+          </form>
+        </li>
       </ul>
-
       <TeamTable />
-
-      <AdminPanelClient />
+      <CreateParticipantAdminPanel />
+      <CreateRiddleAdminPanel />
+      <AddParticipantToTeamAdminPanel
+        participants={participants}
+        teams={teams}
+      />
     </>
   );
 }

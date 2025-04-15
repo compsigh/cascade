@@ -1,12 +1,10 @@
-import {
-  getParticipantByEmail,
-  validateInputServerAction,
-} from "@/functions/db";
+import { getParticipantByEmail } from "@/functions/db";
 
 import { auth } from "@/auth";
 import { Spacer } from "@/components/Spacer";
 import { Button } from "@/components/Button";
 import { isAuthed } from "@/functions/user-management";
+import { validateInputServerAction } from "@/functions/actions";
 
 export async function Input({ riddleNumber }: { riddleNumber: number }) {
   const session = await auth();

@@ -16,13 +16,13 @@ const initialState: FormState = {
   message: "",
 };
 
-export default function AdminPanelClient() {
+export default function CreateRiddleAdminPanel() {
   const [riddleNumber, setRiddleNumber] = useState("");
   const [text, setText] = useState("");
   const [inputVal, setInputVal] = useState("");
   const [solution, setSolution] = useState("");
 
-  async function createRiddleAdminPanel(
+  async function createRiddleFormAction(
     _prevState: FormState,
     formData: FormData,
   ): Promise<FormState> {
@@ -38,7 +38,7 @@ export default function AdminPanelClient() {
   }
 
   const [state, formAction] = useActionState(
-    createRiddleAdminPanel,
+    createRiddleFormAction,
     initialState,
   );
 

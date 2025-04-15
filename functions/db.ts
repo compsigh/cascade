@@ -1,4 +1,4 @@
-import { PrismaClient } from "../generated/client";
+import { Prisma, PrismaClient } from "../generated/client";
 
 import { get } from "@vercel/edge-config";
 
@@ -21,26 +21,22 @@ export async function getAllParticipants() {
   return participants;
 }
 
-export async function getTeamById(id: string) {
-  const team = await prisma.team.findUnique({
-    where: {
-      id,
-    },
-    include: {
-      participants: true,
-    },
-  });
-
-  return team;
-}
-
 export async function createParticipant(name: string, email: string) {
+  const riddles = await prisma.riddle.findMany();
+
   const participant = await prisma.participant.create({
     data: {
       name,
       email,
       team: {
-        create: {},
+        create: {
+          riddlesProgresses: {
+            create: riddles.map((riddle) => ({
+              riddleNumber: riddle.number,
+              completed: false,
+            })),
+          },
+        },
       },
     },
   });
@@ -63,18 +59,50 @@ export async function deleteParticipant(email: string) {
 
   if (!participant) return null;
 
-  await removeParticipantFromTeam(email);
-
-  return await prisma.participant.delete({
-    where: {
-      email,
-    },
+  const team = await prisma.team.findUnique({
+    where: { id: participant.teamId },
+    include: { participants: true },
   });
+
+  if (!team) return null;
+
+  if (team.participants.length === 1) {
+    await prisma.$transaction([
+      prisma.riddleProgress.deleteMany({
+        where: { teamId: team.id },
+      }),
+      prisma.participant.delete({
+        where: { email },
+      }),
+      prisma.team.delete({
+        where: { id: team.id },
+      }),
+    ]);
+  } else {
+    await prisma.participant.delete({
+      where: { email },
+    });
+  }
 }
 
 export async function deleteAllParticipants() {
   const users = await prisma.participant.deleteMany();
+  await prisma.riddleProgress.deleteMany();
+  await prisma.team.deleteMany();
   return users;
+}
+
+export async function getTeamById(id: string) {
+  const team = await prisma.team.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      participants: true,
+    },
+  });
+
+  return team;
 }
 
 export async function deleteTeam(id: string) {
@@ -85,8 +113,76 @@ export async function deleteTeam(id: string) {
   });
 }
 
-export async function deleteAllTeams() {
-  const teams = await prisma.team.deleteMany();
+export async function deleteTeamAndProgresses(id: string) {
+  // Delete all riddle progresses associated with the team
+  await prisma.riddleProgress.deleteMany({
+    where: {
+      teamId: id,
+    },
+  });
+
+  // Delete the team
+  await prisma.team.delete({
+    where: {
+      id: id,
+    },
+  });
+}
+
+export async function dissolveAllTeams() {
+  const teams = await prisma.team.findMany({
+    include: { participants: true },
+  });
+
+  for (const team of teams) {
+    if (team.participants.length > 1) {
+      const transaction: Prisma.PrismaPromise<any>[] = [];
+
+      const riddles = await prisma.riddle.findMany();
+
+      for (const participant of team.participants) {
+        transaction.push(
+          prisma.participant.update({
+            where: { email: participant.email },
+            data: {
+              team: {
+                create: {
+                  riddlesProgresses: {
+                    create: riddles.map((riddle) => ({
+                      riddleNumber: riddle.number,
+                      completed: false,
+                    })),
+                  },
+                },
+              },
+            },
+          }),
+        );
+      }
+
+      transaction.push(
+        prisma.riddleProgress.deleteMany({
+          where: { teamId: team.id },
+        }),
+      );
+
+      transaction.push(
+        prisma.team.delete({
+          where: { id: team.id },
+        }),
+      );
+
+      await prisma.$transaction(transaction);
+    }
+  }
+}
+
+export async function getAllTeams() {
+  const teams = await prisma.team.findMany({
+    include: {
+      participants: true,
+    },
+  });
   return teams;
 }
 
@@ -146,11 +242,7 @@ export async function updateParticipantTeam(email: string, teamId: string) {
 
   // Clean up former team if it has no participants other than the one removed
   if (formerTeam.participants.length === 1)
-    await prisma.team.delete({
-      where: {
-        id: formerTeam.id,
-      },
-    });
+    await deleteTeamAndProgresses(formerTeam.id);
 }
 
 export async function removeParticipantFromTeam(email: string) {
@@ -159,50 +251,36 @@ export async function removeParticipantFromTeam(email: string) {
   if (!participant) return null;
 
   const currentTeam = await prisma.team.findUnique({
-    where: {
-      id: participant.teamId,
-    },
-    include: {
-      participants: true,
-    },
+    where: { id: participant.teamId },
+    include: { participants: true },
   });
 
   if (!currentTeam) return null;
+  const riddles = await prisma.riddle.findMany();
 
-  // Create a new solo team for the participant
-  await prisma.team.create({
-    data: {
-      participants: {
-        connect: {
-          email,
+  if (currentTeam.participants.length === 1) {
+    return null;
+  }
+
+  await prisma.$transaction(async (prisma) => {
+    const newTeam = await prisma.team.create({
+      data: {
+        riddlesProgresses: {
+          create: riddles.map((riddle) => ({
+            riddleNumber: riddle.number,
+            completed: false,
+          })),
         },
       },
-    },
-  });
+    });
 
-  // Remove the participant from their former team
-  const otherParticipants = currentTeam.participants.filter(
-    (participant) => participant.email !== email,
-  );
-
-  await prisma.team.update({
-    where: {
-      id: currentTeam.id,
-    },
-    data: {
-      participants: {
-        set: otherParticipants,
-      },
-    },
-  });
-
-  // Clean up former team if it has no participants other than the one removed
-  if (currentTeam.participants.length === 1)
-    await prisma.team.delete({
-      where: {
-        id: currentTeam.id,
+    await prisma.participant.update({
+      where: { email },
+      data: {
+        team: { connect: { id: newTeam.id } },
       },
     });
+  });
 }
 
 export async function sendInvite(from: string, to: string) {
@@ -328,8 +406,8 @@ export async function getRiddleProgresses(riddleNumber: number) {
 
 // Get the progress of a riddle for a team given riddle number and team number
 export async function getTeamRiddleProgress(
-  riddleNumber: number,
   teamId: string,
+  riddleNumber: number,
 ) {
   return prisma.riddleProgress.findUnique({
     where: {
@@ -374,21 +452,35 @@ export async function populateAllTeamsWithRiddleProgresses() {
 }
 
 export async function resetAllTeamsRiddleProgresses() {
-  const teams = await prisma.team.findMany();
+  try {
+    const [teams, riddles] = await Promise.all([
+      prisma.team.findMany(),
+      prisma.riddle.findMany(),
+    ]);
 
-  for (const team of teams) {
-    const riddles = await prisma.riddle.findMany();
-
-    for (const riddle of riddles) {
-
-        await prisma.riddleProgress.create({
-          data: {
+    const upsertOperations = teams.flatMap((team) =>
+      riddles.map((riddle) =>
+        prisma.riddleProgress.upsert({
+          where: {
+            teamId_riddleNumber: {
+              teamId: team.id,
+              riddleNumber: riddle.number,
+            },
+          },
+          update: { completed: false },
+          create: {
             riddleNumber: riddle.number,
             teamId: team.id,
-            completed: false, // Initialize as not completed
+            completed: false,
           },
-        });
-    }
+        }),
+      ),
+    );
+
+    await prisma.$transaction(upsertOperations);
+  } catch (error) {
+    console.error("Error resetting riddle progresses:", error);
+    throw new Error("Failed to reset progress");
   }
 }
 
@@ -411,14 +503,27 @@ export async function createRiddle(
   input: string,
   solution: string,
 ) {
-  return prisma.riddle.create({
-    data: {
-      number: riddleNumber,
-      text: text,
-      input: input,
-      solution: solution,
-    },
-  });
+  const teams = await prisma.team.findMany();
+
+  await prisma.$transaction([
+    prisma.riddle.create({
+      data: {
+        number: riddleNumber,
+        text: text,
+        input: input,
+        solution: solution,
+      },
+    }),
+    ...teams.map((team) =>
+      prisma.riddleProgress.create({
+        data: {
+          teamId: team.id,
+          riddleNumber: riddleNumber,
+          completed: false,
+        },
+      }),
+    ),
+  ]);
 }
 
 // Check if a riddle for a team was last submitted in the past n seconds
@@ -545,15 +650,6 @@ export async function updateTeamRiddleProgress(
   });
 }
 
-export async function updateTeamRiddleProgressServerAction(formData: FormData) {
-  const teamId = formData.get("teamId") as string;
-  const number = parseInt(formData.get("number") as string);
-  const complete = formData.get("complete") === "true";
-
-  await updateTeamRiddleProgress(teamId, number, complete);
-
-}
-
 // Modify getAllTeams to include riddle progresses
 export async function getAllTeamsParticipants() {
   const teams = await prisma.team.findMany({
@@ -578,23 +674,129 @@ export async function getAllRiddleProgresses() {
   });
 }
 
-export async function validateInputServerAction(formData: FormData) {
-  const teamId = formData.get("teamId") as string;
-  const riddleNumber = parseInt(formData.get("riddleNumber") as string);
-  const solution = formData.get("solution") as string;
+export async function deleteRiddle(riddleNumber: number) {
+  await prisma.$transaction([
+    prisma.riddleProgress.deleteMany({
+      where: {
+        riddleNumber: riddleNumber,
+      },
+    }),
+    prisma.riddle.delete({
+      where: {
+        number: riddleNumber,
+      },
+    }),
+  ]);
+}
 
-  const submissionCheck = await isRiddleSubmittedRecently(riddleNumber, teamId);
+export async function deleteAllRiddles() {
+  await prisma.$transaction([
+    prisma.riddleProgress.deleteMany(),
+    prisma.riddle.deleteMany(),
+  ]);
+}
 
-  if (!submissionCheck.canSubmit) {
-    // return { correct: false, timeLeft: submissionCheck.timeLeft };
+export async function dissolveTeam(teamId: string) {
+  const team = await prisma.team.findUnique({
+    where: { id: teamId },
+    include: { participants: true },
+  });
+
+  if (!team) return null;
+
+  if (team.participants.length === 1) {
+    return null;
   }
 
-  const isCorrect = await isCorrectSolution(riddleNumber, solution);
+  const transaction: Prisma.PrismaPromise<any>[] = [];
 
-  if (isCorrect) {
-    await completeTeamRiddle(riddleNumber, teamId);
+  const riddles = await prisma.riddle.findMany();
+
+  for (const participant of team.participants) {
+    transaction.push(
+      prisma.participant.update({
+        where: { email: participant.email },
+        data: {
+          team: {
+            create: {
+              riddlesProgresses: {
+                create: riddles.map((riddle) => ({
+                  riddleNumber: riddle.number,
+                  completed: false,
+                })),
+              },
+            },
+          },
+        },
+      }),
+    );
   }
 
-  await updateSubmissionTime(riddleNumber, teamId);
+  transaction.push(
+    prisma.riddleProgress.deleteMany({
+      where: { teamId },
+    }),
+  );
 
-  // return { correct: isCorrect, timeLeft: 0 };
+  transaction.push(
+    prisma.team.delete({
+      where: { id: teamId },
+    }),
+  );
+
+  // Run all operations in a transaction
+  await prisma.$transaction(transaction);
+}
+
+export async function addParticipantToTeam(
+  participantEmail: string,
+  newTeamId: string,
+) {
+  const participant = await prisma.participant.findUnique({
+    where: { email: participantEmail },
+    include: { team: true },
+  });
+
+  if (!participant) {
+    throw new Error(`Participant with email ${participantEmail} not found`);
+  }
+
+  const oldTeamId = participant.teamId;
+
+  if (!oldTeamId) {
+    await prisma.participant.update({
+      where: { email: participantEmail },
+      data: { teamId: newTeamId },
+    });
+    return;
+  }
+
+  const oldTeam = await prisma.team.findUnique({
+    where: { id: oldTeamId },
+    include: { participants: true },
+  });
+
+  if (!oldTeam) {
+    throw new Error(`Old team with id ${oldTeamId} not found`);
+  }
+
+  if (oldTeam.participants.length === 1) {
+    await prisma.participant.update({
+      where: { email: participantEmail },
+      data: { teamId: newTeamId },
+    });
+
+    await prisma.riddleProgress.deleteMany({
+      where: { teamId: oldTeamId },
+    });
+
+    await prisma.team.delete({
+      where: { id: oldTeamId },
+    });
+  } else {
+    await prisma.participant.update({
+      where: { email: participantEmail },
+      data: { teamId: newTeamId },
+    });
+  }
+}

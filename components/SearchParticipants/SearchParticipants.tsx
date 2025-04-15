@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Fuse from "fuse.js";
-import styles from "./search-input.module.css";
+import styles from "./search-participants.module.css";
 
 type Participant = {
   name: string;
@@ -10,12 +10,15 @@ type Participant = {
   teamId: string;
 };
 
-interface SearchInputProps {
+interface SearchParticipantsProps {
   participants: Participant[];
   onSelect?: (email: string) => void;
 }
 
-export function SearchInput({ participants, onSelect }: SearchInputProps) {
+export function SearchParticipants({
+  participants,
+  onSelect,
+}: SearchParticipantsProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
   const [selectedEmail, setSelectedEmail] = React.useState("");
@@ -23,7 +26,6 @@ export function SearchInput({ participants, onSelect }: SearchInputProps) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const resultsRef = React.useRef<HTMLDivElement>(null);
 
-  // Set up fuzzy search with Fuse.js
   const fuse = React.useMemo(
     () =>
       new Fuse(participants, {
@@ -33,13 +35,11 @@ export function SearchInput({ participants, onSelect }: SearchInputProps) {
     [participants],
   );
 
-  // Get filtered results based on search term
   const results = React.useMemo(() => {
     if (!search) return participants;
     return fuse.search(search).map((result) => result.item);
   }, [fuse, search, participants]);
 
-  // Handle click outside to close dropdown
   React.useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -63,7 +63,6 @@ export function SearchInput({ participants, onSelect }: SearchInputProps) {
     setSearch(participant.name);
     setIsOpen(false);
 
-    // Call the onSelect callback if provided
     if (onSelect) onSelect(participant.email);
   }
 

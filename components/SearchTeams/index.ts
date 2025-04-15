@@ -1,0 +1,1 @@
+export { SearchTeams } from "./SearchTeams";
