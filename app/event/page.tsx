@@ -18,11 +18,11 @@ import { revalidatePath } from "next/cache";
 import { Spacer } from "@/components/Spacer";
 import { Button } from "@/components/Button";
 import { TeamView } from "@/components/TeamView";
-import { RiddleWrapper } from "@/components/RiddleWrapper";
 import { CountdownWrapper } from "@/components/CountdownWrapper";
 import { IncomingInviteList } from "@/components/IncomingInviteList";
 import { InviteSystem } from "@/components/InviteSystem";
 import { Invite, Participant } from "@/generated/client";
+import Link from "next/link";
 
 function Welcome({ participantName }: { participantName: string }) {
   return (
@@ -33,7 +33,7 @@ function Welcome({ participantName }: { participantName: string }) {
 }
 
 function EventCountdown() {
-  const EVENT_START_TIME = 1729301400;
+  const EVENT_START_TIME = 1745631000;
   return (
     <p>
       the event will begin in{" "}
@@ -46,6 +46,10 @@ function EventCountdown() {
       </code>
     </p>
   );
+}
+
+export function GoToRiddlesLink() {
+  return <Link href="/riddles">Go to Riddles</Link>;
 }
 
 function Unregistered({
@@ -92,12 +96,14 @@ async function cancelInviteServerAction(id: string): Promise<Invite> {
   revalidatePath("/event");
   return await cancelInvite(id);
 }
+
 async function RegisteredAndWaiting({
   participant,
+  eventStarted,
 }: {
   participant: Participant;
+  eventStarted: boolean;
 }) {
-  // Fetch all the data we need
   const invitesSent = await getInvitesFromEmail(participant.email);
   const team = await getTeamById(participant.teamId);
   const teammates = team?.participants || [];
@@ -112,19 +118,25 @@ async function RegisteredAndWaiting({
       <p>
         you&apos;ve registered for compsigh <code>cascade</code>
       </p>
-      <EventCountdown />
+      {eventStarted ? <GoToRiddlesLink /> : <EventCountdown />}
       <TeamView participantEmail={participant.email} />
-      <IncomingInviteList participantEmail={participant.email} />
-      <InviteSystem
-        participant={participant}
-        allParticipants={allParticipants}
-        initialInvitesSent={invitesSent}
-        team={teammates}
-        maxTeamSize={maxTeamSize!}
-        maxInvites={maxInvites!}
-        onSendInvite={sendInviteServerAction}
-        onCancelInvite={cancelInviteServerAction}
-      />
+      {eventStarted ? (
+        <p>Invites are closed, talk to leadership</p>
+      ) : (
+        <>
+          <IncomingInviteList participantEmail={participant.email} />
+          <InviteSystem
+            participant={participant}
+            allParticipants={allParticipants}
+            initialInvitesSent={invitesSent}
+            team={teammates}
+            maxTeamSize={maxTeamSize!}
+            maxInvites={maxInvites!}
+            onSendInvite={sendInviteServerAction}
+            onCancelInvite={cancelInviteServerAction}
+          />
+        </>
+      )}
     </>
   );
 }
@@ -134,7 +146,6 @@ async function Content({ session }: { session: Session }) {
   const participantEmail = session.user!.email!;
 
   const participant = await getParticipantByEmail(participantEmail);
-  const team = await getTeamById(participant?.teamId || "");
   const eventStarted = (await get("eventStarted")) as boolean;
   if (!participant) {
     return (
@@ -145,9 +156,12 @@ async function Content({ session }: { session: Session }) {
     );
   }
 
-  if (team && eventStarted) return <RiddleWrapper teamId={team.id} />;
-
-  return <RegisteredAndWaiting participant={participant} />;
+  return (
+    <RegisteredAndWaiting
+      participant={participant}
+      eventStarted={eventStarted}
+    />
+  );
 }
 
 export default async function Event() {

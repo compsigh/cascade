@@ -54,6 +54,15 @@ export async function getParticipantByEmail(email: string) {
   return participant;
 }
 
+export async function getTeamByEmail(email: string) {
+  const participant = await prisma.participant.findUnique({
+    where: { email },
+    include: { team: true },
+  });
+
+  return participant?.team || null;
+}
+
 export async function deleteParticipant(email: string) {
   const participant = await getParticipantByEmail(email);
 
@@ -395,6 +404,15 @@ export async function getAllRiddles() {
   return prisma.riddle.findMany();
 }
 
+// Get all riddles
+export async function getRiddle(riddleNumber: number) {
+  return prisma.riddle.findUnique({
+    where: {
+      number: riddleNumber,
+    },
+  });
+}
+
 // Get all progresses for a riddle given a riddle number
 export async function getRiddleProgresses(riddleNumber: number) {
   return prisma.riddleProgress.findMany({
@@ -415,6 +433,14 @@ export async function getTeamRiddleProgress(
         riddleNumber: riddleNumber,
         teamId: teamId,
       },
+    },
+  });
+}
+// Get the progress of a riddle for a team given riddle number and team number
+export async function getAllTeamRiddleProgress(teamId: string) {
+  return prisma.riddleProgress.findMany({
+    where: {
+      teamId: teamId,
     },
   });
 }
