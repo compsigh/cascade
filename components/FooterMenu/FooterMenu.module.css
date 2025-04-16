@@ -1,0 +1,32 @@
+.footer {
+    display: flex;
+    gap: 35px;
+    position: fixed;
+    bottom: 4.1%;
+    font-size: 3rem;
+    font-weight: bold;
+    /* text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.32); */
+}
+
+.signInButton {
+    font-size: 1rem;
+    font-weight: normal;
+    text-shadow: none;
+    color: inherit;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .footer {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer {
+        flex-direction: column;
+        gap: 1px;
+    }
+}

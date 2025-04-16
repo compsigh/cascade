@@ -1,0 +1,18 @@
+.main {
+  text-align: left;
+}
+
+.subtitleText {
+  font-size: 2.5rem;
+}
+
+.riddleText {
+  font-size: 2rem;
+  text-wrap: wrap;
+}
+
+/* @media (max-width: 768px) {
+}
+
+@media (max-width: 480px) {
+} */

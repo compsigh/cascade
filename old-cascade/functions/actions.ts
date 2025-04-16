@@ -57,16 +57,16 @@ export async function updateTimerStatusServerAction(formData: FormData) {
         body: JSON.stringify({
           items: [
             {
-              operation: "update",
-              key: "timerOn",
-              value: !Boolean(formData.get("timerOn"))
-            },
-            {
-              operation: "update",
-              key: "timerToggleTimestamp",
-              value: Date.now()
-            }
-          ]
+            operation: "update",
+            key: "timerOn",
+            value: !Boolean(formData.get("timerOn"))
+          },
+          {
+            operation: "update",
+            key: "timerToggleTimestamp",
+            value: Date.now()
+          }
+        ]
         })
       }).then(res => res.json())
 

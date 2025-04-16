@@ -1,51 +1,36 @@
-# compsigh cascade
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Riddle one
+## Getting Started
 
-You are an old, senile CS professor walking around the twisting halls of Kalmanovitz.
+First, run the development server:
 
-**Input:** You're given a *2D* character array with `R`, `L`, and `#`. Starting from the top left, navigate using the current tile: `R` means right, `L` means left, and `#` means straight. Each turn is relative to your current direction.
-
-**Output:** List every tile you visit from start to finish. You start and end on `#`.
-
-### Example
-
-**Input:**
-```
-# R R #
-L L R #
-R # # #
-# L # #
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-**Output:**
-```
-#LLRRRL#L##
-```
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Riddle two
-You are given a jumbled sentence encoded with a Caesar Cipher and a 2D grid of words.
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-**Input:** A string `text` encoded with a Caesar Cipher, an integer `shift` representing the cipher shift, and a 2D list `grid` containing words.
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-**Output:** The decoded sentence and the list of indices where each word of the decoded sentence appears in the grid.
+## Learn More
 
-### Example
+To learn more about Next.js, take a look at the following resources:
 
-**Input:**
-```
-text: "cqrb rb j cnbc"
-shift: 9
-grid: [
-    ["hello", "test", "what"],
-    ["cascade", "october", "is"],
-    ["a", "this", "output", "compsigh"]
-]
-```
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-**Output:**
-```
-Decoded Text: "this is a test"
-Indices: (2, 1), (1, 2), (2, 0), (0, 1)
-```
-TODO: @edward how do you want the output formatted?
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

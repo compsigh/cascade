@@ -5,14 +5,12 @@ export function isAuthed(session: Session | null) {
     return false
   if (!session.user)
     return false
-  if (!session.user.name)
-    return false
   if (!session.user.email)
     return false
   if (!session.user.email.endsWith('usfca.edu'))
     return false
 
-  return true;
+  return true
 }
 
 export function isOrganizer(session: Session | null) {
