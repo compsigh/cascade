@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
+}
+
+model Participant {
+  name   String @unique
+  email  String @id @unique
+  team   Team   @relation(fields: [teamId], references: [id])
+  teamId String
+}
+
+model Team {
+  id                String           @id @default(uuid())
+  participants      Participant[]
+  totalTime         Int              @default(0)
+  riddlesProgresses RiddleProgress[]
+}
+
+model RiddleProgress {
+  id                   String   @id @default(uuid())
+  completed            Boolean  @default(false)
+  mostRecentSubmission DateTime @updatedAt
+  team                 Team     @relation(fields: [teamId], references: [id])
+  teamId               String
+  riddle               Riddle   @relation(fields: [riddleNumber], references: [number])
+  riddleNumber         Int
+
+  @@unique([teamId, riddleNumber])
+}
+
+model Riddle {
+  number           Int              @id @unique
+  text             String
+  input            String
+  solution         String
+  riddleProgresses RiddleProgress[]
+}
+
+model Invite {
+  id                   String @id @default(uuid())
+  fromParticipantEmail String
+  toParticipantEmail   String
+}
