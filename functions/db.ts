@@ -558,6 +558,48 @@ export async function createRiddle(
   ]);
 }
 
+export async function upsertRiddle(
+  riddleNumber: number,
+  text: string,
+  input: string,
+  solution: string,
+) {
+  const existingRiddle = await prisma.riddle.findUnique({
+    where: { number: riddleNumber },
+  });
+
+  await prisma.riddle.upsert({
+    where: { number: riddleNumber },
+    update: {
+      text: text,
+      input: input,
+      solution: solution,
+    },
+    create: {
+      number: riddleNumber,
+      text: text,
+      input: input,
+      solution: solution,
+    },
+  });
+
+  if (!existingRiddle) {
+    const teams = await prisma.team.findMany();
+
+    await prisma.$transaction(
+      teams.map((team) =>
+        prisma.riddleProgress.create({
+          data: {
+            teamId: team.id,
+            riddleNumber: riddleNumber,
+            completed: false,
+          },
+        }),
+      ),
+    );
+  }
+}
+
 // Check if a riddle for a team was last submitted in the past n seconds
 export async function isRiddleSubmittedRecently(
   riddleNumber: number,

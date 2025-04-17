@@ -4,7 +4,6 @@ import {
   completeTeamRiddle,
   createParticipant,
   dissolveAllTeams,
-  createRiddle,
   deleteAllParticipants,
   deleteAllRiddles,
   deleteRiddle,
@@ -14,6 +13,7 @@ import {
   resetAllTeamsRiddleProgresses,
   updateSubmissionTime,
   updateTeamRiddleProgress,
+  upsertRiddle,
 } from "@/functions/db";
 
 import {
@@ -126,7 +126,7 @@ export async function createRiddleServerAction(
   solution: string,
 ) {
   try {
-    await createRiddle(riddleNumber, text, input, solution);
+    await upsertRiddle(riddleNumber, text, input, solution);
     revalidatePath("/admin");
     return { success: true, message: "Riddle created successfully!" };
   } catch (error) {
