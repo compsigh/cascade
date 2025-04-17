@@ -1,10 +1,13 @@
+import { auth } from "@/auth";
 import { Input } from "@/components/Input";
 import { MDX } from "@/components/MDX";
 import { Spacer } from "@/components/Spacer";
 import { getRiddle } from "@/functions/db";
+import { isAuthed, isOrganizer } from "@/functions/user-management";
+import { get } from "@vercel/edge-config";
 import { compileMDX } from "next-mdx-remote/rsc";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
 import rehypePrettyCode, { Options } from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
@@ -43,12 +46,17 @@ async function readMarkdownFileAtRoute(page: string) {
 }
 
 export default async function Page(props: Props) {
+  const session = await auth();
+  const authed = isAuthed(session);
+  if (!session || !authed) redirect("/");
+  const eventStarted = (await get("eventStarted")) as boolean;
+  if (!eventStarted && !isOrganizer(session)) redirect("/");
+
   const params = await props.params;
   const riddleNumber = Number(params.riddleNumber);
   if (isNaN(riddleNumber)) return notFound();
   const riddle = await getRiddle(riddleNumber);
-  //TODO: route back to riddles
-  if (riddle === null) return;
+  if (riddle === null) return notFound();
 
   const { content, frontmatter } = await readMarkdownFileAtRoute(riddle.text);
 

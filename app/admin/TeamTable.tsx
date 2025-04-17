@@ -11,13 +11,14 @@ import { getAllRiddles, getAllTeamsParticipants } from "@/functions/db";
 export default async function TeamTable() {
   const teams = await getAllTeamsParticipants();
   const riddles = await getAllRiddles();
+  const sortedRiddles = riddles.slice().sort((a, b) => a.number - b.number);
   return (
     <table>
       <thead>
         <tr>
           <th>participants</th>
           <th>total time</th>
-          {riddles.map((riddle) => (
+          {sortedRiddles.map((riddle) => (
             <th key={riddle.number}>
               riddle {riddle.number}
               <form action={deleteRiddleServerAction}>

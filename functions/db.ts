@@ -399,9 +399,12 @@ export async function logTeamTime(id: string, time: number) {
   });
 }
 
-// Get all riddles
 export async function getAllRiddles() {
-  return prisma.riddle.findMany();
+  return prisma.riddle.findMany({
+    orderBy: {
+      number: "asc",
+    },
+  });
 }
 
 // Get all riddles
@@ -441,6 +444,9 @@ export async function getAllTeamRiddleProgress(teamId: string) {
   return prisma.riddleProgress.findMany({
     where: {
       teamId: teamId,
+    },
+    orderBy: {
+      riddleNumber: "asc",
     },
   });
 }

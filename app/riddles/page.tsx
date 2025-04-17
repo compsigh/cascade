@@ -5,7 +5,7 @@ import { getAllTeamRiddleProgress, getTeamByEmail } from "@/functions/db";
 import { Spacer } from "@/components/Spacer";
 import { RiddleTimer } from "@/components/RiddleTimer";
 import { auth } from "@/auth";
-import { isAuthed } from "@/functions/user-management";
+import { isAuthed, isOrganizer } from "@/functions/user-management";
 import { redirect } from "next/navigation";
 
 export default async function Riddles() {
@@ -15,6 +15,8 @@ export default async function Riddles() {
   if (!session || !authed) redirect("/");
 
   const eventStarted = (await get("eventStarted")) as boolean;
+
+  if (!eventStarted && !isOrganizer(session)) redirect("/");
 
   const participantEmail = session.user!.email!;
 
