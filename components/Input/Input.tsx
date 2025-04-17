@@ -1,27 +1,63 @@
-import { getParticipantByEmail } from "@/functions/db";
+"use client";
 
-import { auth } from "@/auth";
-import { Spacer } from "@/components/Spacer";
+import { useState } from "react";
 import { Button } from "@/components/Button";
-import { isAuthed } from "@/functions/user-management";
 import { validateInputServerAction } from "@/functions/actions";
 
-export async function Input({ riddleNumber }: { riddleNumber: number }) {
-  const session = await auth();
-  const authed = isAuthed(session);
-  if (!session || !authed) return null;
+interface FormState {
+  correct: boolean | null;
+  message: string;
+}
 
-  const participant = await getParticipantByEmail(session.user!.email!);
-  const teamId = participant?.teamId;
+const initialState: FormState = {
+  correct: null,
+  message: "",
+};
+
+export function Input({
+  riddleNumber,
+  teamId,
+}: {
+  riddleNumber: number;
+  teamId: string;
+}) {
+  const [solution, setSolution] = useState("");
+  const [state, setState] = useState<FormState>(initialState);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!solution.trim()) {
+      setState({ correct: false, message: "Please enter a solution." });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("solution", solution);
+    formData.append("riddleNumber", riddleNumber.toString());
+    formData.append("teamId", teamId);
+
+    const result = await validateInputServerAction(formData);
+    setState({
+      correct: result.correct,
+      message:
+        result.message ||
+        (result.correct ? "Correct solution!" : "Incorrect solution!"),
+    });
+  }
+
   return (
     <>
-      <form action={validateInputServerAction}>
-        <input type="hidden" name="teamId" value={teamId} />
-        <input type="hidden" name="riddleNumber" value={riddleNumber} />
-        <input type="text" name="solution" placeholder="solution" />
-        <Spacer size={8} />
-        <Button type="submit">submit</Button>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          id="solution"
+          name="solution"
+          value={solution}
+          onChange={(e) => setSolution(e.target.value)}
+        />
+        <Button type="submit">Submit</Button>
       </form>
+      {state.message && <p>{state.message}</p>}
     </>
   );
 }

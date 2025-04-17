@@ -1,0 +1,31 @@
+button.button {
+  border: none;
+  cursor: pointer;
+
+  background: transparent;
+  color: var(--color-black);
+
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 1.125rem;
+  line-height: 1.6em;
+  text-decoration-line: underline;
+  text-decoration-thickness: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+button.button:hover {
+  text-decoration-line: none;
+}
+
+button.button:active {
+  color: var(--color-white);
+  background-color: var(--color-black);
+}
+
+button.button:disabled {
+  cursor: not-allowed;
+  color: var(--color-gray);
+}

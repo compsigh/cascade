@@ -48,10 +48,6 @@ function EventCountdown() {
   );
 }
 
-export function GoToRiddlesLink() {
-  return <Link href="/riddles">Go to Riddles</Link>;
-}
-
 function Unregistered({
   participantName,
   participantEmail,
@@ -118,7 +114,11 @@ async function RegisteredAndWaiting({
       <p>
         you&apos;ve registered for compsigh <code>cascade</code>
       </p>
-      {eventStarted ? <GoToRiddlesLink /> : <EventCountdown />}
+      {eventStarted ? (
+        <Link href="/riddles">Go to Riddles</Link>
+      ) : (
+        <EventCountdown />
+      )}
       <TeamView participantEmail={participant.email} />
       {eventStarted ? (
         <p>Invites are closed, talk to leadership</p>

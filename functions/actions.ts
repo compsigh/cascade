@@ -185,17 +185,25 @@ export async function validateInputServerAction(formData: FormData) {
   const submissionCheck = await isRiddleSubmittedRecently(riddleNumber, teamId);
 
   if (!submissionCheck.canSubmit) {
-    // return { correct: false, timeLeft: submissionCheck.timeLeft };
+    return {
+      correct: false,
+      timeLeft: submissionCheck.timeLeft,
+      message: "Please wait before submitting again.",
+    };
   }
 
   const isCorrect = await isCorrectSolution(riddleNumber, solution);
 
   if (isCorrect) {
     await completeTeamRiddle(riddleNumber, teamId);
+    await updateSubmissionTime(riddleNumber, teamId);
+    return { correct: true, timeLeft: null, message: "Correct solution!" };
+  } else {
+    await updateSubmissionTime(riddleNumber, teamId);
+    return { correct: false, timeLeft: null, message: "Incorrect solution!" };
   }
-
-  await updateSubmissionTime(riddleNumber, teamId);
 }
+
 export async function updateTeamRiddleProgressServerAction(formData: FormData) {
   const teamId = formData.get("teamId") as string;
   const number = parseInt(formData.get("number") as string);
