@@ -35,12 +35,12 @@ export default async function Riddles() {
       />
       <Spacer size={32} />
       <p>the riddle is available now!</p>
-      <p>you have 30 minutes to complete it.</p>
+      <p>first one to finish all of them wins!</p>
       <p>good luck!</p>
       <ul>
         {riddleProgresses.map((riddleProgress) => (
           <li key={riddleProgress.riddleNumber}>
-            <Link href={`/riddle/${riddleProgress.riddleNumber}`}>
+            <Link href={`/riddles/${riddleProgress.riddleNumber}`}>
               {riddleProgress.riddleNumber}:
               {riddleProgress.completed ? "completed" : "incomplete"}
             </Link>
