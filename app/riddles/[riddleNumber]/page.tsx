@@ -54,11 +54,9 @@ export default async function Page(props: Props) {
 
   const params = await props.params;
   const riddleNumber = Number(params.riddleNumber);
-  console.log(riddleNumber);
-  // if (isNaN(riddleNumber)) return notFound();
+  if (isNaN(riddleNumber)) return notFound();
   const riddle = await getRiddle(riddleNumber);
-  console.log(riddle);
-  // if (riddle === null) return notFound();
+  if (riddle === null) return notFound();
 
   const { content, frontmatter } = await readMarkdownFileAtRoute(riddle.text);
 
