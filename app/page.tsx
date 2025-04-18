@@ -1,17 +1,17 @@
-import { auth } from "@/auth";
-import { isAuthed, isOrganizer } from "@/functions/user-management";
+import { auth } from "@/auth"
+import { isAuthed, isOrganizer } from "@/functions/user-management"
 
-import Link from "next/link";
-import { Spacer } from "@/components/Spacer";
-import { Button } from "@/components/Button";
-import { TextStream } from "@/components/TextStream";
-import { get } from "@vercel/edge-config";
+import Link from "next/link"
+import { Spacer } from "@/components/Spacer"
+import { Button } from "@/components/Button"
+import { TextStream } from "@/components/TextStream"
+import { get } from "@vercel/edge-config"
 
 export default async function Home() {
-  const session = await auth();
-  const authed = isAuthed(session);
-  const organizer = isOrganizer(session);
-  const maxTeamSize = await get<number>("maxTeamSize");
+  const session = await auth()
+  const authed = isAuthed(session)
+  const organizer = isOrganizer(session)
+  const maxTeamSize = await get<number>("maxTeamSize")
 
   return (
     <>
@@ -66,5 +66,5 @@ export default async function Home() {
         </>
       )}
     </>
-  );
+  )
 }

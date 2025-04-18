@@ -1,1 +1,1 @@
-export { CountdownWrapper } from "./CountdownWrapper";
+export { CountdownWrapper } from "./CountdownWrapper"

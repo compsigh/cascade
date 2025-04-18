@@ -1,31 +1,31 @@
-import { auth } from "@/auth";
-import { get } from "@vercel/edge-config";
-import { redirect } from "next/navigation";
-import { isAuthed, isOrganizer } from "@/functions/user-management";
+import { auth } from "@/auth"
+import { get } from "@vercel/edge-config"
+import { redirect } from "next/navigation"
+import { isAuthed, isOrganizer } from "@/functions/user-management"
 import {
   deleteAllParticipantsServerAction,
   deleteAllRiddlesServerAction,
   dissolveAllTeamsServerAction,
   resetAllTeamRiddleProgressAction,
   toggleEventStatusServerAction,
-  updateTimerStatusServerAction,
-} from "@/functions/actions";
-import { Button } from "@/components/Button";
-import TeamTable from "./TeamTable";
-import CreateParticipantAdminPanel from "./CreateParticipantAdminPanel";
-import CreateRiddleAdminPanel from "./CreateRiddleAdminPanel";
-import AddParticipantToTeamAdminPanel from "./AddParticipantToTeamAdminPanel";
-import { getAllParticipants, getAllTeams } from "@/functions/db";
+  updateTimerStatusServerAction
+} from "@/functions/actions"
+import { Button } from "@/components/Button"
+import TeamTable from "./TeamTable"
+import CreateParticipantAdminPanel from "./CreateParticipantAdminPanel"
+import CreateRiddleAdminPanel from "./CreateRiddleAdminPanel"
+import AddParticipantToTeamAdminPanel from "./AddParticipantToTeamAdminPanel"
+import { getAllParticipants, getAllTeams } from "@/functions/db"
 
 export default async function AdminPanel() {
-  const session = await auth();
-  const authed = isAuthed(session) && isOrganizer(session);
-  if (!session || !authed) redirect("/");
+  const session = await auth()
+  const authed = isAuthed(session) && isOrganizer(session)
+  if (!session || !authed) redirect("/")
 
-  const eventStarted = (await get("eventStarted")) as boolean;
-  const timerOn = (await get("timerOn")) as boolean;
-  const teams = await getAllTeams();
-  const participants = await getAllParticipants();
+  const eventStarted = (await get("eventStarted")) as boolean
+  const timerOn = (await get("timerOn")) as boolean
+  const teams = await getAllTeams()
+  const participants = await getAllParticipants()
 
   return (
     <>
@@ -79,5 +79,5 @@ export default async function AdminPanel() {
         teams={teams}
       />
     </>
-  );
+  )
 }

@@ -1,48 +1,48 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Button } from "@/components/Button";
-import { validateInputServerAction } from "@/functions/actions";
+import { useState } from "react"
+import { Button } from "@/components/Button"
+import { validateInputServerAction } from "@/functions/actions"
 
 interface FormState {
-  correct: boolean | null;
-  message: string;
+  correct: boolean | null
+  message: string
 }
 
 const initialState: FormState = {
   correct: null,
-  message: "",
-};
+  message: ""
+}
 
 export function Input({
   riddleNumber,
-  teamId,
+  teamId
 }: {
-  riddleNumber: number;
-  teamId: string;
+  riddleNumber: number
+  teamId: string
 }) {
-  const [solution, setSolution] = useState("");
-  const [state, setState] = useState<FormState>(initialState);
+  const [solution, setSolution] = useState("")
+  const [state, setState] = useState<FormState>(initialState)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+    e.preventDefault()
     if (!solution.trim()) {
-      setState({ correct: false, message: "Please enter a solution." });
-      return;
+      setState({ correct: false, message: "Please enter a solution." })
+      return
     }
 
-    const formData = new FormData();
-    formData.append("solution", solution);
-    formData.append("riddleNumber", riddleNumber.toString());
-    formData.append("teamId", teamId);
+    const formData = new FormData()
+    formData.append("solution", solution)
+    formData.append("riddleNumber", riddleNumber.toString())
+    formData.append("teamId", teamId)
 
-    const result = await validateInputServerAction(formData);
+    const result = await validateInputServerAction(formData)
     setState({
       correct: result.correct,
       message:
         result.message ||
-        (result.correct ? "Correct solution!" : "Incorrect solution!"),
-    });
+        (result.correct ? "Correct solution!" : "Incorrect solution!")
+    })
   }
 
   return (
@@ -59,5 +59,5 @@ export function Input({
       </form>
       {state.message && <p>{state.message}</p>}
     </>
-  );
+  )
 }

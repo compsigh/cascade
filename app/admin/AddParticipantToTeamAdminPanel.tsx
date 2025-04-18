@@ -1,57 +1,57 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/Button";
-import { addParticipantToTeamServerAction } from "@/functions/actions";
-import { useState, useActionState } from "react";
-import { Spacer } from "@/components/Spacer";
-import { SearchParticipants } from "@/components/SearchParticipants";
-import { SearchTeams } from "@/components/SearchTeams";
+import { Button } from "@/components/Button"
+import { addParticipantToTeamServerAction } from "@/functions/actions"
+import { useState, useActionState } from "react"
+import { Spacer } from "@/components/Spacer"
+import { SearchParticipants } from "@/components/SearchParticipants"
+import { SearchTeams } from "@/components/SearchTeams"
 
 interface FormState {
-  success: boolean;
-  message: string;
+  success: boolean
+  message: string
 }
 
 const initialState: FormState = {
   success: false,
-  message: "",
-};
+  message: ""
+}
 
 type Participant = {
-  name: string;
-  email: string;
-  teamId: string;
-};
+  name: string
+  email: string
+  teamId: string
+}
 
 type Team = {
-  id: string;
-  totalTime: number;
-  participants: Participant[];
-};
+  id: string
+  totalTime: number
+  participants: Participant[]
+}
 
 interface AddParticipantToTeamAdminPanelProps {
-  participants: Participant[];
-  teams: Team[];
+  participants: Participant[]
+  teams: Team[]
 }
 
 export default function AddParticipantToTeamAdminPanel({
   participants,
-  teams,
+  teams
 }: AddParticipantToTeamAdminPanelProps) {
-  const [email, setEmail] = useState("");
-  const [teamId, setTeamId] = useState("");
+  const [email, setEmail] = useState("")
+  const [teamId, setTeamId] = useState("")
 
   async function addParticipantToTeamFormAction(): Promise<FormState> {
     if (!email || !teamId)
-      return { success: false, message: "Please fill in all fields." };
+      return { success: false, message: "Please fill in all fields." }
 
-    return await addParticipantToTeamServerAction(email, teamId);
+    return await addParticipantToTeamServerAction(email, teamId)
   }
 
   const [state, formAction] = useActionState(
     addParticipantToTeamFormAction,
-    initialState,
-  );
+    initialState
+  )
 
   return (
     <>
@@ -72,5 +72,5 @@ export default function AddParticipantToTeamAdminPanel({
       </form>
       {state?.message && state.message}
     </>
-  );
+  )
 }

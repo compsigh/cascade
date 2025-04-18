@@ -1,45 +1,45 @@
-"use client";
+"use client"
 
-import * as React from "react";
-import Fuse from "fuse.js";
-import styles from "./search-teams.module.css";
+import * as React from "react"
+import Fuse from "fuse.js"
+import styles from "./search-teams.module.css"
 interface Participant {
-  name: string;
-  email: string;
-  teamId: string;
+  name: string
+  email: string
+  teamId: string
 }
 
 type Team = {
-  id: string;
-  totalTime: number;
-  participants: Participant[];
-};
+  id: string
+  totalTime: number
+  participants: Participant[]
+}
 
 interface SearchTeamsProps {
-  teams: Team[];
-  onSelect?: (teamId: string) => void;
+  teams: Team[]
+  onSelect?: (teamId: string) => void
 }
 
 export function SearchTeams({ teams, onSelect }: SearchTeamsProps) {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [search, setSearch] = React.useState("");
-  const [selectedTeamId, setSelectedTeamId] = React.useState("");
-  const inputRef = React.useRef<HTMLInputElement>(null);
-  const resultsRef = React.useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = React.useState(false)
+  const [search, setSearch] = React.useState("")
+  const [selectedTeamId, setSelectedTeamId] = React.useState("")
+  const inputRef = React.useRef<HTMLInputElement>(null)
+  const resultsRef = React.useRef<HTMLDivElement>(null)
 
   const fuse = React.useMemo(
     () =>
       new Fuse(teams, {
         keys: ["teamId"],
-        threshold: 0.3,
+        threshold: 0.3
       }),
-    [teams],
-  );
+    [teams]
+  )
 
   const results = React.useMemo(() => {
-    if (!search) return teams;
-    return fuse.search(search).map((result) => result.item);
-  }, [fuse, search, teams]);
+    if (!search) return teams
+    return fuse.search(search).map((result) => result.item)
+  }, [fuse, search, teams])
 
   React.useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -49,21 +49,21 @@ export function SearchTeams({ teams, onSelect }: SearchTeamsProps) {
         resultsRef.current &&
         !resultsRef.current.contains(event.target as Node)
       )
-        setIsOpen(false);
+        setIsOpen(false)
     }
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside)
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
 
   function handleSelect(team: Team) {
-    setSelectedTeamId(team.id);
-    setSearch(team.id);
-    setIsOpen(false);
+    setSelectedTeamId(team.id)
+    setSearch(team.id)
+    setIsOpen(false)
 
-    if (onSelect) onSelect(team.id);
+    if (onSelect) onSelect(team.id)
   }
 
   return (
@@ -76,8 +76,8 @@ export function SearchTeams({ teams, onSelect }: SearchTeamsProps) {
         placeholder="Search for a team by id..."
         value={search}
         onChange={(e) => {
-          setSearch(e.target.value);
-          setIsOpen(true);
+          setSearch(e.target.value)
+          setIsOpen(true)
         }}
         onFocus={() => setIsOpen(true)}
       />
@@ -104,5 +104,5 @@ export function SearchTeams({ teams, onSelect }: SearchTeamsProps) {
         </div>
       )}
     </div>
-  );
+  )
 }

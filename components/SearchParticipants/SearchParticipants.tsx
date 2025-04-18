@@ -1,44 +1,44 @@
-"use client";
+"use client"
 
-import * as React from "react";
-import Fuse from "fuse.js";
-import styles from "./search-participants.module.css";
+import * as React from "react"
+import Fuse from "fuse.js"
+import styles from "./search-participants.module.css"
 
 type Participant = {
-  name: string;
-  email: string;
-  teamId: string;
-};
+  name: string
+  email: string
+  teamId: string
+}
 
 interface SearchParticipantsProps {
-  participants: Participant[];
-  onSelect?: (email: string) => void;
+  participants: Participant[]
+  onSelect?: (email: string) => void
 }
 
 export function SearchParticipants({
   participants,
-  onSelect,
+  onSelect
 }: SearchParticipantsProps) {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [search, setSearch] = React.useState("");
-  const [selectedEmail, setSelectedEmail] = React.useState("");
-  const [, setSelectedName] = React.useState("");
-  const inputRef = React.useRef<HTMLInputElement>(null);
-  const resultsRef = React.useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = React.useState(false)
+  const [search, setSearch] = React.useState("")
+  const [selectedEmail, setSelectedEmail] = React.useState("")
+  const [, setSelectedName] = React.useState("")
+  const inputRef = React.useRef<HTMLInputElement>(null)
+  const resultsRef = React.useRef<HTMLDivElement>(null)
 
   const fuse = React.useMemo(
     () =>
       new Fuse(participants, {
         keys: ["name"],
-        threshold: 0.3,
+        threshold: 0.3
       }),
-    [participants],
-  );
+    [participants]
+  )
 
   const results = React.useMemo(() => {
-    if (!search) return participants;
-    return fuse.search(search).map((result) => result.item);
-  }, [fuse, search, participants]);
+    if (!search) return participants
+    return fuse.search(search).map((result) => result.item)
+  }, [fuse, search, participants])
 
   React.useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -48,22 +48,22 @@ export function SearchParticipants({
         resultsRef.current &&
         !resultsRef.current.contains(event.target as Node)
       )
-        setIsOpen(false);
+        setIsOpen(false)
     }
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside)
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
 
   function handleSelect(participant: Participant) {
-    setSelectedEmail(participant.email);
-    setSelectedName(participant.name);
-    setSearch(participant.name);
-    setIsOpen(false);
+    setSelectedEmail(participant.email)
+    setSelectedName(participant.name)
+    setSearch(participant.name)
+    setIsOpen(false)
 
-    if (onSelect) onSelect(participant.email);
+    if (onSelect) onSelect(participant.email)
   }
 
   return (
@@ -76,8 +76,8 @@ export function SearchParticipants({
         placeholder="Search for a participant by name..."
         value={search}
         onChange={(e) => {
-          setSearch(e.target.value);
-          setIsOpen(true);
+          setSearch(e.target.value)
+          setIsOpen(true)
         }}
         onFocus={() => setIsOpen(true)}
       />
@@ -100,5 +100,5 @@ export function SearchParticipants({
         </div>
       )}
     </div>
-  );
+  )
 }

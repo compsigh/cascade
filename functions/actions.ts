@@ -1,4 +1,4 @@
-"use server";
+"use server"
 import {
   addParticipantToTeam,
   completeTeamRiddle,
@@ -13,29 +13,29 @@ import {
   resetAllTeamsRiddleProgresses,
   updateSubmissionTime,
   updateTeamRiddleProgress,
-  upsertRiddle,
-} from "@/functions/db";
+  upsertRiddle
+} from "@/functions/db"
 
 import {
   deleteParticipant,
   removeParticipantFromTeam,
-  resetTeamTime,
-} from "./db";
-import { revalidatePath } from "next/cache";
+  resetTeamTime
+} from "./db"
+import { revalidatePath } from "next/cache"
 
 export async function removeParticipantFromTeamServerAction(
-  formData: FormData,
+  formData: FormData
 ): Promise<void> {
   const rawFormData = {
-    email: formData.get("email") as string,
-  };
+    email: formData.get("email") as string
+  }
 
-  revalidatePath("/admin");
-  await removeParticipantFromTeam(rawFormData.email);
+  revalidatePath("/admin")
+  await removeParticipantFromTeam(rawFormData.email)
 }
 
 export async function toggleEventStatusServerAction(
-  formData: FormData,
+  formData: FormData
 ): Promise<void> {
   try {
     const result = await fetch(
@@ -44,30 +44,30 @@ export async function toggleEventStatusServerAction(
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.VERCEL_API_TOKEN}`,
+          "Authorization": `Bearer ${process.env.VERCEL_API_TOKEN}`
         },
         body: JSON.stringify({
           items: [
             {
               operation: "update",
               key: "eventStarted",
-              value: !Boolean(formData.get("eventStarted")),
-            },
-          ],
-        }),
-      },
-    ).then((res) => res.json());
+              value: !Boolean(formData.get("eventStarted"))
+            }
+          ]
+        })
+      }
+    ).then((res) => res.json())
 
-    revalidatePath("/admin");
-    result;
+    revalidatePath("/admin")
+    result
   } catch (error) {
-    console.error(error);
-    error;
+    console.error(error)
+    error
   }
 }
 
 export async function updateTimerStatusServerAction(
-  formData: FormData,
+  formData: FormData
 ): Promise<void> {
   try {
     const result = await fetch(
@@ -76,158 +76,158 @@ export async function updateTimerStatusServerAction(
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.VERCEL_API_TOKEN}`,
+          "Authorization": `Bearer ${process.env.VERCEL_API_TOKEN}`
         },
         body: JSON.stringify({
           items: [
             {
               operation: "update",
               key: "timerOn",
-              value: !Boolean(formData.get("timerOn")),
+              value: !Boolean(formData.get("timerOn"))
             },
             {
               operation: "update",
               key: "timerToggleTimestamp",
-              value: Date.now(),
-            },
-          ],
-        }),
-      },
-    ).then((res) => res.json());
+              value: Date.now()
+            }
+          ]
+        })
+      }
+    ).then((res) => res.json())
 
-    revalidatePath("/admin");
-    result;
+    revalidatePath("/admin")
+    result
   } catch (error) {
-    console.error(error);
-    error;
+    console.error(error)
+    error
   }
 }
 
 export async function deleteParticipantServerAction(
-  formData: FormData,
+  formData: FormData
 ): Promise<void> {
-  const email = formData.get("email") as string;
-  await deleteParticipant(email);
-  revalidatePath("/admin");
+  const email = formData.get("email") as string
+  await deleteParticipant(email)
+  revalidatePath("/admin")
 }
 
 export async function resetTeamTimeServerAction(
-  formData: FormData,
+  formData: FormData
 ): Promise<void> {
-  const teamId = formData.get("teamId") as string;
-  await resetTeamTime(teamId);
-  revalidatePath("/admin");
+  const teamId = formData.get("teamId") as string
+  await resetTeamTime(teamId)
+  revalidatePath("/admin")
 }
 
 export async function createRiddleServerAction(
   riddleNumber: number,
   text: string,
   input: string,
-  solution: string,
+  solution: string
 ) {
   try {
-    await upsertRiddle(riddleNumber, text, input, solution);
-    revalidatePath("/admin");
-    return { success: true, message: "Riddle created successfully!" };
+    await upsertRiddle(riddleNumber, text, input, solution)
+    revalidatePath("/admin")
+    return { success: true, message: "Riddle created successfully!" }
   } catch (error) {
-    console.error("Error creating riddle:", error);
-    return { success: false, message: "Error creating riddle." };
+    console.error("Error creating riddle:", error)
+    return { success: false, message: "Error creating riddle." }
   }
 }
 
 export async function createParticipantServerAction(
   name: string,
-  email: string,
+  email: string
 ) {
   try {
-    await createParticipant(name, email);
-    revalidatePath("/admin");
-    return { success: true, message: "Participant created successfully!" };
+    await createParticipant(name, email)
+    revalidatePath("/admin")
+    return { success: true, message: "Participant created successfully!" }
   } catch (error) {
-    console.error("Error creating riddle:", error);
-    return { success: false, message: "Error creating participant." };
+    console.error("Error creating riddle:", error)
+    return { success: false, message: "Error creating participant." }
   }
 }
 
 export async function toggleTeamRiddleProgressAction(
-  formData: FormData,
+  formData: FormData
 ): Promise<void> {
-  const teamId = formData.get("teamId") as string;
-  const riddleNumber = Number(formData.get("riddleNumber"));
-  const teamProgress = await getTeamRiddleProgress(teamId, riddleNumber);
+  const teamId = formData.get("teamId") as string
+  const riddleNumber = Number(formData.get("riddleNumber"))
+  const teamProgress = await getTeamRiddleProgress(teamId, riddleNumber)
   if (teamProgress == null) {
-    return;
+    return
   }
-  updateTeamRiddleProgress(teamId, riddleNumber, !teamProgress.completed);
-  revalidatePath("/admin");
+  updateTeamRiddleProgress(teamId, riddleNumber, !teamProgress.completed)
+  revalidatePath("/admin")
 }
 
 export async function resetAllTeamRiddleProgressAction() {
-  await resetAllTeamsRiddleProgresses();
-  revalidatePath("/admin");
+  await resetAllTeamsRiddleProgresses()
+  revalidatePath("/admin")
 }
 
 export async function deleteAllParticipantsServerAction() {
-  await deleteAllParticipants();
-  revalidatePath("/admin");
+  await deleteAllParticipants()
+  revalidatePath("/admin")
 }
 
 export async function dissolveAllTeamsServerAction() {
-  await dissolveAllTeams();
-  revalidatePath("/admin");
+  await dissolveAllTeams()
+  revalidatePath("/admin")
 }
 
 export async function validateInputServerAction(formData: FormData) {
-  const teamId = formData.get("teamId") as string;
-  const riddleNumber = parseInt(formData.get("riddleNumber") as string);
-  const solution = formData.get("solution") as string;
+  const teamId = formData.get("teamId") as string
+  const riddleNumber = parseInt(formData.get("riddleNumber") as string)
+  const solution = formData.get("solution") as string
 
-  const submissionCheck = await isRiddleSubmittedRecently(riddleNumber, teamId);
+  const submissionCheck = await isRiddleSubmittedRecently(riddleNumber, teamId)
 
   if (!submissionCheck.canSubmit) {
     return {
       correct: false,
       timeLeft: submissionCheck.timeLeft,
-      message: "Please wait before submitting again.",
-    };
+      message: "Please wait before submitting again."
+    }
   }
 
-  const isCorrect = await isCorrectSolution(riddleNumber, solution);
+  const isCorrect = await isCorrectSolution(riddleNumber, solution)
 
   if (isCorrect) {
-    await completeTeamRiddle(riddleNumber, teamId);
-    await updateSubmissionTime(riddleNumber, teamId);
-    return { correct: true, timeLeft: null, message: "Correct solution!" };
+    await completeTeamRiddle(riddleNumber, teamId)
+    await updateSubmissionTime(riddleNumber, teamId)
+    return { correct: true, timeLeft: null, message: "Correct solution!" }
   } else {
-    await updateSubmissionTime(riddleNumber, teamId);
-    return { correct: false, timeLeft: null, message: "Incorrect solution!" };
+    await updateSubmissionTime(riddleNumber, teamId)
+    return { correct: false, timeLeft: null, message: "Incorrect solution!" }
   }
 }
 
 export async function updateTeamRiddleProgressServerAction(formData: FormData) {
-  const teamId = formData.get("teamId") as string;
-  const number = parseInt(formData.get("number") as string);
-  const complete = formData.get("complete") === "true";
+  const teamId = formData.get("teamId") as string
+  const number = parseInt(formData.get("number") as string)
+  const complete = formData.get("complete") === "true"
 
-  await updateTeamRiddleProgress(teamId, number, complete);
+  await updateTeamRiddleProgress(teamId, number, complete)
 }
 export async function deleteRiddleServerAction(formData: FormData) {
-  const riddleNumber = Number(formData.get("riddleNumber"));
-  await deleteRiddle(riddleNumber);
+  const riddleNumber = Number(formData.get("riddleNumber"))
+  await deleteRiddle(riddleNumber)
 }
 export async function deleteAllRiddlesServerAction() {
-  await deleteAllRiddles();
+  await deleteAllRiddles()
 }
 export async function addParticipantToTeamServerAction(
   email: string,
-  teamId: string,
+  teamId: string
 ) {
   try {
-    await addParticipantToTeam(email, teamId);
-    revalidatePath("/admin");
-    return { success: true, message: "Successfully added participant to team" };
+    await addParticipantToTeam(email, teamId)
+    revalidatePath("/admin")
+    return { success: true, message: "Successfully added participant to team" }
   } catch (error) {
-    console.error("Error adding participant to team:", error);
-    return { success: false, message: "Error adding participant to team" };
+    console.error("Error adding participant to team:", error)
+    return { success: false, message: "Error adding participant to team" }
   }
 }

@@ -1,32 +1,32 @@
-import Link from "next/link";
-import { get } from "@vercel/edge-config";
-import { getAllTeamRiddleProgress, getTeamByEmail } from "@/functions/db";
+import Link from "next/link"
+import { get } from "@vercel/edge-config"
+import { getAllTeamRiddleProgress, getTeamByEmail } from "@/functions/db"
 
-import { Spacer } from "@/components/Spacer";
-import { RiddleTimer } from "@/components/RiddleTimer";
-import { auth } from "@/auth";
-import { isAuthed, isOrganizer } from "@/functions/user-management";
-import { redirect } from "next/navigation";
+import { Spacer } from "@/components/Spacer"
+import { RiddleTimer } from "@/components/RiddleTimer"
+import { auth } from "@/auth"
+import { isAuthed, isOrganizer } from "@/functions/user-management"
+import { redirect } from "next/navigation"
 
 export default async function Riddles() {
-  const session = await auth();
-  const authed = isAuthed(session);
+  const session = await auth()
+  const authed = isAuthed(session)
 
-  if (!session || !authed) redirect("/");
+  if (!session || !authed) redirect("/")
 
-  const eventStarted = (await get("eventStarted")) as boolean;
+  const eventStarted = (await get("eventStarted")) as boolean
 
-  if (!eventStarted && !isOrganizer(session)) redirect("/");
+  if (!eventStarted && !isOrganizer(session)) redirect("/")
 
-  const participantEmail = session.user!.email!;
+  const participantEmail = session.user!.email!
 
-  const team = await getTeamByEmail(participantEmail);
+  const team = await getTeamByEmail(participantEmail)
 
-  const timerToggleTimestamp = (await get("timerToggleTimestamp")) as number;
+  const timerToggleTimestamp = (await get("timerToggleTimestamp")) as number
 
-  if (!team) return null;
+  if (!team) return null
 
-  const riddleProgresses = await getAllTeamRiddleProgress(team.id);
+  const riddleProgresses = await getAllTeamRiddleProgress(team.id)
   return (
     <>
       <RiddleTimer
@@ -48,5 +48,5 @@ export default async function Riddles() {
         ))}
       </ul>
     </>
-  );
+  )
 }

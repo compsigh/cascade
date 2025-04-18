@@ -1,1 +1,1 @@
-export { SearchParticipants } from "./SearchParticipants";
+export { SearchParticipants } from "./SearchParticipants"

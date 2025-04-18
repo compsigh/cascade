@@ -1,46 +1,46 @@
 // AdminPanelClient.tsx
-"use client";
+"use client"
 
-import { Button } from "@/components/Button";
-import { createRiddleServerAction } from "@/functions/actions"; // Import the server action
-import { useState, useActionState } from "react";
-import { Spacer } from "@/components/Spacer";
+import { Button } from "@/components/Button"
+import { createRiddleServerAction } from "@/functions/actions" // Import the server action
+import { useState, useActionState } from "react"
+import { Spacer } from "@/components/Spacer"
 
 interface FormState {
-  success: boolean;
-  message: string;
+  success: boolean
+  message: string
 }
 
 const initialState: FormState = {
   success: false,
-  message: "",
-};
+  message: ""
+}
 
 export default function CreateRiddleAdminPanel() {
-  const [riddleNumber, setRiddleNumber] = useState("");
-  const [text, setText] = useState("");
-  const [inputVal, setInputVal] = useState("");
-  const [solution, setSolution] = useState("");
+  const [riddleNumber, setRiddleNumber] = useState("")
+  const [text, setText] = useState("")
+  const [inputVal, setInputVal] = useState("")
+  const [solution, setSolution] = useState("")
 
   async function createRiddleFormAction(
     _prevState: FormState,
-    formData: FormData,
+    formData: FormData
   ): Promise<FormState> {
-    const riddleNumber = parseInt(formData.get("riddleNumber") as string);
-    const text = formData.get("text") as string;
-    const input = formData.get("inputVal") as string;
-    const solution = formData.get("solution") as string;
+    const riddleNumber = parseInt(formData.get("riddleNumber") as string)
+    const text = formData.get("text") as string
+    const input = formData.get("inputVal") as string
+    const solution = formData.get("solution") as string
 
     if (isNaN(riddleNumber) || !text || !input || !solution)
-      return { success: false, message: "Please fill in all fields." };
+      return { success: false, message: "Please fill in all fields." }
 
-    return await createRiddleServerAction(riddleNumber, text, input, solution);
+    return await createRiddleServerAction(riddleNumber, text, input, solution)
   }
 
   const [state, formAction] = useActionState(
     createRiddleFormAction,
-    initialState,
-  );
+    initialState
+  )
 
   return (
     <>
@@ -93,5 +93,5 @@ export default function CreateRiddleAdminPanel() {
       </form>
       {state?.message && state.message}
     </>
-  );
+  )
 }

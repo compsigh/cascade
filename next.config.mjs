@@ -5,7 +5,7 @@
  **/
 const nextConfig = {
   pageExtensions: ["js", "jsx", "ts", "tsx"],
-  reactStrictMode: true,
-};
+  reactStrictMode: true
+}
 
-export default nextConfig;
+export default nextConfig

@@ -1,5 +1,5 @@
-import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+import NextAuth from "next-auth"
+import GoogleProvider from "next-auth/providers/google"
 
 export const authOptions = {
   providers: [
@@ -11,14 +11,14 @@ export const authOptions = {
           id: profile.sub,
           name: profile.name,
           email: profile.email,
-          image: profile.picture,
-        };
-      },
-    }),
-  ],
-};
+          image: profile.picture
+        }
+      }
+    })
+  ]
+}
 
 export const {
   handlers: { GET, POST },
-  auth,
-} = NextAuth(authOptions);
+  auth
+} = NextAuth(authOptions)

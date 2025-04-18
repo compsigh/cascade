@@ -1,41 +1,41 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/Button";
-import { createParticipantServerAction } from "@/functions/actions";
-import { useState, useActionState } from "react";
-import { Spacer } from "@/components/Spacer";
+import { Button } from "@/components/Button"
+import { createParticipantServerAction } from "@/functions/actions"
+import { useState, useActionState } from "react"
+import { Spacer } from "@/components/Spacer"
 
 interface FormState {
-  success: boolean;
-  message: string;
+  success: boolean
+  message: string
 }
 
 const initialState: FormState = {
   success: false,
-  message: "",
-};
+  message: ""
+}
 
 export default function CreateParticipantAdminPanel() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
 
   async function createParticipantFormAction(
     _prevState: FormState,
-    formData: FormData,
+    formData: FormData
   ): Promise<FormState> {
-    const name = formData.get("name") as string;
-    const email = formData.get("email") as string;
+    const name = formData.get("name") as string
+    const email = formData.get("email") as string
 
     if (!name || !email)
-      return { success: false, message: "Please fill in all fields." };
+      return { success: false, message: "Please fill in all fields." }
 
-    return await createParticipantServerAction(name, email);
+    return await createParticipantServerAction(name, email)
   }
 
   const [state, formAction] = useActionState(
     createParticipantFormAction,
-    initialState,
-  );
+    initialState
+  )
 
   return (
     <>
@@ -67,5 +67,5 @@ export default function CreateParticipantAdminPanel() {
       </form>
       {state?.message && state.message}
     </>
-  );
+  )
 }

@@ -1,16 +1,16 @@
-import { Button } from "@/components/Button";
+import { Button } from "@/components/Button"
 import {
   deleteParticipantServerAction,
   deleteRiddleServerAction,
   removeParticipantFromTeamServerAction,
   resetTeamTimeServerAction,
-  toggleTeamRiddleProgressAction,
-} from "@/functions/actions";
-import { getAllRiddles, getAllTeamsParticipants } from "@/functions/db";
+  toggleTeamRiddleProgressAction
+} from "@/functions/actions"
+import { getAllRiddles, getAllTeamsParticipants } from "@/functions/db"
 
 export default async function TeamTable() {
-  const teams = await getAllTeamsParticipants();
-  const riddles = await getAllRiddles();
+  const teams = await getAllTeamsParticipants()
+  const riddles = await getAllRiddles()
   return (
     <table>
       <thead>
@@ -74,21 +74,21 @@ export default async function TeamTable() {
             </td>
             {riddles.map((riddle) => {
               const riddleProgress = team.riddlesProgresses.find(
-                (progress) => progress.riddleNumber === riddle.number,
-              );
+                (progress) => progress.riddleNumber === riddle.number
+              )
 
               if (!riddleProgress) {
                 return (
                   <td key={`team-${team.id}-riddle-${riddle.number}`}>
                     no progress
                   </td>
-                );
+                )
               }
 
-              const completionStatus = riddleProgress?.completed ? "✅" : "❌";
+              const completionStatus = riddleProgress?.completed ? "✅" : "❌"
               const lastSubmissionTime = riddleProgress?.mostRecentSubmission
                 ? riddleProgress.mostRecentSubmission.toLocaleTimeString()
-                : "No submissions";
+                : "No submissions"
 
               return (
                 <td key={`team-${team.id}-riddle-${riddle.number}`}>
@@ -106,11 +106,11 @@ export default async function TeamTable() {
                     </Button>
                   </form>
                 </td>
-              );
+              )
             })}
           </tr>
         ))}
       </tbody>
     </table>
-  );
+  )
 }

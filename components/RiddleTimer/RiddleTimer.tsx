@@ -1,11 +1,11 @@
-import { CountdownWrapper } from "@/components/CountdownWrapper";
+import { CountdownWrapper } from "@/components/CountdownWrapper"
 
 export function RiddleTimer({
   on,
-  millisecondsSinceStart,
+  millisecondsSinceStart
 }: {
-  on: boolean;
-  millisecondsSinceStart: number;
+  on: boolean
+  millisecondsSinceStart: number
 }) {
   return (
     <>
@@ -16,5 +16,5 @@ export function RiddleTimer({
         />
       </code>
     </>
-  );
+  )
 }

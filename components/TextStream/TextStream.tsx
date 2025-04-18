@@ -1,24 +1,24 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
-import { RandomReveal } from "react-random-reveal";
+import { useEffect, useState } from "react"
+import { RandomReveal } from "react-random-reveal"
 
 export function TextStream({
   text,
-  duration = 2,
+  duration = 2
 }: {
-  text: string;
-  duration?: number;
+  text: string
+  duration?: number
 }) {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false)
   const CHARACTERS =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?".split(
-      "",
-    );
+      ""
+    )
 
   useEffect(() => {
-    setIsLoaded(true);
-  }, []);
+    setIsLoaded(true)
+  }, [])
 
   return isLoaded ? (
     <span>
@@ -32,5 +32,5 @@ export function TextStream({
     </span>
   ) : (
     <span>{text}</span>
-  );
+  )
 }

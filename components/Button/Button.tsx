@@ -1,16 +1,16 @@
-"use client";
+"use client"
 
-import { signIn } from "next-auth/react";
-import styles from "./Button.module.css";
+import { signIn } from "next-auth/react"
+import styles from "./Button.module.css"
 
 export function Button({
   type,
   children,
-  disabled = false,
+  disabled = false
 }: {
-  type: "signIn" | "submit";
-  children: React.ReactNode;
-  disabled?: boolean;
+  type: "signIn" | "submit"
+  children: React.ReactNode
+  disabled?: boolean
 }) {
   if (type === "signIn") {
     return (
@@ -20,7 +20,7 @@ export function Button({
       >
         {children}
       </button>
-    );
+    )
   }
 
   if (type === "submit") {
@@ -28,8 +28,8 @@ export function Button({
       <button type="submit" className={styles.button} disabled={disabled}>
         {children}
       </button>
-    );
+    )
   }
 
-  return <></>;
+  return <></>
 }

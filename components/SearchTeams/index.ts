@@ -1,1 +1,1 @@
-export { SearchTeams } from "./SearchTeams";
+export { SearchTeams } from "./SearchTeams"

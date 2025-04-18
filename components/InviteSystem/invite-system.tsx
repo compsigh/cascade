@@ -1,26 +1,26 @@
-"use client";
+"use client"
 
-import { useState, useTransition } from "react";
-import { Button } from "@/components/Button";
-import { Spacer } from "@/components/Spacer";
-import { SearchParticipants } from "@/components/SearchParticipants";
-import { Participant } from "@/generated/client";
+import { useState, useTransition } from "react"
+import { Button } from "@/components/Button"
+import { Spacer } from "@/components/Spacer"
+import { SearchParticipants } from "@/components/SearchParticipants"
+import { Participant } from "@/generated/client"
 
 type Invite = {
-  id: string;
-  fromParticipantEmail: string;
-  toParticipantEmail: string;
-};
+  id: string
+  fromParticipantEmail: string
+  toParticipantEmail: string
+}
 
 export interface InviteSystemProps {
-  participant: Participant;
-  allParticipants: Participant[];
-  initialInvitesSent: Invite[];
-  team: Participant[];
-  maxTeamSize: number;
-  maxInvites: number;
-  onSendInvite: (from: string, to: string) => Promise<Invite>;
-  onCancelInvite: (id: string) => Promise<Invite>;
+  participant: Participant
+  allParticipants: Participant[]
+  initialInvitesSent: Invite[]
+  team: Participant[]
+  maxTeamSize: number
+  maxInvites: number
+  onSendInvite: (from: string, to: string) => Promise<Invite>
+  onCancelInvite: (id: string) => Promise<Invite>
 }
 
 export function InviteSystem({
@@ -31,108 +31,108 @@ export function InviteSystem({
   maxTeamSize,
   maxInvites,
   onSendInvite,
-  onCancelInvite,
+  onCancelInvite
 }: InviteSystemProps) {
   // State for tracking invites including optimistic updates
-  const [invitesSent, setInvitesSent] = useState<Invite[]>(initialInvitesSent);
-  const [pendingInvites, setPendingInvites] = useState<Set<string>>(new Set());
+  const [invitesSent, setInvitesSent] = useState<Invite[]>(initialInvitesSent)
+  const [pendingInvites, setPendingInvites] = useState<Set<string>>(new Set())
   const [pendingCancellations, setPendingCancellations] = useState<Set<string>>(
-    new Set(),
-  );
-  const [selectedEmail, setSelectedEmail] = useState("");
-  const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
+    new Set()
+  )
+  const [selectedEmail, setSelectedEmail] = useState("")
+  const [isPending, startTransition] = useTransition()
+  const [error, setError] = useState<string | null>(null)
 
   // Filter participants to exclude current user and those already invited
   const availableParticipants = allParticipants.filter(
     (p) =>
       !invitesSent.some((invite) => invite.toParticipantEmail === p.email) &&
       !team.some((teammate) => teammate.email === p.email) &&
-      !pendingInvites.has(p.email),
-  );
+      !pendingInvites.has(p.email)
+  )
 
   // Calculate effective counts including pending actions
   const effectiveInviteCount =
-    invitesSent.length + pendingInvites.size - pendingCancellations.size;
+    invitesSent.length + pendingInvites.size - pendingCancellations.size
 
   // Check if user can send more invites
   const canSendInvite =
     maxTeamSize !== null &&
     maxInvites !== null &&
     team.length < maxTeamSize &&
-    effectiveInviteCount < maxInvites;
+    effectiveInviteCount < maxInvites
 
   // Handle sending an invite with optimistic update
   function handleSendInvite(e: React.FormEvent) {
-    e.preventDefault();
+    e.preventDefault()
 
-    if (!selectedEmail || !canSendInvite) return;
+    if (!selectedEmail || !canSendInvite) return
 
     // Validate
     if (maxInvites !== null && effectiveInviteCount >= maxInvites) {
-      setError("You've reached the maximum number of invites");
-      return;
+      setError("You've reached the maximum number of invites")
+      return
     }
 
     // Add to pending set for optimistic UI update
-    setPendingInvites((prev) => new Set(prev).add(selectedEmail));
-    setSelectedEmail("");
-    setError(null);
+    setPendingInvites((prev) => new Set(prev).add(selectedEmail))
+    setSelectedEmail("")
+    setError(null)
 
     // Send the actual invite
     startTransition(async () => {
       try {
-        const newInvite = await onSendInvite(participant.email, selectedEmail);
+        const newInvite = await onSendInvite(participant.email, selectedEmail)
 
         if (newInvite) {
           // Update with the server response
-          setInvitesSent((prev) => [...prev, newInvite]);
+          setInvitesSent((prev) => [...prev, newInvite])
         } else {
-          setError("Failed to send invite");
+          setError("Failed to send invite")
         }
       } catch (err) {
-        setError("An error occurred while sending the invite");
-        console.error(err);
+        setError("An error occurred while sending the invite")
+        console.error(err)
       } finally {
         // Remove from pending set
         setPendingInvites((prev) => {
-          const updated = new Set(prev);
-          updated.delete(selectedEmail);
-          return updated;
-        });
+          const updated = new Set(prev)
+          updated.delete(selectedEmail)
+          return updated
+        })
       }
-    });
+    })
   }
 
   // Handle canceling an invite with optimistic update
   function handleCancelInvite(inviteId: string) {
     // Find the invite to cancel
-    const inviteToCancel = invitesSent.find((invite) => invite.id === inviteId);
-    if (!inviteToCancel) return;
+    const inviteToCancel = invitesSent.find((invite) => invite.id === inviteId)
+    if (!inviteToCancel) return
 
     // Add to pending cancellations for optimistic UI update
-    setPendingCancellations((prev) => new Set(prev).add(inviteId));
+    setPendingCancellations((prev) => new Set(prev).add(inviteId))
 
     // Optimistically update the UI
-    setInvitesSent((prev) => prev.filter((invite) => invite.id !== inviteId));
+    setInvitesSent((prev) => prev.filter((invite) => invite.id !== inviteId))
 
     // Send the actual cancellation request
     startTransition(async () => {
       try {
-        await onCancelInvite(inviteId);
+        await onCancelInvite(inviteId)
       } catch (err) {
         // Revert the optimistic update if there's an error
-        setInvitesSent((prev) => [...prev, inviteToCancel]);
-        console.error(err);
+        setInvitesSent((prev) => [...prev, inviteToCancel])
+        console.error(err)
       } finally {
         // Remove from pending cancellations
         setPendingCancellations((prev) => {
-          const updated = new Set(prev);
-          updated.delete(inviteId);
-          return updated;
-        });
+          const updated = new Set(prev)
+          updated.delete(inviteId)
+          return updated
+        })
       }
-    });
+    })
   }
 
   return (
@@ -168,11 +168,11 @@ export function InviteSystem({
           <Spacer size={8} />
           <Button type="submit" disabled={!selectedEmail || isPending}>
             {(() => {
-              if (isPending) return "sending...";
+              if (isPending) return "sending..."
 
-              if (selectedEmail) return "send invite";
+              if (selectedEmail) return "send invite"
 
-              return "select participant";
+              return "select participant"
             })()}
           </Button>
         </form>
@@ -190,8 +190,8 @@ export function InviteSystem({
               <p>to: {invite.toParticipantEmail}</p>
               <form
                 onSubmit={(e) => {
-                  e.preventDefault();
-                  handleCancelInvite(invite.id);
+                  e.preventDefault()
+                  handleCancelInvite(invite.id)
                 }}
               >
                 <Button
@@ -208,5 +208,5 @@ export function InviteSystem({
         </ul>
       )}
     </div>
-  );
+  )
 }

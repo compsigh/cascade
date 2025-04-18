@@ -1,28 +1,28 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 
-import styles from "./Breadcrumbs.module.css";
+import styles from "./Breadcrumbs.module.css"
 
 function Crumb({
   href,
-  children,
+  children
 }: {
-  href: string;
-  children: React.ReactNode;
+  href: string
+  children: React.ReactNode
 }) {
   return (
     <li>
       <Link href={href}>{children}</Link>
     </li>
-  );
+  )
 }
 
 export function Breadcrumbs() {
-  const path = usePathname();
-  const crumbs = path.split("/").filter(Boolean);
-  crumbs.pop();
+  const path = usePathname()
+  const crumbs = path.split("/").filter(Boolean)
+  crumbs.pop()
 
   return (
     <nav id={styles.breadcrumbs} aria-label="Breadcrumb">
@@ -39,5 +39,5 @@ export function Breadcrumbs() {
         ))}
       </ol>
     </nav>
-  );
+  )
 }
