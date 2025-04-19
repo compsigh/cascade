@@ -34,3 +34,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# https://www.prisma.io/docs/orm/prisma-schema/overview/generators#prisma-client-early-access
+/generated/client/

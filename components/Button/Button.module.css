@@ -24,3 +24,8 @@ button.button:active {
   color: var(--color-white);
   background-color: var(--color-black);
 }
+
+button.button:disabled {
+  cursor: not-allowed;
+  color: var(--color-gray);
+}
