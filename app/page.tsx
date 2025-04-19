@@ -1,11 +1,11 @@
 import { auth } from "@/auth"
+import { get } from "@vercel/edge-config"
 import { isAuthed, isOrganizer } from "@/functions/user-management"
 
 import Link from "next/link"
 import { Spacer } from "@/components/Spacer"
 import { Button } from "@/components/Button"
 import { TextStream } from "@/components/TextStream"
-import { get } from "@vercel/edge-config"
 
 export default async function Home() {
   const session = await auth()
@@ -28,7 +28,7 @@ export default async function Home() {
         <li>
           <TextStream
             duration={1}
-            text={`participants form teams of 1-${maxTeamSize !== null ? maxTeamSize : "N/A"}`}
+            text={`participants form teams of 1–${maxTeamSize !== null ? maxTeamSize : "N/A"}`}
           />
         </li>
         <li>

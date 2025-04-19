@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   metadataBase,
   title: "compsigh cascade",
   description:
-    "A one-night coding riddle competition for the compsigh community on October 18th 2024 at 6pm",
+    "A one-night coding riddle competition for the compsigh community on April 25th 2025 at 6pm",
   openGraph: {
     images: ["/og-image.png"]
   }

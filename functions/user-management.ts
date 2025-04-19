@@ -11,7 +11,6 @@ export function isAuthed(session: Session | null) {
 
 export function isOrganizer(session: Session | null) {
   if (!isAuthed(session)) return false
-
   if (process.env.ORGANIZERS?.includes(session!.user!.email!)) return true
 
   return false
