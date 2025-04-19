@@ -1,1 +1,0 @@
-export { TextStream } from './TextStream'

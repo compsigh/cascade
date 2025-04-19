@@ -1,1 +1,0 @@
-export { InviteForm } from './InviteForm'

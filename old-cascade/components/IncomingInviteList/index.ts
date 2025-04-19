@@ -1,1 +1,0 @@
-export { IncomingInviteList } from './IncomingInviteList'
