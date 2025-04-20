@@ -1,4 +1,3 @@
-import { Button } from "@/components/Button"
 import {
   deleteParticipantServerAction,
   deleteRiddleServerAction,
@@ -6,10 +5,12 @@ import {
   resetTeamTimeServerAction,
   toggleTeamRiddleProgressAction
 } from "@/functions/actions"
-import { getAllRiddles, getAllTeamsParticipants } from "@/functions/db"
+import { getAllRiddles, getAllTeams } from "@/functions/db"
 
-export default async function TeamTable() {
-  const teams = await getAllTeamsParticipants()
+import { Button } from "@/components/Button"
+
+export async function TeamTable() {
+  const teams = await getAllTeams()
   const riddles = await getAllRiddles()
   return (
     <table>
@@ -26,7 +27,7 @@ export default async function TeamTable() {
                   name="riddleNumber"
                   value={riddle.number}
                 />
-                <Button type="submit">❌</Button>
+                <Button type="submit">Delete</Button>
               </form>
             </th>
           ))}
@@ -38,30 +39,22 @@ export default async function TeamTable() {
             <td>
               {team.participants.map((participant) => (
                 <div key={participant.name}>
-                  {participant.name}{" "}
-                  <form
-                    action={removeParticipantFromTeamServerAction}
-                    key={participant.email + "removeFromTeam"}
-                    style={{ display: "inline" }}
-                  >
+                  <p>{participant.name}</p>
+                  <form action={removeParticipantFromTeamServerAction}>
                     <input
                       type="hidden"
                       name="email"
                       value={participant.email}
                     />
-                    <Button type="submit">🆓</Button>
-                  </form>{" "}
-                  <form
-                    action={deleteParticipantServerAction}
-                    key={participant.email + "deleteParticipant"}
-                    style={{ display: "inline" }}
-                  >
+                    <Button type="submit">Remove from team</Button>
+                  </form>
+                  <form action={deleteParticipantServerAction}>
                     <input
                       type="hidden"
                       name="email"
                       value={participant.email}
                     />
-                    <Button type="submit">❌</Button>
+                    <Button type="submit">Remove from event</Button>
                   </form>
                 </div>
               ))}
@@ -69,7 +62,8 @@ export default async function TeamTable() {
             <td>
               <form action={resetTeamTimeServerAction}>
                 <input type="hidden" name="teamId" value={team.id} />
-                {team.totalTime} <Button type="submit">🔁</Button>
+                <p>{team.totalTime}</p>
+                <Button type="submit">Reset</Button>
               </form>
             </td>
             {riddles.map((riddle) => {
@@ -99,10 +93,9 @@ export default async function TeamTable() {
                       name="riddleNumber"
                       value={riddle.number}
                     />
+                    <p>{completionStatus} {" "} {lastSubmissionTime}</p>
                     <Button type="submit">
-                      {completionStatus}
-
-                      {lastSubmissionTime}
+                      Toggle completion
                     </Button>
                   </form>
                 </td>

@@ -1,7 +1,6 @@
 import { auth } from "@/auth"
 import { get } from "@vercel/edge-config"
 import { redirect } from "next/navigation"
-import { isAuthed, isOrganizer } from "@/functions/user-management"
 import {
   deleteAllParticipantsServerAction,
   deleteAllRiddlesServerAction,
@@ -10,12 +9,14 @@ import {
   toggleEventStatusServerAction,
   updateTimerStatusServerAction
 } from "@/functions/actions"
-import { Button } from "@/components/Button"
-import TeamTable from "./TeamTable"
-import CreateParticipantAdminPanel from "./CreateParticipantAdminPanel"
-import CreateRiddleAdminPanel from "./CreateRiddleAdminPanel"
-import AddParticipantToTeamAdminPanel from "./AddParticipantToTeamAdminPanel"
 import { getAllParticipants, getAllTeams } from "@/functions/db"
+import { isAuthed, isOrganizer } from "@/functions/user-management"
+
+import { TeamTable } from "./TeamTable"
+import { Button } from "@/components/Button"
+import CreateRiddleAdminPanel from "./CreateRiddleAdminPanel"
+import CreateParticipantAdminPanel from "./CreateParticipantAdminPanel"
+import AddParticipantToTeamAdminPanel from "./AddParticipantToTeamAdminPanel"
 
 export default async function AdminPanel() {
   const session = await auth()
@@ -24,8 +25,8 @@ export default async function AdminPanel() {
 
   const eventStarted = (await get("eventStarted")) as boolean
   const timerOn = (await get("timerOn")) as boolean
-  const teams = await getAllTeams()
   const participants = await getAllParticipants()
+  const teams = await getAllTeams()
 
   return (
     <>
@@ -71,6 +72,7 @@ export default async function AdminPanel() {
           </form>
         </li>
       </ul>
+
       <TeamTable />
       <CreateParticipantAdminPanel />
       <CreateRiddleAdminPanel />

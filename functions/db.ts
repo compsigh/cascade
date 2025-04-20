@@ -189,7 +189,11 @@ export async function dissolveAllTeams() {
 export async function getAllTeams() {
   const teams = await prisma.team.findMany({
     include: {
-      participants: true
+      participants: true,
+      riddlesProgresses: true
+    },
+    orderBy: {
+      totalTime: "asc"
     }
   })
   return teams
@@ -719,20 +723,6 @@ export async function updateTeamRiddleProgress(
       completed: complete
     }
   })
-}
-
-// Modify getAllTeams to include riddle progresses
-export async function getAllTeamsParticipants() {
-  const teams = await prisma.team.findMany({
-    include: {
-      participants: true,
-      riddlesProgresses: true
-    },
-    orderBy: {
-      totalTime: "asc"
-    }
-  })
-  return teams
 }
 
 // New function to fetch all riddle completions
