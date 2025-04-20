@@ -1,8 +1,9 @@
 "use client"
 
-import { Button } from "@/components/Button"
-import { createParticipantServerAction } from "@/functions/actions"
 import { useState, useActionState } from "react"
+import { createParticipantServerAction } from "@/functions/actions"
+
+import { Button } from "@/components/Button"
 import { Spacer } from "@/components/Spacer"
 
 interface FormState {
@@ -15,14 +16,14 @@ const initialState: FormState = {
   message: ""
 }
 
-export default function CreateParticipantAdminPanel() {
+export function CreateParticipantForm() {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
 
   async function createParticipantFormAction(
     _prevState: FormState,
     formData: FormData
-  ): Promise<FormState> {
+  ) {
     const name = formData.get("name") as string
     const email = formData.get("email") as string
 
@@ -41,7 +42,7 @@ export default function CreateParticipantAdminPanel() {
     <>
       <h2>Create New Participant</h2>
       <form action={formAction}>
-        <label htmlFor="name">Name:</label>
+        <label htmlFor="name">Name:</label> {" "}
         <input
           type="text"
           id="name"
@@ -50,18 +51,20 @@ export default function CreateParticipantAdminPanel() {
           onChange={(e) => setName(e.target.value)}
           required
         />
-        <Spacer size={10} />
 
-        <label htmlFor="email">Email:</label>
+        <Spacer size={12} />
+
+        <label htmlFor="email">Email:</label> {" "}
         <input
-          type="text"
+          type="email"
           id="email"
           name="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <Spacer size={10} />
+
+        <Spacer size={12} />
 
         <Button type="submit">Create Participant</Button>
       </form>

@@ -199,6 +199,26 @@ export async function getAllTeams() {
   return teams
 }
 
+export type CompleteTeamData =
+{
+  participants: {
+    name: string
+    email: string
+    teamId: string
+  }[]
+} & {
+  id: string
+  totalTime: number
+} & {
+  riddlesProgresses: {
+    teamId: string
+    id: string
+    completed: boolean
+    mostRecentSubmission: Date
+    riddleNumber: number
+  }[]
+}
+
 export async function deleteAllParticipantsAndTeams() {
   const participants = await prisma.participant.deleteMany()
   const teams = await prisma.team.deleteMany()

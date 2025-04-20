@@ -1,11 +1,15 @@
 "use client"
 
-import { Button } from "@/components/Button"
-import { addParticipantToTeamServerAction } from "@/functions/actions"
 import { useState, useActionState } from "react"
+import { addParticipantToTeamServerAction } from "@/functions/actions"
+
+import type { Participant } from "@/generated/client"
+import type { CompleteTeamData } from "@/functions/db"
+
+import { Button } from "@/components/Button"
 import { Spacer } from "@/components/Spacer"
-import { SearchParticipants } from "@/components/SearchParticipants"
 import { SearchTeams } from "@/components/SearchTeams"
+import { SearchParticipants } from "@/components/SearchParticipants"
 
 interface FormState {
   success: boolean
@@ -17,31 +21,19 @@ const initialState: FormState = {
   message: ""
 }
 
-type Participant = {
-  name: string
-  email: string
-  teamId: string
-}
-
-type Team = {
-  id: string
-  totalTime: number
-  participants: Participant[]
-}
-
 interface AddParticipantToTeamAdminPanelProps {
   participants: Participant[]
-  teams: Team[]
+  teams: CompleteTeamData[]
 }
 
-export default function AddParticipantToTeamAdminPanel({
+export function AddParticipantToTeamForm({
   participants,
   teams
 }: AddParticipantToTeamAdminPanelProps) {
   const [email, setEmail] = useState("")
   const [teamId, setTeamId] = useState("")
 
-  async function addParticipantToTeamFormAction(): Promise<FormState> {
+  async function addParticipantToTeamFormAction() {
     if (!email || !teamId)
       return { success: false, message: "Please fill in all fields." }
 
@@ -57,16 +49,16 @@ export default function AddParticipantToTeamAdminPanel({
     <>
       <h2>Add Participant To Team</h2>
       <form action={formAction}>
-        <label htmlFor="email">participant:</label>
+        <label htmlFor="email">Participant:</label>
         <SearchParticipants
           participants={participants}
           onSelect={(email) => setEmail(email)}
         />
-        <Spacer size={10} />
+        <Spacer size={12} />
 
-        <label htmlFor="teamId">team:</label>
+        <label htmlFor="teamId">Team:</label>
         <SearchTeams teams={teams} onSelect={(teamId) => setTeamId(teamId)} />
-        <Spacer size={10} />
+        <Spacer size={12} />
 
         <Button type="submit">Add Participant to Team</Button>
       </form>

@@ -14,9 +14,9 @@ import { isAuthed, isOrganizer } from "@/functions/user-management"
 
 import { TeamTable } from "./TeamTable"
 import { Button } from "@/components/Button"
-import CreateRiddleAdminPanel from "./CreateRiddleAdminPanel"
-import CreateParticipantAdminPanel from "./CreateParticipantAdminPanel"
-import AddParticipantToTeamAdminPanel from "./AddParticipantToTeamAdminPanel"
+import { CreateRiddleForm } from "./CreateRiddleForm"
+import { CreateParticipantForm } from "./CreateParticipantForm"
+import { AddParticipantToTeamForm } from "./AddParticipantToTeamForm"
 
 export default async function AdminPanel() {
   const session = await auth()
@@ -74,9 +74,9 @@ export default async function AdminPanel() {
       </ul>
 
       <TeamTable />
-      <CreateParticipantAdminPanel />
-      <CreateRiddleAdminPanel />
-      <AddParticipantToTeamAdminPanel
+      <CreateParticipantForm />
+      <CreateRiddleForm />
+      <AddParticipantToTeamForm
         participants={participants}
         teams={teams}
       />

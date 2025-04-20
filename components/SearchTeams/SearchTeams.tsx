@@ -1,33 +1,24 @@
 "use client"
 
-import * as React from "react"
 import Fuse from "fuse.js"
-import styles from "./search-teams.module.css"
-interface Participant {
-  name: string
-  email: string
-  teamId: string
-}
+import type { CompleteTeamData } from "@/functions/db"
+import { useState, useRef, useMemo, useEffect } from "react"
 
-type Team = {
-  id: string
-  totalTime: number
-  participants: Participant[]
-}
+import styles from "./SearchTeams.module.css"
 
 interface SearchTeamsProps {
-  teams: Team[]
+  teams: CompleteTeamData[]
   onSelect?: (teamId: string) => void
 }
 
 export function SearchTeams({ teams, onSelect }: SearchTeamsProps) {
-  const [isOpen, setIsOpen] = React.useState(false)
-  const [search, setSearch] = React.useState("")
-  const [selectedTeamId, setSelectedTeamId] = React.useState("")
-  const inputRef = React.useRef<HTMLInputElement>(null)
-  const resultsRef = React.useRef<HTMLDivElement>(null)
+  const [isOpen, setIsOpen] = useState(false)
+  const [search, setSearch] = useState("")
+  const [selectedTeamId, setSelectedTeamId] = useState("")
+  const inputRef = useRef<HTMLInputElement>(null)
+  const resultsRef = useRef<HTMLDivElement>(null)
 
-  const fuse = React.useMemo(
+  const fuse = useMemo(
     () =>
       new Fuse(teams, {
         keys: ["teamId"],
@@ -36,12 +27,12 @@ export function SearchTeams({ teams, onSelect }: SearchTeamsProps) {
     [teams]
   )
 
-  const results = React.useMemo(() => {
+  const results = useMemo(() => {
     if (!search) return teams
     return fuse.search(search).map((result) => result.item)
   }, [fuse, search, teams])
 
-  React.useEffect(() => {
+  useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
         inputRef.current &&
@@ -58,7 +49,7 @@ export function SearchTeams({ teams, onSelect }: SearchTeamsProps) {
     }
   }, [])
 
-  function handleSelect(team: Team) {
+  function handleSelect(team: CompleteTeamData) {
     setSelectedTeamId(team.id)
     setSearch(team.id)
     setIsOpen(false)

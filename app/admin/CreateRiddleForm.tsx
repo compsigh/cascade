@@ -1,9 +1,9 @@
-// AdminPanelClient.tsx
 "use client"
 
-import { Button } from "@/components/Button"
-import { createRiddleServerAction } from "@/functions/actions" // Import the server action
 import { useState, useActionState } from "react"
+import { createRiddleServerAction } from "@/functions/actions"
+
+import { Button } from "@/components/Button"
 import { Spacer } from "@/components/Spacer"
 
 interface FormState {
@@ -16,7 +16,7 @@ const initialState: FormState = {
   message: ""
 }
 
-export default function CreateRiddleAdminPanel() {
+export function CreateRiddleForm() {
   const [riddleNumber, setRiddleNumber] = useState("")
   const [text, setText] = useState("")
   const [inputVal, setInputVal] = useState("")
@@ -25,7 +25,7 @@ export default function CreateRiddleAdminPanel() {
   async function createRiddleFormAction(
     _prevState: FormState,
     formData: FormData
-  ): Promise<FormState> {
+  ) {
     const riddleNumber = parseInt(formData.get("riddleNumber") as string)
     const text = formData.get("text") as string
     const input = formData.get("inputVal") as string
@@ -46,7 +46,7 @@ export default function CreateRiddleAdminPanel() {
     <>
       <h2>Create New Riddle</h2>
       <form action={formAction}>
-        <label htmlFor="riddleNumber">Riddle Number:</label>
+        <label htmlFor="riddleNumber">Riddle Number:</label> {" "}
         <input
           type="number"
           pattern="^[1-9][0-9]*$"
@@ -56,9 +56,9 @@ export default function CreateRiddleAdminPanel() {
           onChange={(e) => setRiddleNumber(e.target.value)}
           required
         />
-        <Spacer size={10} />
+        <Spacer size={12} />
 
-        <label htmlFor="text">Text:</label>
+        <label htmlFor="text">Text:</label> {" "}
         <textarea
           id="text"
           name="text"
@@ -66,9 +66,9 @@ export default function CreateRiddleAdminPanel() {
           onChange={(e) => setText(e.target.value)}
           required
         />
-        <Spacer size={10} />
+        <Spacer size={12} />
 
-        <label htmlFor="inputVal">Input:</label>
+        <label htmlFor="inputVal">Input:</label> {" "}
         <textarea
           id="inputVal"
           name="inputVal"
@@ -76,9 +76,9 @@ export default function CreateRiddleAdminPanel() {
           onChange={(e) => setInputVal(e.target.value)}
           required
         />
-        <Spacer size={10} />
+        <Spacer size={12} />
 
-        <label htmlFor="solution">Solution:</label>
+        <label htmlFor="solution">Solution:</label> {" "}
         <input
           type="text"
           id="solution"
@@ -87,7 +87,7 @@ export default function CreateRiddleAdminPanel() {
           onChange={(e) => setSolution(e.target.value)}
           required
         />
-        <Spacer size={10} />
+        <Spacer size={12} />
 
         <Button type="submit">Create Riddle</Button>
       </form>
