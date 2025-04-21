@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useActionState } from "react"
-import { createParticipantServerAction } from "@/functions/actions"
+import { createParticipantServerAction } from "@/functions/actions/participants"
 
 import { Button } from "@/components/Button"
 import { Spacer } from "@/components/Spacer"
@@ -42,7 +42,7 @@ export function CreateParticipantForm() {
     <>
       <h2>Create New Participant</h2>
       <form action={formAction}>
-        <label htmlFor="name">Name:</label> {" "}
+        <label htmlFor="name">Name:</label>{" "}
         <input
           type="text"
           id="name"
@@ -51,10 +51,8 @@ export function CreateParticipantForm() {
           onChange={(e) => setName(e.target.value)}
           required
         />
-
         <Spacer size={12} />
-
-        <label htmlFor="email">Email:</label> {" "}
+        <label htmlFor="email">Email:</label>{" "}
         <input
           type="email"
           id="email"
@@ -63,9 +61,7 @@ export function CreateParticipantForm() {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-
         <Spacer size={12} />
-
         <Button type="submit">Create Participant</Button>
       </form>
       {state?.message && state.message}

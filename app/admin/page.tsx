@@ -1,16 +1,19 @@
 import { auth } from "@/auth"
-import { get } from "@vercel/edge-config"
-import { redirect } from "next/navigation"
 import {
-  deleteAllParticipantsServerAction,
-  deleteAllRiddlesServerAction,
-  dissolveAllTeamsServerAction,
-  resetAllTeamRiddleProgressAction,
   toggleEventStatusServerAction,
   updateTimerStatusServerAction
-} from "@/functions/actions"
-import { getAllParticipants, getAllTeams } from "@/functions/db"
+} from "@/functions/actions/flags"
+import {
+  resetAllTeamRiddleProgressAction,
+  dissolveAllTeamsServerAction
+} from "@/functions/actions/teams"
+import { get } from "@vercel/edge-config"
+import { redirect } from "next/navigation"
+import { getAllTeams } from "@/functions/db/teams"
+import { getAllParticipants } from "@/functions/db/participants"
 import { isAuthed, isOrganizer } from "@/functions/user-management"
+import { deleteAllRiddlesServerAction } from "@/functions/actions/riddles"
+import { deleteAllParticipantsServerAction } from "@/functions/actions/participants"
 
 import { TeamTable } from "./TeamTable"
 import { Button } from "@/components/Button"
@@ -76,10 +79,7 @@ export default async function AdminPanel() {
       <TeamTable />
       <CreateParticipantForm />
       <CreateRiddleForm />
-      <AddParticipantToTeamForm
-        participants={participants}
-        teams={teams}
-      />
+      <AddParticipantToTeamForm participants={participants} teams={teams} />
     </>
   )
 }

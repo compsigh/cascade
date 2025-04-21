@@ -1,11 +1,14 @@
 import {
-  deleteParticipantServerAction,
-  deleteRiddleServerAction,
-  removeParticipantFromTeamServerAction,
   resetTeamTimeServerAction,
   toggleTeamRiddleProgressAction
-} from "@/functions/actions"
-import { getAllRiddles, getAllTeams } from "@/functions/db"
+} from "@/functions/actions/teams"
+import {
+  removeParticipantFromTeamServerAction,
+  deleteParticipantServerAction
+} from "@/functions/actions/participants"
+import { getAllTeams } from "@/functions/db/teams"
+import { getAllRiddles } from "@/functions/db/riddles"
+import { deleteRiddleServerAction } from "@/functions/actions/riddles"
 
 import { Button } from "@/components/Button"
 
@@ -93,10 +96,10 @@ export async function TeamTable() {
                       name="riddleNumber"
                       value={riddle.number}
                     />
-                    <p>{completionStatus} {" "} {lastSubmissionTime}</p>
-                    <Button type="submit">
-                      Toggle completion
-                    </Button>
+                    <p>
+                      {completionStatus} {lastSubmissionTime}
+                    </p>
+                    <Button type="submit">Toggle completion</Button>
                   </form>
                 </td>
               )

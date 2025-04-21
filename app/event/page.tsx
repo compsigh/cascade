@@ -1,28 +1,30 @@
 import { auth } from "@/auth"
 import type { Session } from "next-auth"
 import { redirect } from "next/navigation"
+import type { Participant } from "@/generated/client"
 import { isAuthed } from "@/functions/user-management"
 import {
-  cancelInvite,
   createParticipant,
   getAllParticipants,
-  getInvitesFromEmail,
-  getParticipantByEmail,
-  getTeamById,
-  sendInvite
-} from "@/functions/db"
+  getParticipantByEmail
+} from "@/functions/db/participants"
+import { getTeamById } from "@/functions/db/teams"
+import { getInvitesFromEmail } from "@/functions/db/invites"
+import {
+  sendInviteServerAction,
+  cancelInviteServerAction
+} from "@/functions/actions/invites"
 
 import { get } from "@vercel/edge-config"
 import { revalidatePath } from "next/cache"
 
+import Link from "next/link"
 import { Spacer } from "@/components/Spacer"
 import { Button } from "@/components/Button"
 import { TeamView } from "@/components/TeamView"
 import { CountdownWrapper } from "@/components/CountdownWrapper"
 import { IncomingInviteList } from "@/components/IncomingInviteList"
 import { InviteSystem } from "@/components/InviteSystem"
-import { Invite, Participant } from "@/generated/client"
-import Link from "next/link"
 
 function Welcome({ participantName }: { participantName: string }) {
   return (
@@ -75,22 +77,6 @@ function Unregistered({
       </form>
     </>
   )
-}
-
-async function sendInviteServerAction(
-  from: string,
-  to: string
-): Promise<Invite> {
-  "use server"
-  revalidatePath("/event")
-  return await sendInvite(from, to)
-}
-
-// Server action to cancel an invite
-async function cancelInviteServerAction(id: string): Promise<Invite> {
-  "use server"
-  revalidatePath("/event")
-  return await cancelInvite(id)
 }
 
 async function RegisteredAndWaiting({

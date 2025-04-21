@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/Button"
-import { validateInputServerAction } from "@/functions/actions"
+import { validateInputServerAction } from "@/functions/actions/riddles"
 
 interface FormState {
   correct: boolean | null

@@ -1,14 +1,14 @@
-import { Button } from "@/components/Button"
-import { Spacer } from "@/components/Spacer"
 import {
   getParticipantByEmail,
-  getInvitesFromEmail,
-  getTeamById,
-  sendInvite,
   getAllParticipants
-} from "@/functions/db"
-import { revalidatePath } from "next/cache"
+} from "@/functions/db/participants"
 import { get } from "@vercel/edge-config"
+import { revalidatePath } from "next/cache"
+import { getTeamById } from "@/functions/db/teams"
+import { getInvitesFromEmail, sendInvite } from "@/functions/db/invites"
+
+import { Button } from "@/components/Button"
+import { Spacer } from "@/components/Spacer"
 import { SearchParticipants } from "@/components/SearchParticipants"
 
 export async function InviteForm({

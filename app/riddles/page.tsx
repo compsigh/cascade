@@ -1,12 +1,15 @@
-import Link from "next/link"
+import {
+  getTeamByParticipantEmail,
+  getTeamRiddleProgresses
+} from "@/functions/db/teams"
+import { auth } from "@/auth"
 import { get } from "@vercel/edge-config"
-import { getAllTeamRiddleProgress, getTeamByEmail } from "@/functions/db"
+import { redirect } from "next/navigation"
+import { isAuthed, isOrganizer } from "@/functions/user-management"
 
+import Link from "next/link"
 import { Spacer } from "@/components/Spacer"
 import { RiddleTimer } from "@/components/RiddleTimer"
-import { auth } from "@/auth"
-import { isAuthed, isOrganizer } from "@/functions/user-management"
-import { redirect } from "next/navigation"
 
 export default async function Riddles() {
   const session = await auth()
@@ -20,13 +23,13 @@ export default async function Riddles() {
 
   const participantEmail = session.user!.email!
 
-  const team = await getTeamByEmail(participantEmail)
+  const team = await getTeamByParticipantEmail(participantEmail)
 
   const timerToggleTimestamp = (await get("timerToggleTimestamp")) as number
 
   if (!team) return null
 
-  const riddleProgresses = await getAllTeamRiddleProgress(team.id)
+  const riddleProgresses = await getTeamRiddleProgresses(team.id)
   return (
     <>
       <RiddleTimer

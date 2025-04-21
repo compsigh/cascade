@@ -1,10 +1,10 @@
 "use client"
 
 import { useState, useActionState } from "react"
-import { addParticipantToTeamServerAction } from "@/functions/actions"
+import { addParticipantToTeamServerAction } from "@/functions/actions/teams"
 
 import type { Participant } from "@/generated/client"
-import type { CompleteTeamData } from "@/functions/db"
+import type { CompleteTeamData } from "@/functions/db/teams"
 
 import { Button } from "@/components/Button"
 import { Spacer } from "@/components/Spacer"

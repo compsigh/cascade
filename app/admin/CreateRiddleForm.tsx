@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useActionState } from "react"
-import { createRiddleServerAction } from "@/functions/actions"
+import { createRiddleServerAction } from "@/functions/actions/riddles"
 
 import { Button } from "@/components/Button"
 import { Spacer } from "@/components/Spacer"
@@ -46,7 +46,7 @@ export function CreateRiddleForm() {
     <>
       <h2>Create New Riddle</h2>
       <form action={formAction}>
-        <label htmlFor="riddleNumber">Riddle Number:</label> {" "}
+        <label htmlFor="riddleNumber">Riddle Number:</label>{" "}
         <input
           type="number"
           pattern="^[1-9][0-9]*$"
@@ -57,8 +57,7 @@ export function CreateRiddleForm() {
           required
         />
         <Spacer size={12} />
-
-        <label htmlFor="text">Text:</label> {" "}
+        <label htmlFor="text">Text:</label>{" "}
         <textarea
           id="text"
           name="text"
@@ -67,8 +66,7 @@ export function CreateRiddleForm() {
           required
         />
         <Spacer size={12} />
-
-        <label htmlFor="inputVal">Input:</label> {" "}
+        <label htmlFor="inputVal">Input:</label>{" "}
         <textarea
           id="inputVal"
           name="inputVal"
@@ -77,8 +75,7 @@ export function CreateRiddleForm() {
           required
         />
         <Spacer size={12} />
-
-        <label htmlFor="solution">Solution:</label> {" "}
+        <label htmlFor="solution">Solution:</label>{" "}
         <input
           type="text"
           id="solution"
@@ -88,7 +85,6 @@ export function CreateRiddleForm() {
           required
         />
         <Spacer size={12} />
-
         <Button type="submit">Create Riddle</Button>
       </form>
       {state?.message && state.message}

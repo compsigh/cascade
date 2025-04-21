@@ -1,7 +1,7 @@
 "use client"
 
 import Fuse from "fuse.js"
-import type { CompleteTeamData } from "@/functions/db"
+import type { CompleteTeamData } from "@/functions/db/teams"
 import { useState, useRef, useMemo, useEffect } from "react"
 
 import styles from "./SearchTeams.module.css"

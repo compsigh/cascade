@@ -1,18 +1,19 @@
-import { Button } from "@/components/Button"
-import { Spacer } from "@/components/Spacer"
 import {
   getParticipantByEmail,
-  getTeamById,
   removeParticipantFromTeam
-} from "@/functions/db"
+} from "@/functions/db/participants"
 import { revalidatePath } from "next/cache"
+import { getTeamById } from "@/functions/db/teams"
+
+import { Button } from "@/components/Button"
+import { Spacer } from "@/components/Spacer"
 
 export async function TeamView({
   participantEmail
 }: {
   participantEmail: string
 }) {
-  async function leaveTeamServerAction(formData: FormData): Promise<void> {
+  async function leaveTeamServerAction(formData: FormData) {
     "use server"
 
     const rawFormData = {

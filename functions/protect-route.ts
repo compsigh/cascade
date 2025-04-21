@@ -8,21 +8,25 @@ export enum Role {
 
 export async function protectRoute(protectionLevel: Role) {
   const session = await auth()
-  if (!session)
+  if (!session) {
     return new Response(JSON.stringify({ message: "Unauthorized" }), {
       status: 401
     })
+  }
   const authed = isAuthed(session)
-  if (!authed)
+  if (!authed) {
     return new Response(JSON.stringify({ message: "Forbidden" }), {
       status: 403
     })
+  }
 
-  if (protectionLevel === Role.Organizer)
-    if (!isOrganizer(session))
+  if (protectionLevel === Role.Organizer) {
+    if (!isOrganizer(session)) {
       return new Response(JSON.stringify({ message: "Forbidden" }), {
         status: 403
       })
+    }
+  }
 
   return session
 }
