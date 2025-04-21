@@ -1,7 +1,8 @@
+import { revalidatePath } from "next/cache"
+import { cancelInvite, getInvitesFromEmail } from "@/functions/db/invites"
+
 import { Button } from "@/components/Button"
 import { Spacer } from "@/components/Spacer"
-import { cancelInvite, getInvitesFromEmail } from "@/functions/db/invites"
-import { revalidatePath } from "next/cache"
 
 export async function OutgoingInviteList({
   participantEmail
@@ -20,29 +21,26 @@ export async function OutgoingInviteList({
   }
 
   const invites = await getInvitesFromEmail(participantEmail)
-  if (invites.length === 0) {
-    return (
-      <>
-        <h2>no invites sent</h2>
-      </>
-    )
-  }
 
   return (
     <>
       <Spacer size={16} />
       <h2>invites you&apos;ve sent</h2>
-      <ul>
-        {invites.map((invite) => (
-          <li key={invite.id}>
-            <p>to: {invite.toParticipantEmail}</p>
-            <form action={cancelInviteServerAction}>
-              <input type="hidden" name="id" value={invite.id} />
-              <Button type="submit">cancel</Button>
-            </form>
-          </li>
-        ))}
-      </ul>
+      {invites.length === 0 ? (
+        <p>no invites sent</p>
+      ) : (
+        <ul>
+          {invites.map((invite) => (
+            <li key={invite.id}>
+              <p>to: {invite.toParticipantEmail}</p>
+              <form action={cancelInviteServerAction}>
+                <input type="hidden" name="id" value={invite.id} />
+                <Button type="submit">cancel</Button>
+              </form>
+            </li>
+          ))}
+        </ul>
+      )}
     </>
   )
 }

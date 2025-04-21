@@ -54,7 +54,7 @@ export function Input({
           name="solution"
           value={solution}
           onChange={(e) => setSolution(e.target.value)}
-        />
+        />{" "}
         <Button type="submit">Submit</Button>
       </form>
       {state.message && <p>{state.message}</p>}

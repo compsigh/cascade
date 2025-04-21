@@ -67,7 +67,7 @@ export default async function Page(props: Props) {
         <MDX content={content} frontmatter={frontmatter} />
       </Suspense>
       <DownloadInput riddleNumber={riddleNumber} input={riddle.input} />
-      <Spacer size={15} />
+      <Spacer size={12} />
       <Input riddleNumber={riddleNumber} teamId={team!.id} />
     </>
   )
