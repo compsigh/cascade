@@ -1,14 +1,14 @@
 "use server"
 
 import {
-  addParticipantToTeam,
-  dissolveAllTeams,
+  disbandAllTeams,
   getTeamRiddleProgress,
   resetAllTeamsRiddleProgresses,
   resetTeamTime,
   updateTeamRiddleProgress
 } from "@/functions/db/teams"
 import { revalidatePath } from "next/cache"
+import { updateParticipantTeam } from "@/functions/db/participants"
 
 export async function resetTeamTimeServerAction(formData: FormData) {
   const teamId = formData.get("teamId") as string
@@ -30,8 +30,8 @@ export async function resetAllTeamRiddleProgressAction() {
   revalidatePath("/admin")
 }
 
-export async function dissolveAllTeamsServerAction() {
-  await dissolveAllTeams()
+export async function disbandAllTeamsServerAction() {
+  await disbandAllTeams()
   revalidatePath("/admin")
 }
 
@@ -48,7 +48,7 @@ export async function addParticipantToTeamServerAction(
   teamId: string
 ) {
   try {
-    await addParticipantToTeam(email, teamId)
+    await updateParticipantTeam(email, teamId)
     revalidatePath("/admin")
     return { success: true, message: "Successfully added participant to team" }
   } catch (error) {

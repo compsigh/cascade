@@ -4,8 +4,8 @@ import {
   updateTimerStatusServerAction
 } from "@/functions/actions/flags"
 import {
-  resetAllTeamRiddleProgressAction,
-  dissolveAllTeamsServerAction
+  disbandAllTeamsServerAction,
+  resetAllTeamRiddleProgressAction
 } from "@/functions/actions/teams"
 import { get } from "@vercel/edge-config"
 import { redirect } from "next/navigation"
@@ -65,8 +65,8 @@ export default async function AdminPanel() {
           </form>
         </li>
         <li>
-          <form action={dissolveAllTeamsServerAction}>
-            <Button type="submit">dissolve all teams</Button>
+          <form action={disbandAllTeamsServerAction}>
+            <Button type="submit">disband all teams</Button>
           </form>
         </li>
         <li>

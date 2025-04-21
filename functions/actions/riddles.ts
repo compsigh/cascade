@@ -2,8 +2,8 @@
 
 import {
   isRiddleSubmittedRecently,
-  completeTeamRiddle,
-  updateSubmissionTime
+  updateSubmissionTime,
+  updateTeamRiddleProgress
 } from "@/functions/db/teams"
 import {
   deleteAllRiddles,
@@ -47,11 +47,11 @@ export async function validateInputServerAction(formData: FormData) {
   const isCorrect = await isCorrectSolution(riddleNumber, solution)
 
   if (isCorrect) {
-    await completeTeamRiddle(riddleNumber, teamId)
-    await updateSubmissionTime(riddleNumber, teamId)
+    await updateTeamRiddleProgress(teamId, riddleNumber, true)
+    await updateSubmissionTime(teamId, riddleNumber)
     return { correct: true, timeLeft: null, message: "Correct solution!" }
   } else {
-    await updateSubmissionTime(riddleNumber, teamId)
+    await updateSubmissionTime(teamId, riddleNumber)
     return { correct: false, timeLeft: null, message: "Incorrect solution!" }
   }
 }

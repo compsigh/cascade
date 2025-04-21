@@ -11,64 +11,49 @@ export async function sendInvite(from: string, to: string) {
       toParticipantEmail: to
     }
   })
-
   return invite
 }
 
 export async function getInvitesToEmail(email: string) {
   const invites = await prisma.invite.findMany({
-    where: {
-      toParticipantEmail: email
-    }
+    where: { toParticipantEmail: email }
   })
-
   return invites
 }
 
 export async function getInvitesFromEmail(email: string) {
   const invites = await prisma.invite.findMany({
-    where: {
-      fromParticipantEmail: email
-    }
+    where: { fromParticipantEmail: email }
   })
-
   return invites
 }
 
 export async function acceptInvite(id: string) {
   const invite = await prisma.invite.findUnique({
-    where: {
-      id
-    }
+    where: { id }
   })
-
   if (!invite) return null
 
   const fromParticipant = await getParticipantByEmail(
     invite.fromParticipantEmail
   )
   if (!fromParticipant) return null
-  const fromParticipantTeamId = fromParticipant.teamId
 
   const toParticipant = await getParticipantByEmail(invite.toParticipantEmail)
   if (!toParticipant) return null
 
   await prisma.invite.delete({
-    where: {
-      id
-    }
+    where: { id }
   })
 
+  const fromParticipantTeamId = fromParticipant.teamId
   return await updateParticipantTeam(toParticipant.email, fromParticipantTeamId)
 }
 
 export async function declineInvite(id: string) {
   const invite = await prisma.invite.delete({
-    where: {
-      id
-    }
+    where: { id }
   })
-
   return invite
 }
 

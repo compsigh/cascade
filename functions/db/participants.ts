@@ -8,17 +8,13 @@ export async function getAllParticipants() {
 
 export async function getParticipantByEmail(email: string) {
   const participant = await prisma.participant.findUnique({
-    where: {
-      email
-    }
+    where: { email }
   })
-
   return participant
 }
 
 export async function createParticipant(name: string, email: string) {
   const riddles = await prisma.riddle.findMany()
-
   const participant = await prisma.participant.create({
     data: {
       name,
@@ -35,38 +31,26 @@ export async function createParticipant(name: string, email: string) {
       }
     }
   })
-
   return participant
 }
 
 export async function updateParticipantTeam(email: string, teamId: string) {
   const participant = await getParticipantByEmail(email)
-
   if (!participant) return null
 
   const formerTeam = await prisma.team.findUnique({
-    where: {
-      id: participant.teamId
-    },
-    include: {
-      participants: true
-    }
+    where: { id: participant.teamId },
+    include: { participants: true }
   })
-
   if (!formerTeam) return null
-
   if (formerTeam.id === teamId) return null
 
   // Set new team's participants to include participant
   await prisma.team.update({
-    where: {
-      id: teamId
-    },
+    where: { id: teamId },
     data: {
       participants: {
-        connect: {
-          email
-        }
+        connect: { email }
       }
     }
   })
@@ -75,11 +59,8 @@ export async function updateParticipantTeam(email: string, teamId: string) {
   const otherParticipants = formerTeam.participants.filter(
     (participant) => participant.email !== email
   )
-
   await prisma.team.update({
-    where: {
-      id: formerTeam.id
-    },
+    where: { id: formerTeam.id },
     data: {
       participants: {
         set: otherParticipants
@@ -88,23 +69,26 @@ export async function updateParticipantTeam(email: string, teamId: string) {
   })
 
   // Clean up former team if it has no participants other than the one removed
-  if (formerTeam.participants.length === 1) await deleteTeam(formerTeam.id)
+  if (formerTeam.participants.length === 1) {
+    await prisma.riddleProgress.deleteMany({
+      where: { teamId: formerTeam.id }
+    })
+    await deleteTeam(formerTeam.id)
+  }
 }
 
 export async function removeParticipantFromTeam(email: string) {
   const participant = await getParticipantByEmail(email)
-
   if (!participant) return null
 
   const currentTeam = await prisma.team.findUnique({
     where: { id: participant.teamId },
     include: { participants: true }
   })
-
   if (!currentTeam) return null
-  const riddles = await prisma.riddle.findMany()
-
   if (currentTeam.participants.length === 1) return null
+
+  const riddles = await prisma.riddle.findMany()
 
   return await prisma.$transaction(async (prisma) => {
     const newTeam = await prisma.team.create({
@@ -121,7 +105,9 @@ export async function removeParticipantFromTeam(email: string) {
     await prisma.participant.update({
       where: { email },
       data: {
-        team: { connect: { id: newTeam.id } }
+        team: {
+          connect: { id: newTeam.id }
+        }
       }
     })
   })
@@ -129,14 +115,12 @@ export async function removeParticipantFromTeam(email: string) {
 
 export async function deleteParticipant(email: string) {
   const participant = await getParticipantByEmail(email)
-
   if (!participant) return null
 
   const team = await prisma.team.findUnique({
     where: { id: participant.teamId },
     include: { participants: true }
   })
-
   if (!team) return null
 
   if (team.participants.length === 1) {
@@ -159,14 +143,8 @@ export async function deleteParticipant(email: string) {
 }
 
 export async function deleteAllParticipants() {
-  const users = await prisma.participant.deleteMany()
-  await prisma.riddleProgress.deleteMany()
-  await prisma.team.deleteMany()
-  return users
-}
-
-export async function deleteAllParticipantsAndTeams() {
   const participants = await prisma.participant.deleteMany()
+  await prisma.riddleProgress.deleteMany()
   const teams = await prisma.team.deleteMany()
   return { participants, teams }
 }

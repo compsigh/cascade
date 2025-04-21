@@ -1,6 +1,6 @@
 import prisma from "@/functions/db"
 import { get } from "@vercel/edge-config"
-import type { PrismaPromise } from "@/generated/client"
+import { removeParticipantFromTeam } from "@/functions/db/participants"
 
 export type CompleteTeamData = {
   participants: {
@@ -47,184 +47,54 @@ export async function getAllTeams() {
       participants: true,
       riddlesProgresses: true
     },
-    orderBy: {
-      totalTime: "asc"
-    }
+    orderBy: { totalTime: "asc" }
   })
   return teams
 }
 
 export async function deleteTeam(id: string) {
   await prisma.riddleProgress.deleteMany({
-    where: {
-      teamId: id
-    }
+    where: { teamId: id }
   })
   return await prisma.team.delete({
     where: { id },
-    include: {
-      participants: true
-    }
+    include: { participants: true }
   })
 }
 
-export async function addParticipantToTeam(
-  participantEmail: string,
-  newTeamId: string
-) {
-  const participant = await prisma.participant.findUnique({
-    where: { email: participantEmail },
-    include: { team: true }
-  })
-
-  if (!participant)
-    throw new Error(`Participant with email ${participantEmail} not found`)
-
-  const oldTeamId = participant.teamId
-
-  if (!oldTeamId) {
-    await prisma.participant.update({
-      where: { email: participantEmail },
-      data: { teamId: newTeamId }
-    })
-    return
-  }
-
-  const oldTeam = await prisma.team.findUnique({
-    where: { id: oldTeamId },
-    include: { participants: true }
-  })
-
-  if (!oldTeam) throw new Error(`Old team with id ${oldTeamId} not found`)
-
-  if (oldTeam.participants.length === 1) {
-    await prisma.participant.update({
-      where: { email: participantEmail },
-      data: { teamId: newTeamId }
-    })
-
-    await prisma.riddleProgress.deleteMany({
-      where: { teamId: oldTeamId }
-    })
-
-    await prisma.team.delete({
-      where: { id: oldTeamId }
-    })
-  } else {
-    await prisma.participant.update({
-      where: { email: participantEmail },
-      data: { teamId: newTeamId }
-    })
-  }
-}
-
-export async function dissolveTeam(teamId: string) {
-  const team = await prisma.team.findUnique({
-    where: { id: teamId },
-    include: { participants: true }
-  })
-
+export async function disbandTeam(id: string) {
+  const team = await getTeamById(id)
   if (!team) return null
 
-  if (team.participants.length === 1) return null
+  for (const participant of team.participants)
+    await removeParticipantFromTeam(participant.email)
 
-  const transaction: PrismaPromise<unknown>[] = []
-
-  const riddles = await prisma.riddle.findMany()
-
-  for (const participant of team.participants) {
-    transaction.push(
-      prisma.participant.update({
-        where: { email: participant.email },
-        data: {
-          team: {
-            create: {
-              riddlesProgresses: {
-                create: riddles.map((riddle) => ({
-                  riddleNumber: riddle.number,
-                  completed: false
-                }))
-              }
-            }
-          }
-        }
-      })
-    )
-  }
-
-  transaction.push(
-    prisma.riddleProgress.deleteMany({
-      where: { teamId }
-    })
-  )
-
-  transaction.push(
-    prisma.team.delete({
-      where: { id: teamId }
-    })
-  )
-
-  // Run all operations in a transaction
-  await prisma.$transaction(transaction)
+  return await deleteTeam(id)
 }
 
-export async function dissolveAllTeams() {
-  const teams = await prisma.team.findMany({
-    include: { participants: true }
-  })
+export async function disbandAllTeams() {
+  const teams = await getAllTeams()
 
   for (const team of teams) {
-    if (team.participants.length > 1) {
-      const transaction: PrismaPromise<unknown>[] = []
-
-      const riddles = await prisma.riddle.findMany()
-
-      for (const participant of team.participants) {
-        transaction.push(
-          prisma.participant.update({
-            where: { email: participant.email },
-            data: {
-              team: {
-                create: {
-                  riddlesProgresses: {
-                    create: riddles.map((riddle) => ({
-                      riddleNumber: riddle.number,
-                      completed: false
-                    }))
-                  }
-                }
-              }
-            }
-          })
-        )
-      }
-
-      transaction.push(
-        prisma.riddleProgress.deleteMany({
-          where: { teamId: team.id }
-        })
-      )
-
-      transaction.push(
-        prisma.team.delete({
-          where: { id: team.id }
-        })
-      )
-
-      await prisma.$transaction(transaction)
-    }
+    for (const participant of team.participants)
+      await removeParticipantFromTeam(participant.email)
+    await prisma.riddleProgress.deleteMany({
+      where: { teamId: team.id }
+    })
+    await deleteTeam(team.id)
   }
+
+  return teams
 }
 
 export async function resetTeamTime(id: string) {
   return await prisma.team.update({
     where: { id },
-    data: {
-      totalTime: 0
-    }
+    data: { totalTime: 0 }
   })
 }
 
+// Not used
 export async function logTeamTime(id: string, time: number) {
   const team = await prisma.team.findUnique({
     where: { id }
@@ -235,9 +105,7 @@ export async function logTeamTime(id: string, time: number) {
 
   return await prisma.team.update({
     where: { id },
-    data: {
-      totalTime: time
-    }
+    data: { totalTime: time }
   })
 }
 
@@ -248,8 +116,8 @@ export async function getTeamRiddleProgress(
   return await prisma.riddleProgress.findUnique({
     where: {
       teamId_riddleNumber: {
-        riddleNumber: riddleNumber,
-        teamId: teamId
+        teamId,
+        riddleNumber
       }
     }
   })
@@ -258,9 +126,7 @@ export async function getTeamRiddleProgress(
 export async function getTeamRiddleProgresses(teamId: string) {
   return await prisma.riddleProgress.findMany({
     where: { teamId },
-    orderBy: {
-      riddleNumber: "asc"
-    }
+    orderBy: { riddleNumber: "asc" }
   })
 }
 
@@ -305,8 +171,8 @@ export async function isRiddleSubmittedRecently(
   const progress = await prisma.riddleProgress.findUnique({
     where: {
       teamId_riddleNumber: {
-        riddleNumber: riddleNumber,
-        teamId: teamId
+        teamId,
+        riddleNumber
       }
     }
   })
@@ -324,57 +190,41 @@ export async function isRiddleSubmittedRecently(
   return { canSubmit: diff >= cooldownSeconds * 1000, timeLeft: timeLeft }
 }
 
+// Not used
 export async function getNumberOfCorrectRiddles(teamId: string) {
   return await prisma.riddleProgress.count({
     where: {
-      teamId: teamId,
+      teamId,
       completed: true
     }
   })
 }
 
+// Not used
 export async function hasTeamCompletedEveryRiddle(teamId: string) {
   const riddles = await prisma.riddle.findMany()
   const riddleCount = riddles.length
-
   const completedRiddlesCount = await prisma.riddleProgress.count({
     where: {
-      teamId: teamId,
+      teamId,
       completed: true
     }
   })
-
   return completedRiddlesCount === riddleCount
 }
 
 export async function updateSubmissionTime(
-  riddleNumber: number,
-  teamId: string
+  teamId: string,
+  riddleNumber: number
 ) {
   return await prisma.riddleProgress.update({
     where: {
       teamId_riddleNumber: {
-        riddleNumber: riddleNumber,
-        teamId: teamId
+        teamId,
+        riddleNumber
       }
     },
-    data: {
-      mostRecentSubmission: new Date()
-    }
-  })
-}
-
-export async function completeTeamRiddle(riddleNumber: number, teamId: string) {
-  return await prisma.riddleProgress.update({
-    where: {
-      teamId_riddleNumber: {
-        riddleNumber: riddleNumber,
-        teamId: teamId
-      }
-    },
-    data: {
-      completed: true
-    }
+    data: { mostRecentSubmission: new Date() }
   })
 }
 
@@ -386,12 +236,10 @@ export async function updateTeamRiddleProgress(
   return await prisma.riddleProgress.update({
     where: {
       teamId_riddleNumber: {
-        riddleNumber: riddleNumber,
-        teamId: teamId
+        teamId,
+        riddleNumber
       }
     },
-    data: {
-      completed: complete
-    }
+    data: { completed: complete }
   })
 }

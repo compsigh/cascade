@@ -2,17 +2,13 @@ import prisma from "@/functions/db"
 
 export async function getAllRiddles() {
   return await prisma.riddle.findMany({
-    orderBy: {
-      number: "asc"
-    }
+    orderBy: { number: "asc" }
   })
 }
 
 export async function getRiddle(riddleNumber: number) {
   return await prisma.riddle.findUnique({
-    where: {
-      number: riddleNumber
-    }
+    where: { number: riddleNumber }
   })
 }
 
@@ -43,7 +39,6 @@ export async function upsertRiddle(
 
   if (!existingRiddle) {
     const teams = await prisma.team.findMany()
-
     await prisma.$transaction(
       teams.map((team) =>
         prisma.riddleProgress.create({
@@ -56,25 +51,25 @@ export async function upsertRiddle(
       )
     )
   }
+
+  return await prisma.riddle.findUnique({
+    where: { number: riddleNumber }
+  })
 }
 
 export async function deleteRiddle(riddleNumber: number) {
-  await prisma.$transaction([
+  return await prisma.$transaction([
     prisma.riddleProgress.deleteMany({
-      where: {
-        riddleNumber: riddleNumber
-      }
+      where: { riddleNumber: riddleNumber }
     }),
     prisma.riddle.delete({
-      where: {
-        number: riddleNumber
-      }
+      where: { number: riddleNumber }
     })
   ])
 }
 
 export async function deleteAllRiddles() {
-  await prisma.$transaction([
+  return await prisma.$transaction([
     prisma.riddleProgress.deleteMany(),
     prisma.riddle.deleteMany()
   ])
@@ -85,12 +80,8 @@ export async function isCorrectSolution(
   submission: string
 ) {
   const riddle = await prisma.riddle.findUnique({
-    where: {
-      number: riddleNumber
-    }
+    where: { number: riddleNumber }
   })
-
   if (!riddle) return false // Riddle not found
-
   return submission === riddle.solution
 }
