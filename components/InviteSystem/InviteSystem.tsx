@@ -1,16 +1,11 @@
 "use client"
 
 import { useState, useTransition } from "react"
+import type { Invite, Participant } from "@/generated/client"
+
 import { Button } from "@/components/Button"
 import { Spacer } from "@/components/Spacer"
 import { SearchParticipants } from "@/components/SearchParticipants"
-import { Participant } from "@/generated/client"
-
-type Invite = {
-  id: string
-  fromParticipantEmail: string
-  toParticipantEmail: string
-}
 
 export interface InviteSystemProps {
   participant: Participant
