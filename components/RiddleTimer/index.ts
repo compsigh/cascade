@@ -1,1 +1,1 @@
-export { RiddleTimer } from './RiddleTimer'
+export { RiddleTimer } from "./RiddleTimer"

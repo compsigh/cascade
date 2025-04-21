@@ -1,51 +1,50 @@
-# compsigh cascade
+# cascade ![Static Badge](https://img.shields.io/badge/compsigh-black?logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB3aWR0aD0iMTAyNCIgaGVpZ2h0PSIxMDI0IiB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8Y2lyY2xlIGN4PSI1MTIiIGN5PSI1MTIiIHI9IjM3NSIgc3Ryb2tlPSIjRkRCQjMwIiBzdHJva2Utd2lkdGg9IjUwIi8%2BCjxyZWN0IHg9IjI5NCIgeT0iNjk0LjIxOCIgd2lkdGg9IjQ1MCIgaGVpZ2h0PSI1MCIgcng9IjI1IiB0cmFuc2Zvcm09InJvdGF0ZSgtNjAgMjk0IDY5NC4yMTgpIiBmaWxsPSIjRkRCQjMwIi8%2BCjxyZWN0IHg9IjQ2MS4zMDEiIHk9IjY5My43MTEiIHdpZHRoPSI0NTAiIGhlaWdodD0iNTAiIHJ4PSIyNSIgdHJhbnNmb3JtPSJyb3RhdGUoLTYwIDQ2MS4zMDEgNjkzLjcxMSkiIGZpbGw9IiNGREJCMzAiLz4KPC9zdmc%2BCg%3D%3D&link=https%3A%2F%2Fcompsigh.club%2F)
 
-## Riddle one
+> The web platform for [cascade](https://cascade.compsigh.club), a one-night coding riddle competition for the [compsigh](https://compsigh.club) community run every semester
 
-You are an old, senile CS professor walking around the twisting halls of Kalmanovitz.
+## Contributing
 
-**Input:** You're given a *2D* character array with `R`, `L`, and `#`. Starting from the top left, navigate using the current tile: `R` means right, `L` means left, and `#` means straight. Each turn is relative to your current direction.
+We welcome contributions from compsigh community members & friends. If you're experiencing a bug, please check the [Issues](https://github.com/compsigh/cascade/issues) to see if it's been resolved, or if we're working on it. Also feel free to [let us know in Discord](https://discord.gg/compsigh).
 
-**Output:** List every tile you visit from start to finish. You start and end on `#`.
+### Installation
 
-### Example
-
-**Input:**
-```
-# R R #
-L L R #
-R # # #
-# L # #
+```bash
+npm install
 ```
 
-**Output:**
-```
-#LLRRRL#L##
-```
+### Development
 
-## Riddle two
-You are given a jumbled sentence encoded with a Caesar Cipher and a 2D grid of words.
+Start the development server:
 
-**Input:** A string `text` encoded with a Caesar Cipher, an integer `shift` representing the cipher shift, and a 2D list `grid` containing words.
-
-**Output:** The decoded sentence and the list of indices where each word of the decoded sentence appears in the grid.
-
-### Example
-
-**Input:**
-```
-text: "cqrb rb j cnbc"
-shift: 9
-grid: [
-    ["hello", "test", "what"],
-    ["cascade", "october", "is"],
-    ["a", "this", "output", "compsigh"]
-]
+```bash
+npm run dev
 ```
 
-**Output:**
-```
-Decoded Text: "this is a test"
-Indices: (2, 1), (1, 2), (2, 0), (0, 1)
-```
-TODO: @edward how do you want the output formatted?
+### Linting & Formatting
+
+> [!IMPORTANT]
+> Run a [format](https://prettier.io/docs/why-prettier) and [lint](https://eslint.org/docs/latest/about/) before pushing.
+
+- **Check linting** (ESLint 8 with `eslint:recommended`, [`next`, `next/core-web-vitals`, `next/typescript`](https://nextjs.org/docs/app/api-reference/config/eslint), and [`prettier`](https://github.com/prettier/eslint-config-prettier) configurations):
+
+  ```bash
+  npm run lint
+  ```
+
+- **Automatically fix linting issues**:
+
+  ```bash
+  npm run lint:fix
+  ```
+
+- **Check formatting** (Prettier):
+
+  ```bash
+  npm run format
+  ```
+
+- **Automatically fix formatting issues**:
+
+  ```bash
+  npm run format:fix
+  ```
