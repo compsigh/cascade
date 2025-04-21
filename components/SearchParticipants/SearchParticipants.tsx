@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Fuse from "fuse.js"
-import styles from "./search-participants.module.css"
+import styles from "./SearchParticipants.module.css"
 
 type Participant = {
   name: string
