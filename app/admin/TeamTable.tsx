@@ -1,14 +1,11 @@
 import {
-  resetTeamTimeServerAction,
-  toggleTeamRiddleProgressAction
-} from "@/functions/actions/teams"
-import {
   removeParticipantFromTeamServerAction,
   deleteParticipantServerAction
 } from "@/functions/actions/participants"
 import { getAllTeams } from "@/functions/db/teams"
 import { getAllRiddles } from "@/functions/db/riddles"
 import { deleteRiddleServerAction } from "@/functions/actions/riddles"
+import { toggleTeamRiddleProgressAction } from "@/functions/actions/teams"
 
 import { Button } from "@/components/Button"
 
@@ -20,7 +17,6 @@ export async function TeamTable() {
       <thead>
         <tr>
           <th>participants</th>
-          <th>total time</th>
           {riddles.map((riddle) => (
             <th key={riddle.number}>
               riddle {riddle.number}
@@ -61,13 +57,6 @@ export async function TeamTable() {
                   </form>
                 </div>
               ))}
-            </td>
-            <td>
-              <form action={resetTeamTimeServerAction}>
-                <input type="hidden" name="teamId" value={team.id} />
-                <p>{team.totalTime}</p>
-                <Button type="submit">Reset</Button>
-              </form>
             </td>
             {riddles.map((riddle) => {
               const riddleProgress = team.riddlesProgresses.find(

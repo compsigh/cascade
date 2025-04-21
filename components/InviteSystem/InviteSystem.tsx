@@ -164,9 +164,7 @@ export function InviteSystem({
           <Button type="submit" disabled={!selectedEmail || isPending}>
             {(() => {
               if (isPending) return "sending..."
-
               if (selectedEmail) return "send invite"
-
               return "select participant"
             })()}
           </Button>
@@ -175,32 +173,34 @@ export function InviteSystem({
 
       {/* Outgoing Invites List Section */}
       <Spacer size={16} />
-      <h2>invites you&apos;ve sent</h2>
       {invitesSent.length === 0 ? (
-        <p>no invites sent</p>
+        <></>
       ) : (
-        <ul>
-          {invitesSent.map((invite) => (
-            <li key={invite.id}>
-              <p>to: {invite.toParticipantEmail}</p>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault()
-                  handleCancelInvite(invite.id)
-                }}
-              >
-                <Button
-                  type="submit"
-                  disabled={pendingCancellations.has(invite.id)}
+        <>
+          <h2>invites you&apos;ve sent</h2>
+          <ul>
+            {invitesSent.map((invite) => (
+              <li key={invite.id}>
+                <p>to: {invite.toParticipantEmail}</p>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    handleCancelInvite(invite.id)
+                  }}
                 >
-                  {pendingCancellations.has(invite.id)
-                    ? "canceling..."
-                    : "cancel"}
-                </Button>
-              </form>
-            </li>
-          ))}
-        </ul>
+                  <Button
+                    type="submit"
+                    disabled={pendingCancellations.has(invite.id)}
+                  >
+                    {pendingCancellations.has(invite.id)
+                      ? "canceling..."
+                      : "cancel"}
+                  </Button>
+                </form>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
     </div>
   )
