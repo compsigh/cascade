@@ -3,9 +3,9 @@ import {
   getAllParticipants
 } from "@/functions/db/participants"
 import { get } from "@vercel/edge-config"
-import { revalidatePath } from "next/cache"
 import { getTeamById } from "@/functions/db/teams"
-import { getInvitesFromEmail, sendInvite } from "@/functions/db/invites"
+import { getInvitesFromEmail } from "@/functions/db/invites"
+import { sendInviteServerAction } from "@/functions/actions/invites"
 
 import { Button } from "@/components/Button"
 import { Spacer } from "@/components/Spacer"
@@ -16,18 +16,6 @@ export async function InviteForm({
 }: {
   participantEmail: string
 }) {
-  async function sendInviteServerAction(formData: FormData): Promise<void> {
-    "use server"
-
-    const rawFormData = {
-      from: formData.get("from") as string,
-      to: formData.get("to") as string
-    }
-
-    revalidatePath("/event")
-    await sendInvite(rawFormData.from, rawFormData.to)
-  }
-
   const participant = await getParticipantByEmail(participantEmail)
   const invitesSent = await getInvitesFromEmail(participantEmail)
   const team = await getTeamById(participant!.teamId)
