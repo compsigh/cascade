@@ -1,6 +1,6 @@
 import { Button } from "@/components/Button"
 import { Spacer } from "@/components/Spacer"
-import { cancelInvite, getInvitesFromEmail } from "@/functions/db"
+import { cancelInvite, getInvitesFromEmail } from "@/functions/db/invites"
 import { revalidatePath } from "next/cache"
 
 export async function OutgoingInviteList({

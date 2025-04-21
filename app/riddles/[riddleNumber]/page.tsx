@@ -3,7 +3,8 @@ import { DownloadInput } from "@/components/DownloadInput"
 import { Input } from "@/components/Input"
 import { MDX } from "@/components/MDX"
 import { Spacer } from "@/components/Spacer"
-import { getRiddle, getTeamByEmail } from "@/functions/db"
+import { getTeamByParticipantEmail } from "@/functions/db/teams"
+import { getRiddle } from "@/functions/db/riddles"
 import { isAuthed, isOrganizer } from "@/functions/user-management"
 import { get } from "@vercel/edge-config"
 import { compileMDX } from "next-mdx-remote/rsc"
@@ -55,7 +56,7 @@ export default async function Page(props: Props) {
   if (isNaN(riddleNumber)) return notFound()
   const riddle = await getRiddle(riddleNumber)
   if (riddle === null) return notFound()
-  const team = await getTeamByEmail(session.user!.email!)
+  const team = await getTeamByParticipantEmail(session.user!.email!)
 
   const { content, frontmatter } = await readMarkdownFileAtRoute(riddle.text)
 
