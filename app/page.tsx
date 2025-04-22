@@ -32,18 +32,12 @@ export default async function Home() {
           />
         </li>
         <li>
-          <TextStream duration={1.2} text="teams work to answer the riddle" />
+          <TextStream duration={1.2} text="teams work to answer the riddles" />
         </li>
         <li>
           <TextStream
             duration={1.4}
-            text="the prize for the winning team is $100"
-          />
-        </li>
-        <li>
-          <TextStream
-            duration={1.8}
-            text="the team with the shortest completion time wins"
+            text="the team that completes all riddles first wins"
           />
         </li>
       </ul>

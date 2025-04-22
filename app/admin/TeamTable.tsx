@@ -1,6 +1,6 @@
 import {
-  removeParticipantFromTeamServerAction,
-  deleteParticipantServerAction
+  deleteParticipantServerAction,
+  removeParticipantFromTeamServerAction
 } from "@/functions/actions/participants"
 import { getAllTeams } from "@/functions/db/teams"
 import { getAllRiddles } from "@/functions/db/riddles"
