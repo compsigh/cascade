@@ -73,7 +73,7 @@ export async function TeamTable() {
 
               const completionStatus = riddleProgress?.completed ? "✅" : "❌"
               const lastSubmissionTime = riddleProgress?.mostRecentSubmission
-                ? riddleProgress.mostRecentSubmission.toLocaleTimeString()
+                ? new Date(riddleProgress.mostRecentSubmission).toLocaleTimeString()
                 : "No submissions"
 
               return (
